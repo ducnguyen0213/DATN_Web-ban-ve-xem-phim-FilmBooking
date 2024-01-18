@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <title>Chọn rạp</title>
+    <link rel="stylesheet" th:href="@{/users/css/web.css}">
+    <link rel="stylesheet" th:href="@{/users/css/cinema.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+
+</head>
+<body>
+<div th:replace="~{/layout/Header :: header}"></div>
+<li th:if="${customer != null}">
+<!--    <div th:if="${Message}" class="alert alert-success text-center">-->
+<!--        [[${Message}]]-->
+<!--    </div>-->
+    <div th:if="${Message}" class="alert error">
+        <input type="checkbox" id="alert1"/>
+        <label class="close" title="close" for="alert1">
+            <i class="fa-solid fa-circle-xmark"></i>
+        </label>
+        <p class="inner">
+            <strong> [[${Message}]]!</strong>
+        </p>
+    </div>
+    <section>
+        <th:block th:each="cinema : ${cinema}">
+            <div class="card">
+
+                <h4 class="card-title">Rạp: [[${cinema.name}]]</h4>
+                <div class="btn-holder">
+                    <a class="btn btn-outline-primary" data-toggle="modal" data-target="#id01"
+                       th:attrappend="data-target=${cinema.id}" href="#" title="">Xem địa chỉ</a>
+                </div>
+                <div class="btn-holder">
+                    <a class="btn btn-outline-primary"
+                       th:href="@{'/show/schedule?movieId='+${movieId}+'&cinemaId='+${cinema.id}}">Chọn rạp</a>
+                </div>
+            </div>
+        </th:block>
+    </section>
+</li>
+<li th:unless="${customer != null}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.location.href = '/filmbooking/login';
+        /*]]>*/
+    </script>
+</li>
+
+<div th:replace="~{/layout/Footer :: footer}"></div>
+<!--xem chi tiết rap -->
+<th:block th:each="cinema : ${cinema}">
+    <div id="id01" th:attrappend="id=${cinema.id}" class="w3-modal" style="display: none;">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <span data-dismiss="modal"
+                      class="w3-button w3-display-topright">&times;</span>
+                <div class="w3-cinema">
+                    <h3> Rạp: [[${cinema.name}]]</h3>
+                </div>
+                <p>Địa chỉ: [[${cinema.address}]]</p>
+                <br>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<script >
+    document.addEventListener('DOMContentLoaded', function() {
+        var alertDiv = document.querySelector('.alert.error');
+        if (alertDiv) {
+            setTimeout(function() {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+    });
+</script>
+
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <title>ĐĂNG KÝ FILMBOOKING</title>
+    <!-- <link rel="stylesheet" href="css/web.css"> -->
+    <link rel="stylesheet" th:href="@{/users/css/dangky.css}">
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+    <style>
+        .text-danger {
+            color: red;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+<!-- navbar -->
+<div th:replace="~{/layout/Header :: header}"></div>
+<br>
+<div id="login-box">
+    <div th:if="${successMessage}">
+        <div class="alert alert-info">
+            [[${successMessage}]]
+        </div>
+    </div>
+    <div class="left">
+        <h1>ĐĂNG KÝ</h1>
+        <form
+                method="post"
+                role="form"
+                th:action="@{/filmbooking/dangky/save}"
+                th:object="${customer1}"
+        >
+            <div>
+                <input type="text" name="name" id="name" th:field="*{name}" placeholder="Họ và tên"/>
+                <p th:errors="*{name}" class="text-danger"
+                   th:if="${#fields.hasErrors('name')}"></p>
+            </div>
+            <div>
+                <input type="text" name="email" th:field="*{email}" placeholder="E-mail"/>
+                <p th:errors="*{email}" class="text-danger"
+                   th:if="${#fields.hasErrors('email')}"></p>
+            </div>
+            <div>
+                <input type="text" name="phoneNumber" id="phoneNumber" th:field="*{phoneNumber}"
+                       placeholder="Số điện thoại"/></div>
+            <p th:errors="*{phoneNumber}" class="text-danger"
+               th:if="${#fields.hasErrors('phoneNumber')}"></p>
+
+            <div>
+                <input type="password" name="password" th:field="*{password}" placeholder="Mật khẩu"/>
+                <p th:errors="*{password}" class="text-danger"
+                   th:if="${#fields.hasErrors('password')}"></p>
+            </div>
+            <input type="submit" value="ĐĂNG KÝ"/>
+        </form>
+    </div>
+
+    <div class="right">
+        <span class="loginwith">Đăng ký với<br/>social network</span>
+
+        <button class="social-signin facebook">Log in with facebook</button>
+        <button class="social-signin twitter">Log in with Twitter</button>
+        <button class="social-signin google">Log in with Google+</button>
+    </div>
+    <div class="or">OR</div>
+</div>
+<!--  -->
+<br>
+<div th:replace="~{/layout/Footer :: footer}"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<script th:src="@{/users/js/dangky.js}"></script>
+</html>

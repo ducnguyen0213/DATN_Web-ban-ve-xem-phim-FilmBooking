@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chi tiết hóa đơn</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}" />
+    <!--    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">-->
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+      integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" th:href="@{/users/css/thongtincanhan.css}" />
+  </head>
+  <body>
+    <div th:replace="~{/layout/header-admin :: header}"></div>
+    <div class="table_customer" style="margin: 10px 0px 0px 300px">
+      <h1 style="text-align: center; margin: 20px 0px 30px 0px">
+        Chi tiết hóa đơn khách hàng
+      </h1>
+      <table>
+        <thead>
+          <tr>
+            <th>Mã giao dịch</th>
+            <th>Phim</th>
+            <th>Rạp/Phòng chiếu</th>
+            <th>Ghế đã đặt</th>
+            <th>Đồ ăn</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="entry : ${groupedBillDetails}">
+            <!--                    <td th:text="${entry}">Transaction ID</td>-->
+            <td>
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  <span th:text="${detail[0]}">Detail 1</span>
+                  <!-- Add more spans for other details -->
+                </li>
+              </ul>
+            </td>
+            <td id="namefilm">
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  <span th:text="${detail[1]}">Detail 1</span><br />
+                  <img
+                    width="50px"
+                    height="70px"
+                    th:src="${'http://localhost:8080/admin/assets/img/' +detail[2]}"
+                  />
+                  <!-- Add more spans for other details -->
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  <span th:text="${detail[3]}">Detail 1</span>,
+                  <span th:text="${detail[10]}">Detail 1</span>
+                  <hr />
+                  <b>Suất chiếu</b>
+                  <span
+                    th:text="${#dates.format(detail[4], 'dd/MM/yyyy HH:mm')}"
+                    >Detail 1</span
+                  >
+                  <!-- Add more spans for other details -->
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  <span th:text="${detail[5]}">Detail 1</span>
+                  (<span th:text="${detail[6]}">Detail 1</span>)
+                  <hr />
+                  <b>Tổng tiền:</b>
+                  <span id="price" th:text="${detail[6]*detail[9]}"
+                    >Detail 1</span
+                  >
+                  <!-- Add more spans for other details -->
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  <span id="priceService" th:text="${detail[7]}">Detail 1</span>
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  <span
+                    th:text="${#dates.format(detail[8], 'dd/MM/yyyy HH:mm')}"
+                    >Detail 1</span
+                  >
+                  <!-- Add more spans for other details -->
+                </li>
+              </ul>
+            </td>
+
+            <td>
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  <span id="price1" th:text="${detail[12]}">Detail 1</span>
+                  <br />
+                  (+
+                  <span id="poin" th:text="${detail[13]}">Detail 1</span> điểm
+                  tích lũy)
+                  <hr />
+                  <span th:if="${detail[14] == null}">-0 điểm tiêu dùng</span>
+                  <span
+                    th:if="${detail[14] != null}"
+                    th:text="${-detail[14]} + ' điểm tiêu dùng'"
+                  ></span>
+                </li>
+              </ul>
+            </td>
+            <td>
+              <ul>
+                <li style="list-style: none" th:each="detail : ${entry.value}">
+                  <!-- Display other details as per your requirement -->
+                  (<span
+                    th:text="${detail[11]==0 ? 'Chờ thanh toán' : (detail[11]==1 ? 'Đã thanh toán' : 'Đã hủy')}"
+                  ></span>
+                  )
+                  <!-- Add more spans for other details -->
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script th:src="@{/admin/js/index.js}"></script>
+    <script>
+      var priceElements = document.querySelectorAll("#price,#price1");
+
+      // Loop through each element and format its content to VND
+      priceElements.forEach(function (element) {
+        var price = parseFloat(element.innerHTML);
+        var formattedPrice = new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(price);
+        // Set the formatted price as the inner HTML of the element
+        element.innerHTML = formattedPrice;
+      });
+      var elements = document.querySelectorAll("#poin");
+
+      // Duyệt qua từng phần tử và thực hiện việc bỏ hết số 0 sau dấu chấm rồi chuyền giá trị ngược lại
+      elements.forEach(function (element) {
+        var originalNumber = element.innerHTML;
+        var number = parseFloat(originalNumber);
+        var roundedNumber = number.toFixed(0);
+        element.innerHTML = roundedNumber;
+      });
+    </script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+      integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

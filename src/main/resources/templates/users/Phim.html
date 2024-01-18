@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <title>Phim chiếu</title>
+    <link rel="stylesheet" th:href="@{/users/css/web.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+</head>
+
+<body>
+<div th:replace="~{/layout/Header :: header}"></div>
+
+
+
+<h2>FILMBOOKING</h2>
+<div class="warpper">
+    <input class="radio" id="one" name="group" type="radio" checked>
+    <input class="radio" id="two" name="group" type="radio">
+    <input class="radio" id="three" name="group" type="radio">
+    <div class="tabs">
+        <label class="tab" id="one-tab" for="one">PHIM ĐANG CHIẾU</label>
+        <label class="tab" id="two-tab" for="two">PHIM SẮP CHIẾU</label>
+    </div>
+    <div class="panels">
+        <div class="panel" id="one-panel">
+            <div class="khoi">
+                <th:block th:each="movie : ${listmovie}">
+                    <figure class="snip1208">
+                        <img th:src="@{'http://localhost:8080/admin/assets/img/' + ${movie.image}}"
+                             style="width: 100%; height: 459px">
+                        <div class="date"><span class="day">[[${movie.rated.code}]]</span><span
+                                class="month">Trailer</span></div>
+                        <i class="myBtn" data-toggle="modal" data-target="#myModal"
+                           th:attrappend="data-target=${movie.id}"> Xem trailer</i>
+                        <figcaption>
+                            <h3>
+                                <a th:href="@{'/filmbooking/movie/edit/' + ${movie.id}}">[[${movie.name}]]</a>
+                            </h3>
+                            <p>
+                                - Thể loại:
+                                <span th:each="type, iterStat : ${movie.movieTypes}">
+                                        <span th:text="${type.name}"></span>
+                                        <span th:if="${!iterStat.last}">, </span>
+                                </span>
+                                <br>
+                                - Thời lượng: [[${movie.movieDuration}]] phút <br>
+                                - Ngày khởi chiếu: <span th:text="${#dates.format(movie.premiereDate, 'yyyy-MM-dd')}"></span><br>
+                            </p>
+
+                            <th:block th:if="${customer == null}">
+                                <button data-toggle="modal" data-target="#myModalll">Đặt vé</button>
+                            </th:block>
+
+                            <th:block th:unless="${customer == null}">
+                                <button><a th:href="@{'/show/cinema?movieId='+${movie.id}}">Mua Vé</a></button>
+                            </th:block>
+                            <!--                            <button ><a th:href="@{'/show/cinema?movieId='+${movie.id}}">Đặt vé</a></button>-->
+                        </figcaption>
+                    </figure>
+                </th:block>
+
+            </div>
+        </div>
+        <div class="panel" id="two-panel">
+            <div class="khoi">
+                <th:block th:each="movie1 : ${listmovie1}">
+                    <figure class="snip1208">
+                        <img th:src="@{'http://localhost:8080/admin/assets/img/' + ${movie1.image}}"
+                             style="width: 100%; height: 459px">
+                        <div class="date"><span class="day">[[${movie1.rated.code}]]</span><span
+                                class="month">Trailer</span></div>
+                        <i class="myBtnn" data-toggle="modal" data-target="#myModall"
+                           th:attrappend="data-target=${movie1.id}"> Xem trailer</i>
+                        <figcaption>
+                            <h3>
+                                <a th:href="@{'/filmbooking/movie/edit/' + ${movie1.id}}">[[${movie1.name}]]</a>
+                            </h3>
+                            <p>
+                                - Thể loại:
+                                <span th:each="type, iterStat : ${movie1.movieTypes}">
+                                        <span th:text="${type.name}"></span>
+                                        <span th:if="${!iterStat.last}">, </span>
+                                </span>
+                                - Thời lượng: [[${movie1.movieDuration}]] phút<br>
+                                - Ngày khởi chiếu: <span th:text="${#dates.format(movie1.premiereDate, 'yyyy-MM-dd')}"></span><br>
+                            </p>
+                            <!--                            <button ><a th:href="@{'/rap?movieId='+${movie1.id}}">Đặt vé</a>          </button>  -->
+                        </figcaption>
+                    </figure>
+                </th:block>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- gọi trailer phim đang chiếu -->
+<th:block th:each="movie : ${listmovie}">
+    <div id="myModal" th:attrappend="id=${movie.id}" class="modal">
+        <div class="modal-content">
+            <span class="close" data-dismiss="modal">&times;</span>
+            <h2>TRAILER - [[${movie.name}]]</h2>
+            <hr style="margin-top: 20px; opacity: 0.5">
+            <div class="embed-responsive embed-responsive-16by9 video">
+                <iframe width="80%" height="315" th:src="${movie.trailer}"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</th:block>
+<!--  gọi trailer phim sắp chiếu-->
+<th:block th:each="movie1 : ${listmovie1}">
+    <div id="myModall" th:attrappend="id=${movie1.id}" class="modal">
+        <div class="modal-content">
+            <span class="closee" data-dismiss="modal">&times;</span>
+            <h2>TRAILER - [[${movie1.name}]]</h2>
+            <hr style="margin-top: 20px; opacity: 0.5">
+            <div class="embed-responsive embed-responsive-16by9 video">
+                <iframe width="80%" height="315" th:src="${movie1.trailer}"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</th:block>
+<!--hiển thị thông báo khi chưa đăng nhập-->
+<div class="modal" id="myModalll">
+    <div class="Mes ">
+        <h2 class="Modal-InText">
+            Khách hàng cần đăng nhập khi đặt vé !!
+        </h2>
+        <button class="Modal-InBtn Btn-Right"><a style="text-decoration: none; color: #000000"
+                                                 href="/filmbooking/login">OK</a></button>
+        <button class="Modal-InBtn Btn-Left" data-dismiss="modal">HỦY</button>
+    </div>
+</div>
+<div th:replace="~{/layout/Footer :: footer}"></div>
+
+</body>
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<script th:src="@{/users/js/web.js}"></script>
+
+</html>

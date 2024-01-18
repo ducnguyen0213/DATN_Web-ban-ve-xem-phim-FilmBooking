@@ -1,0 +1,50 @@
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #8eff48;
+    color: #333;
+    padding: 20px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    animation: slideIn 0.5s forwards; /* Hiệu ứng trượt vào */
+}
+.notification_err {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #fa5656;
+    color: #333;
+    padding: 20px;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    animation: slideIn 0.5s forwards; /* Hiệu ứng trượt vào */
+}
+.hide-notification-err {
+    animation: slideOut 0.5s forwards; /* Hiệu ứng trượt ra */
+}
+.hide-notification {
+    animation: slideOut 0.5s forwards; /* Hiệu ứng trượt ra */
+}

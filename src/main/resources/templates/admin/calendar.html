@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý suất chiếu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/bill.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/calendar.css}">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.css"
+    />
+</head>
+<body>
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<section class="promotion-html">
+    <div th:replace="~{/layout/header-admin :: header}"></div>
+    <a th:href="@{/schedule/find-all}">
+        <div class="backPage">
+            <i class='bx bx-chevron-left'></i>
+            <span>Quay lại</span>
+        </div>
+    </a>
+    <div class="containerCl">
+        <div class="calendar">
+        <label>Phòng chiếu</label>
+        <select class="form-select" aria-label="Default select example" name="roomName"
+                id="roomName" style="width: 400px">
+            <option th:each="room : ${listRoom}" th:value="${room.id}"
+                    th:text="${room.name}">
+            </option>
+        </select>
+        <br>
+            <div class="header">
+                <div class="mouth"></div>
+                <div class="btns">
+                    <div class="btn today-btn">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="btn prev-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    <div class="btn next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="weekdays">
+                <div class="day">Chủ nhật</div>
+                <div class="day">Thứ 2</div>
+                <div class="day">Thứ 3</div>
+                <div class="day">Thứ 4</div>
+                <div class="day">Thứ 5</div>
+                <div class="day">Thứ 6</div>
+                <div class="day">Thứ 7</div>
+            </div>
+            <div class="days">
+                <!-- Prev mouth days -->
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height: 100%">
+                <div class="modal-header" >
+                    <h1 class="modal-title fs-5" id="selectedDate" style="color: red"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="big-task-container">
+
+
+                    </div>
+                </div>
+                <button style="width: 200px;margin-left: 685px;margin-bottom: 10px;" type="submit" onclick="sendItemMapToServer()" class="btn btn-success" data-bs-dismiss="modal">
+                    Xác nhận và tạo vé
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.2/dragula.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+
+<!--<script th:src="@{/admin/js/pagination.js}"></script>-->
+<script th:src="@{/admin/js/calendar.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script>
+</script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Bootstrap demo</title>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}"/>
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+</head>
+<body>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<header class="page-header">
+    <nav>
+        <a href="#0" aria-label="forecastr logo" class="logo">
+            <img
+                    th:src="@{/admin/assets/imgLogo/logo_text.png}"
+                    alt=""
+                    width="230"
+                    height="200"
+                    class="itemLogo"
+            />
+        </a>
+        <button
+                class="toggle-mob-menu"
+                aria-expanded="false"
+                aria-label="open menu"
+        >
+            <svg width="20" height="20" aria-hidden="true">
+                <use xlink:href="#down"></use>
+            </svg>
+        </button>
+        <ul class="admin-menu">
+            <li class="menu-heading">
+                <h3>Admin</h3>
+            </li>
+            <li>
+                <a th:href="@{/home}" onclick="overLoad()">
+                    <i class="bx bxs-home"></i>
+                    <span>Trang chủ</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/service/find-all}" onclick="overLoad()">
+                    <i class="bx bx-restaurant"></i>
+                    <span>Dịch vụ</span>
+                </a>
+            </li>
+            <!--            <li>-->
+            <!--                <a class="sub-btn_two">-->
+            <!--                    <i class="bx bxs-arch"></i>-->
+            <!--                    <span>Quản lý ghế</span>-->
+            <!--                    <i class="fas fa-angle-right dropdown_two"></i>-->
+            <!--                </a>-->
+            <!--                <div class="dropdown_menu_two">-->
+            <!--                    <a th:href="@{/seat/find-all}" onclick="overLoad()"> <i class="bx bx-arch"></i>Ghế</a>-->
+            <!--                    <a th:href="@{/seat/seat-manager}" onclick="overLoad()"-->
+            <!--                    ><i class="bx bxl-deezer"></i>Xem ghế khách hàng</a-->
+            <!--                    >-->
+            <!--                </div>-->
+            <!--            </li>-->
+            <li>
+                <a
+                        th:href="@{/movie/find-all/page/1?status=&keyword=}"
+                        onclick="overLoad()"
+                >
+                    <i class="bx bxs-camera-movie"></i>Quản lý phim
+                </a>
+            </li>
+            <li>
+                <a class="sub-btn_one">
+                    <i class="bx bxs-group"></i>
+                    <span>Quản lý khách hàng</span>
+                    <i class="fas fa-angle-right dropdown_one"></i>
+                </a>
+                <div class="dropdown_menu_one">
+                    <a th:href="@{/customer/find-all}" onclick="overLoad()">
+                        <i class="bx bxs-universal-access"></i>Tài khoản khách hàng</a
+                    >
+                    <a th:href="@{/rank/find-all}" onclick="overLoad()"
+                    ><i class="bx bx-group"></i>Hạng khách hàng</a
+                    >
+                </div>
+            </li>
+            <li>
+                <a class="sub-btn_one">
+                    <i class="bx bxs-widget"></i>
+                    <span>Quản lý thuộc tính</span>
+                    <i class="fas fa-angle-right dropdown_one"></i>
+                </a>
+                <div class="dropdown_menu_one">
+                    <a th:href="@{/movie/movie-type}" onclick="overLoad()"><i class='bx bx-movie-play'></i>Thể loại phim</a>
+                    <a th:href="@{/movie/language}" onclick="overLoad()"
+                    ><i class='bx bx-world'></i>Ngôn ngữ phim</a
+                    >
+                    <a th:href="@{/movie/director}" onclick="overLoad()"><i class='bx bxs-user'></i>Đạo diễn phim</a>
+                    <a th:href="@{/movie/performer}" onclick="overLoad()"><i class='bx bxs-group'></i>Diễn viên phim</a>
+                    <a th:href="@{/rated/find-all}" onclick="overLoad()"><i class='bx bx-child'></i>Phân loại độ
+                        tuổi</a>
+                    <a th:href="@{/service/service-type}" onclick="overLoad()"><i class='bx bxl-slack'></i></i>Thể loại
+                        dịch vụ</a>
+                </div>
+            </li>
+            <li>
+                <a class="sub-btn">
+                    <i class="bx bxs-school"></i>
+                    <span>Quản lý rạp</span>
+                    <i class="fas fa-angle-right dropdown"></i>
+                </a>
+                <div class="dropdown_menu">
+                    <a th:href="@{/cinema/find-all}" onclick="overLoad()"
+                    ><i class="bx bxs-store-alt"></i>Rạp chiếu</a
+                    >
+                    <a th:href="@{/seat/find-all}" onclick="overLoad()">
+                        <i class="bx bx-arch"></i>Sơ đồ phòng</a
+                    >
+                    <a th:href="@{/room/find-all}" onclick="overLoad()"
+                    ><i class="bx bxs-slideshow"></i>Quản lý phòng chiếu</a
+                    >
+                    <a th:href="@{/schedule/find-all}" onclick="overLoad()"
+                    ><i class="bx bx-calendar"></i>Quản lý suất chiếu</a
+                    >
+                    <a th:href="@{/seatType/find-all}" onclick="overLoad()"
+                    ><i class="bx bxs-slideshow"></i>Quản lý thể loại ghế</a
+                    >
+                </div>
+            </li>
+            <li>
+                <a th:href="@{/bill/find-all}" onclick="overLoad()">
+                    <i class="bx bx-task"></i>
+                    <span
+                    >Quản lý hóa đơn
+                <span class="badge text-bg-secondary"
+                >[[${soldTicketsCount}]]</span
+                ></span
+                    >
+                </a>
+            </li>
+<!--            <li>-->
+<!--                <a th:href="@{/ticket/find-all}" onclick="overLoad()">-->
+<!--                    <i class="bx bxs-coupon"></i>-->
+<!--                    <span>Quản lý vé </span>-->
+<!--                </a>-->
+<!--            </li>-->
+            <li>
+                <a th:href="@{/promotion/find-all}" onclick="overLoad()">
+                    <i class="bx bxs-discount"></i>
+                    <span>Quản lý khuyến mãi</span>
+                </a>
+            </li>
+<!--            <li>-->
+<!--                <a th:href="@{/statistical/find-all}" onclick="overLoad()">-->
+<!--                    <i class="bx bx-line-chart"></i>-->
+<!--                    <span>Thống kê</span>-->
+<!--                </a>-->
+<!--            </li>-->
+            <li>
+                <a th:href="@{/general-setting/find-view}" onclick="overLoad()">
+                    <i class="bx bx-cog"></i>
+                    <span>Cài đặt</span>
+                </a>
+            </li>
+            <li>
+                <div class="switch">
+                    <input type="checkbox" id="mode" checked/>
+                    <label for="mode">
+                        <span></span>
+                        <span>Tối</span>
+                    </label>
+                </div>
+                <button
+                        class="collapse-btn"
+                        aria-expanded="true"
+                        aria-label="collapse menu"
+                >
+                    <svg aria-hidden="true">
+                        <use xlink:href="#collapse"></use>
+                    </svg>
+                    <span>Collapse</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"
+></script>
+</body>
+</html>

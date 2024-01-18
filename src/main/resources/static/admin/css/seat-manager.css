@@ -1,0 +1,106 @@
+.seat_session {
+    background-color: #242e42;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 30px;
+    box-shadow: 5px 10px 20px 13px rgb(141, 138, 138);
+    margin: 40px 40px 0px 340px;
+}
+
+.seat_manager_container {
+    margin: 40px 0px 100px 0px;
+    width: 100%;
+}
+
+.seat_manager {
+    background-color: rgb(255, 100, 3);
+    width: 40px;
+    height: 40px;
+    margin: 15px 10px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    padding-top: 10px;
+    float: left;
+}
+
+.seat_1 {
+    background-color: rgb(255, 100, 3);
+    width: 60px;
+    height: 70px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.seat_1.selected {
+    background-color: rgb(191, 132, 231);
+}
+
+.seat_1.sold {
+    background-color: rgb(156, 215, 244);;
+}
+
+.seat_manager.sold {
+    background-color: rgb(156, 215, 244);
+}
+
+/*.seat_manager:nth-of-type(2) {*/
+/*    margin-right: 40px;*/
+/*}*/
+
+/*.seat_manager:nth-last-of-type(2) {*/
+/*    margin-left: 40px;*/
+/*}*/
+
+.seat_manager:not(.sold):hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.showcase {
+    background-color: rgba(255, 250, 250, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #777;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0px 10px 0px;
+}
+
+.showcase li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 10px;
+}
+
+.showcase li small {
+    margin-left: 10px;
+    color: white;
+}
+
+.seat_row {
+    /* display: flex; */
+    align-items: center;
+    /* justify-content: center; */
+}
+
+.screen {
+    margin: 50px 0px 50px 0px;
+    /* background: url('../../assets/img/bg-screen.png'); */
+    /* background-size: 1 ; */
+}
+
+.screen img {
+    background-size: 100% auto;
+    width: 1500px;
+}
+
+.seat-manager-html {
+    margin: 40px 40px 0px 340px;
+}

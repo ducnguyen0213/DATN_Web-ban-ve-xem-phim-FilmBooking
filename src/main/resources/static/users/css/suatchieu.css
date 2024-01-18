@@ -1,0 +1,97 @@
+
+/*.select {*/
+/*    position: relative;*/
+/*    display: flex;*/
+/*    width: 20em;*/
+/*    height: 3em;*/
+/*    line-height: 3;*/
+/*    background: #5c6664;*/
+/*    overflow: hidden;*/
+/*    border-radius: .25em;*/
+/*}*/
+
+
+/*.select::after {*/
+/*    content: '\25BC';*/
+/*    position: absolute;*/
+/*    top: 0;*/
+/*    right: 0;*/
+/*    padding: 0 1em;*/
+/*    background: #2b2e2e;*/
+/*    cursor: pointer;*/
+/*    pointer-events: none;*/
+/*    transition: .25s all ease;*/
+/*}*/
+
+/*.select:hover::after {*/
+/*    color: #23b499;*/
+/*}*/
+
+select {
+    width: 400px;
+    max-width: 100%;
+    overflow-y: auto;
+    cursor: pointer;
+    padding: 15px 25px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+    color: #444;
+    font-size: 18px;
+    box-shadow: -3px 3px 5px 0px rgba(0, 0, 0, 0.10);
+}
+
+select option {
+    padding: 10px 20px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    background-color: rgb(238, 238, 238);
+    white-space: pre-wrap;
+    cursor: pointer;
+}
+
+select option:hover {
+    background-color: rgb(223, 223, 223);
+}
+
+select option:checked {
+    box-shadow: 0 0 10px 100px #595959 inset;
+}
+
+select::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+    border-radius: 12px;
+}
+
+select::-webkit-scrollbar {
+    width: 8px;
+    background-color: #F5F5F5;
+}
+
+select::-webkit-scrollbar-thumb {
+    background-color: rgb(225, 225, 225);
+    border-radius: 12px;
+    background-image: -webkit-linear-gradient(90deg,
+    rgba(160, 160, 160, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(160, 160, 160, 0.2) 50%,
+    rgba(160, 160, 160, 0.2) 75%,
+    transparent 75%,
+    transparent)
+}
+
+select.fadeIn {
+    animation: fadeInDown 0.2s;
+}
+
+select.fadeOut {
+    animation: fadeInUp 0.2s;
+}
+
+.date {
+    display: grid;
+    grid-template-columns: auto auto auto;
+}

@@ -1,0 +1,32 @@
+.form_add_promotion button {
+  margin: 30px 0px 30px 30px;
+  padding: 10px 100px 10px 100px;
+}
+.promotion-html {
+  margin: 40px 40px 0px 340px;
+}
+.food-html {
+  margin: 40px 40px 0px 340px;
+}
+.Service-html {
+  margin: 40px 40px 0px 340px;
+}
+.select-rank-pomotion select {
+  width: 700px;
+  margin: 10px 117px 0px -2px;
+}
+.datePromtion {
+  display: flex;
+  flex-direction: row;
+}
+.modal-content {
+  width: 900px;
+  margin-left: -170px;
+  padding: 10px;
+}
+
+.col-md-6 {
+  /*margin-left: 20px;*/
+  margin-bottom: 10px;
+}
+

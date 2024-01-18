@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Đạo diễn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/bill.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/food.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/alert.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+
+<body>
+<header th:replace="~{/layout/header-admin :: header}"></header>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<section class="food-html">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+    <div th:if="${successMessage}" class="alert alert-success d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill"/>
+        </svg>
+        <div>
+            <strong>[[${successMessage}]]</strong>
+            <button style="margin-left: 920px" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger d-flex align-items-center"
+         role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill"/>
+        </svg>
+
+        <div>
+            <strong>[[${errorMessage}]]</strong>
+            <button style="margin-left: 900px" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-4"><h2>ĐẠO DIỄN</h2>
+        </div>
+        <div class="col-xl-8">
+            <div class="box-food">
+                <input type="checkbox" id="check"/>
+                <div class="search-box">
+                    <form th:action="@{/movie/search/director}" class="form_search_food" method="get">
+                        <input type="text" name="keyword" placeholder="Tìm kiếm tên đạo diễn..."/>
+                        <label for="check" class="icon">
+                            <button type="submit" style="color: #4d4d4d; padding: 0px 15px 0px 15px; border: none"><i class='bx bx-search-alt-2'></i></button>
+                        </label>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form th:action="@{/movie/home/director/save}" th:object="${director}" class="form_add_promotion" method="post"
+          enctype="multipart/form-data" id="yourForm" onsubmit="validateDirector(event)">
+        <input type="hidden">
+        <div class="food_input">
+            <div class="row g-3">
+                <div class="col">
+                    <div class="input-box">
+                        <label th:for="name">Tên đạo diễn</label>
+                        <input type="text" name="name" id="nameDirector" onblur="checkNameDirector(event)"/>
+                    </div>
+                    <span id="nameDirectorErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                </div>
+            </div>
+        </div>
+        <button type="submit" id="addButton" class="btn btn-outline-success" onclick="return confirm('Bạn muốn thêm đạo diễn !')">
+            Xác nhận
+        </button>
+    </form>
+    <div class="table_movie">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Mã đạo diễn</th>
+                <th scope="col">Tên đạo diễn</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mt : ${listDirector}">
+                <td>[[${mt.code}]]</td>
+                <td id="priceFood">[[${mt.name}]]</td>
+                <td>
+                    <a th:href="@{'/movie/director/delete/' + ${mt.id}}" onclick="return confirm('Bạn muốn xóa đạo diễn !')">
+                        <button type="button" class="btn btn-outline-danger" id="xoaFood">
+                            <i class="bx bxs-trash"></i>
+                        </button>
+                    </a>
+                    <a>
+                        <button class="btn btn-outline-success"
+                                data-bs-toggle="modal"
+                                th:attr="data-bs-target='#exampleModal_' + ${mt.id}">
+                            <i class='bx bxs-edit-alt'></i>
+                        </button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="pagination">
+        <!-- Pagination buttons will be added here dynamically using JavaScript -->
+    </div>
+</section>
+<th:block th:each="mt : ${listDirector}">
+    <div class="modal" th:attrappend="id='exampleModal_' + ${mt.id}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết đạo diễn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="row g-3" th:object="${promotion}" th:action="@{/movie/update/director/{id}(id=${mt.id})}"
+                      method="post">
+                    <div style="display: none" class="col-md-6">
+                        <label class="form-label">Id</label>
+                        <input type="text" class="form-control" name="id" th:value="${mt.id}"
+                               disabled
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mã thể loại phim</label>
+                        <input type="text" class="form-control" name="code" th:value="${mt.code}"
+                               required disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tên thể loại phim</label>
+                        <input type="text" class="form-control" name="name" th:value="${mt.name}"
+                               required>
+                    </div>
+                    <!--                    <div class="col-md-6">-->
+                    <!--                        <label  class="form-label">Ảnh</label>-->
+                    <!--                        <br>-->
+                    <!--                        <img th:if="${food.image}" th:src=" @{'http://localhost:8080/admin/assets/img/' + ${food.image}}" style="width:50px; height: 50px">-->
+
+                    <!--                        <input type="file" class="form-control-file"  name="image">-->
+                    <!--                    </div>-->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="submit" onclick="return confirm('Bạn muốn cập nhật thể loại phim')"  class="btn btn-primary">Sửa</button>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--<script th:src="@{/admin/js/alert.js}"></script>-->
+<script th:src="@{/admin/js/thuoc-tinh.js}"></script>
+<script th:src="@{/admin/js/pagination.js}"></script>
+
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+</html>

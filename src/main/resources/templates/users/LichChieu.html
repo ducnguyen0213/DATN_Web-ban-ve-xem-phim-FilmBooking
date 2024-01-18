@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <title>Lịch Chiếu</title>
+    <link rel="stylesheet" th:href="@{/users/css/lichchieu.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+</head>
+
+<body>
+<!-- navbar -->
+
+<div th:replace="~{/layout/Header :: header}"></div>
+<!--  -->
+<div>
+    <form id="searchForm">
+        <select size="1" id="name" name="name">
+            <option value="">-- Chọn rạp --</option>
+            <option th:each="cinema : ${listcinema}" th:value="${cinema.name}" th:text="${cinema.name}"></option>
+        </select>
+        <!---->
+        <select size="1" id="nameMovie" name="nameMovie">
+            <option value="">-- Chọn phim --</option>
+            <option th:each="movie : ${listmovie}" th:value="${movie.name}" th:text="${movie.name}"></option>
+        </select>
+        <!--  -->
+        <select size="1" id="startAt" name="startAt">
+        </select>
+
+        <div class="searchtime">
+            <div class="wrapper">
+                <label for="startTime" class="label"></label>
+                <input type="number" class="input" id="startTime" name="startTime" placeholder="Giờ bắt đầu">
+            </div>
+
+            <div class="wrapper">
+                <label for="endTime" class="label"></label>
+                <input type="number" class="input" id="endTime" name="endTime" placeholder="Giờ kết thúc">
+            </div>
+<!--            <button type="submit" class="buttonnn cancel-button">Search</button>-->
+        </div>
+    </form>
+</div>
+<!---->
+<div id="searchResult" style="margin-bottom: 100px"></div>
+<!--  -->
+<div th:replace="~{/layout/Footer :: footer}"></div>
+</body>
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.3.js" integrity="sha256-1XMpEtA4eKXNNpXcJ1pmMPs8JV+nwLdEqwiJeCQEkyc="
+        crossorigin="anonymous"></script>
+<script th:src="@{/users/js/lichchieu.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        function performSearch() {
+            var formData = $('#searchForm').serialize();
+
+            $.ajax({
+                type: 'GET',
+                url: '/filmbooking/search/schedule',
+                data: formData,
+                success: function(result) {
+                    $('#searchResult').html(result);
+                }
+            });
+        }
+
+        $('#searchForm input, #searchForm select').on('input change', function(event) {
+            performSearch();
+        });
+
+        // Perform initial search when the page loads
+        performSearch();
+    });
+</script>
+</html>
+

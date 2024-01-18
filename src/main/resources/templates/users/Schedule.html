@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <title>Lịch chiếu</title>
+    <link rel="stylesheet" th:href="@{/users/css/web.css}">
+    <link rel="stylesheet" th:href="@{/users/css/suatchieu.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+
+</head>
+<body>
+<div th:replace="~{/layout/Header :: header}"></div>
+<li th:if="${customer != null}">
+    <div class="modal-content1" style="margin-bottom: -80px">
+        <th:block th:each="movie : ${listmovie}">
+            <h3>LỊCH CHIẾU - PHIM [[${movie.name}]]</h3>
+        </th:block>
+        <hr style="margin-bottom: 20px;">
+        <th:block th:each="cinema : ${listcinema}">
+            <b>Rạp [[${cinema.name}]] </b>
+        </th:block>
+
+        <hr style="opacity: 0.2; margin-top: 5px;margin-bottom: 30px">
+        <div class="date">
+            <h3 style="font-size: 25px;">Chọn ngày : </h3>
+            <select size="1" id="listDate" onchange="updateDiv()">
+                <option th:each="date : ${listStartAt}" th:value="${date}" th:text="${date}"></option>
+            </select>
+            <div style="margin-top: 6px; font-size: 20px" id="resultDiv"></div>
+        </div>
+
+        <br>
+        <div class="tab-content">
+            <div class="tab-pane activee">
+                <h2>2D PHỤ ĐỀ</h2>
+                <br>
+                <div class="time_seat" id="listTime" >
+                    <th:block th:each="start_at : ${listTime}">
+                        <div class="time" style="margin-bottom: 20px">
+                            <button data-modal-target="modal3" data-toggle="modal" data-target="#myModal" id="myButton"
+                                    onclick="displayData(this)">
+                                <p id="time">[[${start_at[0]}]]</p>
+                                <hr>
+                                <p id="room">[[${start_at[1]}]]</p>
+<!--                                <hr>-->
+<!--                                <p id="price">[[${start_at[2]}]]</p>-->
+                            </button>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <!--thông báo xác nhận vé-->
+        <div class="modal-view" id="myModal">
+
+            <div class="modal-content-view">
+                <span class="modal-close-view" data-dismiss="modal" id="spanId">&times;</span>
+                <h3>BẠN ĐANG ĐẶT VÉ XEM PHIM</h3>
+                <hr style="opacity: 0.3; margin-top: 5px; margin-bottom: 30px;">
+                <th:block th:each="movie : ${listmovie}">
+                    <b>[[${movie.name}]]</b>
+                </th:block>
+                <hr style="opacity: 0.2; margin-top: 5px; margin-bottom: 15px;">
+                <table style="margin-bottom: 30px;">
+                    <tr>
+                        <th>Rạp chiếu</th>
+                        <th>Ngày chiếu</th>
+                        <th>Giờ chiếu</th>
+                        <th>Phòng chiếu</th>
+                    </tr>
+                    <tr>
+                        <th:block th:each="cinema : ${listcinema}">
+                            <td>[[${cinema.name}]]</td>
+                        </th:block>
+                        <td id="myDivDate"></td>
+                        <td id="myDiv"></td>
+                        <td id="phong"></td>
+                    </tr>
+                </table>
+
+                <div style="text-align: center;">
+                    <button class="mybtn bronze"><a id="myLink"
+                                                    th:href="@{'/show/booking/schedule?movieId='+${movieId}+'&cinemaId='+${cinemaId}}">
+                        Đồng Ý</a></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>
+<li th:unless="${customer != null}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.location.href = '/filmbooking/login';
+        /*]]>*/
+    </script>
+</li>
+<div th:replace="~{/layout/Footer :: footer}"></div>
+</body>
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<script th:src="@{/users/js/schedule.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    var priceElements = document.querySelectorAll("#price");
+
+    // Loop through each element and format its content to VND
+    priceElements.forEach(function (element) {
+        var price = parseFloat(element.innerHTML);
+        var formattedPrice = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(price);
+        // Set the formatted price as the inner HTML of the element
+        element.innerHTML = formattedPrice;
+    });
+
+    function callAPI() {
+
+        console.log("da goi duoc api!")
+        $.ajax({
+            url: "http://localhost:8080/api/schedule/time?movieId=[[${movieId}]]&cinemaId=[[${cinemaId}]]&start_at=" + $("#listDate").find(":selected").text().trim(),
+            type: 'GET',
+            success: function (data) {
+                console.log("data: " + data)
+                $("#listTime").html("");
+
+                data.forEach(start_at => {
+                    var priceVnd = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(start_at[2]);
+                    $("#listTime").append("<div class='time' >" + "<button data-modal-target='modal3' data-toggle='modal' data-target='#myModal' id='myButton' onclick='displayData(this)'>"
+                        + "<p id='time'>" + start_at[0] + "</p>"
+                        + "<hr>"
+                        + "<p id='room'>" + start_at[1] + "</p>"
+                        + "<hr>"
+                        + "<p id='price'>" + priceVnd + "</p>"
+                        + "</button>"
+                        + "</div>")
+                });
+            },
+            error: function (error) {
+                alert(error)
+            }
+        })
+    }
+
+    $(document).ready(function () {
+        $('#listDate').on('change', function () {
+            // alert( this.value ); // or $(this).val()
+            callAPI();
+        });
+    });
+
+
+</script>
+</html>

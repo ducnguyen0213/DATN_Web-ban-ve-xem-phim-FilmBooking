@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <title>FILMBOOKING</title>
+    <link rel="stylesheet" th:href="@{/users/css/web.css}">
+</head>
+<body>
+<nav class="navbar fixed" th:fragment="header" >
+    <div class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <div class="logo">
+        <img th:src="@{/users/img/logo.png}" alt="">
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="/filmbooking/trangchu">TRANG CHỦ</a></li>
+        <li><a href="/filmbooking/phimchieu">PHIM CHIẾU</a></li>
+        <li><a href="/filmbooking/lichchieu">LỊCH CHIẾU</a></li>
+        <li><a href="/filmbooking/rank-and-membership">THÀNH VIÊN & GIÁ VÉ</a></li>
+
+        <li th:if="${customer == null}">
+            <a class="dropdown-item" href="/filmbooking/login">ĐĂNG NHẬP</a>
+        </li>
+        <li th:if="${customer == null}">
+            <a class="dropdown-item" href="/filmbooking/dangky">ĐĂNG KÝ</a>
+        </li>
+        <li class="dropdown" style="cursor: pointer;color:#FFFFFF;margin-top: 20px; " th:if="${customer != null}">
+            <div class="position">
+                <div class="badge red">[[${soldTicketsCountBill}]]</div>
+                <i class="fas fa-stream"></i>
+                Xin chào, [[${customer.name}]]
+            </div>
+
+            <div class="dropdown-content">
+                <a  href="/filmbooking/thongtincanhan">👨‍ Thông tin</a>
+<!--                <a href="#hanhchinhdienanh">💹 Lịch sử</a>-->
+                <a  href="/filmbooking/logout"> <i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>

@@ -1,0 +1,98 @@
+.form_add_room button {
+    margin: 30px 0px 30px 30px;
+    padding: 10px 40px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.table_room {
+    height: 250px;
+    overflow-y: scroll;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.room-html {
+    margin: 40px 40px 0px 340px;
+}
+
+.form_add_cinema button {
+    margin: 30px 0px 30px 60px;
+    padding: 10px 40px 10px 40px;
+}
+
+.text_cimena {
+    margin: 0px 0px 40px 0px;
+}
+
+.search_customer {
+    background-color: #ebeeee;
+    height: 50px;
+    width: 600px;
+    margin: 0px 0px 30px 537px;
+    border-radius: 30px;
+}
+
+.search_cinema input {
+    outline: none;
+    background: transparent;
+    width: 500px;
+    margin: 10px 25px 0px 15px;
+    font-size: 20px;
+}
+
+.rated-html {
+    margin: 40px 40px 0px 340px;
+}
+
+.form_update_room {
+    background-color: #f2f6fb;
+    border-radius: 30px;
+    margin: 70px 0px 70px 0px;
+    padding: 20px 0px 30px 0px;
+    transition: all 0.3s ease;
+}
+
+.form_update_room:hover {
+    transform: scale(1.04);
+    box-shadow: 0px 5px 10px 10px #d2d2d2;
+}
+
+.form_update_room form {
+    margin: 0px 0px 0px 20px;
+}
+
+.form_update_room form select {
+    width: 690px;
+    margin: 10px 0px 0px 0px;
+}
+
+.form_update_room form button {
+    margin: 20px 0px 0px 10px;
+    padding: 10px 40px;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.room_add_all {
+    background-color: #f2f6fb;
+    border-radius: 30px;
+    margin: 70px 0px 70px 0px;
+    padding: 20px 0px 30px 0px;
+    transition: all 0.3s ease;
+}
+
+.room_add_all:hover {
+    transform: scale(1.04);
+    box-shadow: 0px 5px 10px 10px #d2d2d2;
+}
+
+
+.letter-box {
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 10px;
+    width: 35px;
+}
+
+

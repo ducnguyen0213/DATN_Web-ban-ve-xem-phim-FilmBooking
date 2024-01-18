@@ -1,0 +1,66 @@
+section {
+    display: grid;
+    grid-template-columns: 30% auto;
+    grid-gap: 2px;
+}
+.col1 {
+    grid-row-end: span 2
+}
+.col1 img{
+    width: 300px;
+    height: 450px;
+    border-radius: 10px;
+}
+.col2 {
+    grid-row-end: span 2;
+    color: black;
+    margin-top: 30px;
+    width: 85%;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+}
+.col2 h2{
+    color: #ff7200;
+}
+
+@media screen and (max-width: 700px) {
+    .col1 {
+        grid-row-end: span 1
+    }
+
+}
+.col1 {
+    border:solid 1px rgb(255, 254, 254);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1em;
+
+}
+.col2 .khoi{
+    display: grid;
+    grid-template-columns: 30% auto;
+    margin-top: -15px;
+}
+
+.trailler{
+    width: 100%;
+    position: relative;
+    padding: 0;
+    overflow: hidden;
+    background-color: #bb7b47;
+    color: #fff;
+}
+.trailler h2{
+    margin-top: 30px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+}
+
+.video {
+    margin-top: 20px;
+    text-align: center;
+}

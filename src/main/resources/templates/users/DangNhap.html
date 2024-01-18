@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <title>ĐĂNG NHẬP FILMBOOKING</title>
+    <!-- <link rel="stylesheet" href="css/web.css"> -->
+    <link rel="stylesheet" th:href="@{/users/css/dangky.css}">
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+</head>
+
+<body>
+<!-- navbar -->
+<div th:replace="~{/layout/Header :: header}"></div>
+<br>
+<div id="login-box">
+    <div th:if="${session.ERR_LOGIN != null}" class="alert alert-danger" id="yourElementId" role="alert">
+        [[${session.ERR_LOGIN}]]
+    </div>
+    <div class="left">
+        <h1>ĐĂNG NHẬP</h1>
+        <div style="margin-top: 70px;">
+            <form action="/filmbooking/login" method="post">
+                <input type="text" name="email" placeholder="E-mail"/>
+                <input type="password" name="password" placeholder="Password"/>
+                <input type="checkbox" id="remember" name="remember"/>
+                <label for="remember">Nhớ mật khẩu</label>
+                <input type="submit" name="signup_submit" value="ĐĂNG NHẬP"/>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="right">
+        <span class="loginwith">Đăng nhập với<br/>social network</span>
+
+        <button class="social-signin facebook">Log in with facebook</button>
+        <button class="social-signin twitter">Log in with Twitter</button>
+        <button class="social-signin google">Log in with Google+</button>
+    </div>
+    <div class="or">OR</div>
+</div>
+<!--  -->
+<br>
+<div th:replace="~{/layout/Footer :: footer}"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<script th:src="@{/users/js/dangky.js}"></script>
+<script>
+    var element = document.getElementById("yourElementId");
+
+    // Đặt thời gian chờ 10 giây trước khi ẩn phần tử
+    setTimeout(function () {
+        element.style.display = "none";
+    }, 5000);
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Check if there are saved credentials in local storage
+        var savedEmail = localStorage.getItem("savedEmail");
+        var savedPassword = localStorage.getItem("savedPassword");
+
+        if (savedEmail && savedPassword) {
+            var emailInput = document.getElementsByName("email")[0];
+            var passwordInput = document.getElementsByName("password")[0];
+
+            emailInput.value = savedEmail;
+            passwordInput.value = savedPassword;
+        }
+
+        // Function to handle form submission
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent form submission
+
+            var emailInput = document.getElementsByName("email")[0];
+            var passwordInput = document.getElementsByName("password")[0];
+
+            // Check the "Remember" checkbox is checked
+            if (document.getElementById("remember").checked) {
+                // Save the credentials in local storage
+                localStorage.setItem("savedEmail", emailInput.value);
+                localStorage.setItem("savedPassword", passwordInput.value);
+            } else {
+                // Remove the saved credentials from local storage
+                localStorage.removeItem("savedEmail");
+                localStorage.removeItem("savedPassword");
+            }
+
+            // Submit the form
+            event.target.submit();
+        }
+
+        // Attach the handleSubmit function to the form's submit event
+        var form = document.getElementById("loginForm");
+        form.addEventListener("submit", handleSubmit);
+    });
+</script>
+</html>

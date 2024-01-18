@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dịch vụ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/alert.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/service.css}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+
+<body>
+<header th:replace="~{/layout/header-admin :: header}"></header>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<section class="Service-html">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+    <div th:if="${successMessage}" class="alert alert-success d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill"/>
+        </svg>
+        <div>
+            <strong>[[${successMessage}]]</strong>
+            <button style="margin-left: 920px" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger d-flex align-items-center"
+         role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill"/>
+        </svg>
+
+        <div>
+            <strong>[[${errorMessage}]]</strong>
+            <button style="margin-left: 900px" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 30px">
+        <div class="col-xl-4"><h2>QUẢN LÝ ĐỒ ĂN</h2>
+        </div>
+        <div class="col-xl-8">
+            <div class="box-Service">
+                <input type="checkbox" id="check"/>
+                <div class="search-box">
+                    <form th:action="@{/service/find-all/page/1}" class="form_search_Service" method="get">
+                        <input type="text" name="keyword" placeholder="Nhập thông tin..."/>
+                        <label for="check" class="icon" type="submit">
+                            <button type="submit" style="color: #4d4d4d; padding: 0px 15px 0px 15px; border: none"><i
+                                    class='bx bx-search-alt-2'></i></button>
+                        </label>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form th:action="@{/service/save/1}" th:object="${Service}" class="form_add_Service" method="post"
+          enctype="multipart/form-data" id="yourForm" onsubmit="validateForm(event)">
+        <input type="hidden" th:field="*{id}">
+        <div class="Service_input">
+            <div class="row g-3" style="margin-top: 20px">
+                <div class="col">
+                    <div class="input-box-Service">
+                        <label th:for="name">Tên đồ ăn</label>
+                        <input type="text" th:field="*{name}" name="name" id="name" class="form-control"/>
+                    </div>
+                    <span id="nameFvl" style="color: red; margin: 10px 0px 0px 0px"></span>
+
+                </div>
+                <div class="col">
+                    <div class="input-box-Service">
+                        <label th:for="price">Giá đồ ăn</label>
+                        <input type="number" th:field="*{price}" name="price" id="price" class="form-control"/>
+                    </div>
+                    <span id="priceFvl" style="color: red ; margin: 10px 0px 0px 0px"></span>
+
+                </div>
+            </div>
+            <div class="row g-3" style="margin-top: 40px">
+                <div class="col">
+                    <div class="input-box-Service">
+                        <label th:for="description">Mô tả</label>
+                        <input class="form-control" type="text" th:field="*{description}" name="description"
+                               id="description"/>
+                    </div>
+                    <span id="descriptionFvl" style="color: red ; margin: 40px 0px 0px 0px"></span>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col-xl-7">
+                            <div class="cbbService" style="margin: -20px 0px 0px 0px">
+                                <label>Dịch vụ</label>
+                                <select class="form-select" aria-label="Default select example" name="service">
+                                    <option selected>Mời chọn dịch vụ</option>
+                                    <th:block th:each="st : ${cbbServiceType}">
+                                        <option th:value="${st.id}">[[${st.name}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-5">
+                            <div class="imageService" style="margin: -23px 0px 0px 0px">
+                                <div class="date">
+                                    <label>Hình ảnh</label>
+                                    <input name="file" type="file" th:field="*{image}" id="image" hidden/>
+                                    <img id="img" src="" alt=""
+                                         style="border-radius: 10px; filter: drop-shadow(2px 4px 6px black);margin: -28px 0px -70px 70px"
+                                         height="100"
+                                         width="70"
+                                    >
+                                </div>
+                                <div class="img-Service" style="margin: 10px 0px 0px -20px">
+                                    <label for="image" class="btnUploadService">upload image</label>
+                                </div>
+                                <span id="imageFvl" style="color: red ; margin: 10px 0px 0px 0px"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" id="addButton" class="btn btn-outline-success"
+                onclick="return confirm('Bạn muốn thêm đồ ăn mới !')">
+            Xác nhận
+        </button>
+
+    </form>
+
+    <div class="row row-cols-1 row-cols-md-5 g-4">
+        <div class="col" th:each="Service : ${listService}">
+            <div class="card" style="padding: 0px 0px 15px 0px">
+                <img th:src="@{'http://localhost:8080/admin/assets/img/' + ${Service.image}}" class="card-img-top"
+                     alt="..." style="width: 202px; height: 200px">
+                <div class="card-body">
+                    <h6 class="card-title">Tên đồ ăn: [[${Service.name}]]</h6>
+                    <h6 class="card-title" style="color: red" id="priceService">[[${Service.price}]]</h6>
+                    <p class="card-text">Mô tả: [[${Service.description}]]</p>
+                    <p class="card-text">Phân loại: [[${Service.serviceType.name}]]</p>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <a th:href="@{'/service/delete/' + ${Service.id}}"
+                               onclick="return confirm('Bạn muốn xóa đồ ăn !')">
+                                <button type="button" class="btn btn-outline-danger">
+                                    <i class="bx bxs-trash"></i>
+                                </button>
+                            </a>
+                        </div>
+                        <div class="col-xl-6">
+                            <a>
+                                <button class="btn btn-outline-success"
+                                        data-bs-toggle="modal"
+                                        th:attr="data-bs-target='#exampleModal_' + ${Service.id}">
+                                    <i class='bx bxs-edit-alt'></i>
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="phanTrang_Service">
+        <nav aria-label="Page navigation example" style="margin: 0px 0px 0px 500px;
+    padding: 0px 0px 50px 0px;">
+            <ul class="pagination">
+                <th:block th:if="${currentPage > 1}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/service/find-all/page/' + ${currentPage - 1} + ${keyword == null ? '' : '?keyword=' + keyword}}"
+                           aria-label="Previous">
+                            &laquo;
+                        </a>
+                    </li>
+                </th:block>
+                <th:block th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/service/find-all/page/' + ${pageNumber} + ${keyword == null ? '' : '?keyword=' + keyword}}">
+                            [[${pageNumber}]]
+                        </a>
+                    </li>
+                </th:block>
+                <th:block th:if="${currentPage < totalPages}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/service/find-all/page/' + ${currentPage + 1} + ${keyword == null ? '' : '?keyword=' + keyword}}"
+                           aria-label="Next">
+                            &raquo;
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+        </nav>
+    </div>
+</section>
+<th:block th:each="Service : ${listService}">
+    <div class="modal" th:attrappend="id='exampleModal_' + ${Service.id}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết đồ ăn</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="row g-3" th:object="${promotion}" th:action="@{/service/update/{id}(id=${Service.id})}"
+                      method="post">
+                    <div style="display: none" class="col-md-6">
+                        <label class="form-label">Id</label>
+                        <input type="text" class="form-control" name="id" th:value="${Service.id}"
+                               disabled
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mã đồ ăn</label>
+                        <input type="text" class="form-control" name="code" th:value="${Service.code}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tên đồ ăn</label>
+                        <input type="text" class="form-control" name="name" th:value="${Service.name}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Giá đồ ăn</label>
+                        <input type="number" class="form-control" name="price" th:value="${Service.price}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mô tả</label>
+                        <textarea class="form-control" name="description" th:text="${Service.description}"
+                                  rows="3"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Dịch vụ</label>
+                        <select class="form-select" aria-label="Default select example" name="service">
+                            <option selected>Mời chọn dịch vụ</option>
+                            <th:block th:each="st : ${cbbServiceType}">
+                                <option th:value="${st.id}"  th:selected="${st.id eq Service.serviceType}">[[${st.name}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="date">
+                            <label>Hình ảnh</label>
+                            <input name="image" type="file" id="image1" th:if="${Service.image == null}" hidden/>
+                            <img id="img1" th:src="@{'http://localhost:8080/admin/assets/img/' + ${Service.image}}" alt=""
+                                 style="border-radius: 10px; filter: drop-shadow(2px 4px 6px black);margin: -20px 0px -70px 70px"
+                                 height="100"
+                                 width="90"
+                            >
+                        </div>
+                        <div class="img-Service" style="margin: 10px 0px 20px -20px">
+                            <label for="image1" class="btnUploadService">upload image</label>
+                        </div>
+                        <input name="image" th:value="${Service.image}" th:if="${Service.image != null}" hidden/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="submit" onclick="return confirm('Bạn muốn cập nhật đồ ăn')"
+                                class="btn btn-primary">Sửa
+                        </button>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!--<script th:src="@{/admin/js/alert.js}"></script>-->
+<script th:src="@{/admin/js/service.js}"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+<script th:inline="javascript">
+    var priceElements = document.querySelectorAll("#priceService");
+    var inputImg = document.getElementById('image');
+    var inputImg1 = document.getElementById('image1');
+    var img = document.getElementById('img');
+    var img1 = document.getElementById('img1');
+    // Loop through each element and format its content to VND
+    priceElements.forEach(function (element) {
+        var price = parseFloat(element.innerHTML);
+        var formattedPrice = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(price);
+        // Set the formatted price as the inner HTML of the element
+        element.innerHTML = formattedPrice;
+    });
+    inputImg.onchange = (e) => {
+        if (inputImg.files[0]) img.src = URL.createObjectURL(inputImg.files[0]);
+    };
+</script>
+</html>

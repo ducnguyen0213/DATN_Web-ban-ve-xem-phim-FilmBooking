@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Quản lí hóa đơn</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/bill.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}" />
+  </head>
+  <body>
+    <section class="bill-html">
+      <div class="table_bill_Service">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Tên khách hàng</th>
+              <th scope="col">Mã giao dịch</th>
+              <th scope="col">Ngày tạo</th>
+              <th scope="col">Số tiền</th>
+              <th scope="col">Trạng thái</th>
+              <th scope="col">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="billOne : ${billList}">
+              <th scope="row">[[${billOne.customer.name}]]</th>
+              <td>[[${billOne.tradingCode}]]</td>
+              <td id="ngaytao">[[${billOne.dateCreate}]]</td>
+              <td id="price">[[${billOne.totalMoney}]]</td>
+              <td
+                th:text="${billOne.status == 0 ? 'Chờ thanh toán' : (billOne.status == 1 ? 'Đã thanh toán' : 'Đã hủy')}"
+              ></td>
+              <td>
+                <a th:href="@{'/bill/detail/' + ${billOne.id}}">
+                  <button class="btn btn-outline-primary">
+                    <i class="bx bx-show-alt"></i>
+                  </button>
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination">
+          <!-- Pagination buttons will be added here dynamically using JavaScript -->
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script th:src="@{/admin/js/pagination.js}"></script>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      // Select all elements with the id "ngaytao"
+      var elements = document.querySelectorAll("#ngaytao");
+
+      // Loop through each element and update its inner HTML with the formatted date
+      elements.forEach(function (element) {
+        var myData = element.innerHTML;
+        var dateTime = new Date(myData);
+        var day = dateTime.getDate();
+        var formattedDay = String(day).padStart(2, "0");
+        var month = dateTime.getMonth() + 1;
+        var formattedMonth = String(month).padStart(2, "0");
+        var year = dateTime.getFullYear();
+        var hour = dateTime.getHours(); // Lấy giờ (0-23)
+        var formattedHour = String(hour).padStart(2, "0");
+        var minute = dateTime.getMinutes();
+        var formattedMinute = String(minute).padStart(2, "0");
+        var formattedDate =
+          formattedDay +
+          "/" +
+          formattedMonth +
+          "/" +
+          year +
+          " " +
+          formattedHour +
+          ":" +
+          formattedMinute;
+        element.innerHTML = formattedDate;
+      });
+
+      var priceElements = document.querySelectorAll("#price");
+
+      // Loop through each element and format its content to VND
+      priceElements.forEach(function (element) {
+        var price = parseFloat(element.innerHTML);
+        var formattedPrice = new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
+        }).format(price);
+        // Set the formatted price as the inner HTML of the element
+        element.innerHTML = formattedPrice;
+      });
+
+      //
+    </script>
+  </body>
+</html>

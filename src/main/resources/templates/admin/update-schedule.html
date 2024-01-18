@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chi tiết hóa đơn</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<div class="form-update-schedule">
+    <form th:action="@{/schedule/update/1}" th:object="${schedule}" method="post"
+          class="form_add_schedule">
+        <div class="seat_input">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{movie}">
+            <input type="hidden" th:field="*{room}">
+
+            <div class="row g-3">
+                <div class="col">
+                    <label>Phim</label>
+                    <span type="text" th:text="${schedule.name}" id="nameLichChieu"></span>
+                </div>
+                <div class="col">
+                    <div class="input-box">
+                        <label>Giá vé</label>
+                        <input type="text" th:field="*{price}" id="priceLichChieu"/>
+                    </div>
+                    <span id="priceLichChieuErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col">
+                    <div class="input-box">
+                        <label>Thời gian bắt đầu:</label>
+                        <input
+                                type="text"
+                                name="startTime"
+                                th:field="*{startAt}"
+                                id="startAtUpdate"
+                        />
+                    </div>
+                    <span id="startTimeErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                </div>
+                <div class="col">
+                    <div class="input-box">
+                        <label>Thời gian kết thúc:</label>
+                        <input
+                                type="text"
+                                name="endTime"
+                                id="endTimeUpdate"
+                                th:field="*{finishAt}"
+                                required="false"
+                        />
+                    </div>
+                    <span id="endTimeErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                </div>
+            </div>
+        </div>
+        <button
+                type="submit"
+                class="btn btn-outline-success"
+                onclick="updateSchedule(event)"
+        >
+            Sửa lịch chiếu
+        </button>
+    </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<!-- Nếu bạn sử dụng CDN -->
+<script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script>
+    // Sử dụng moment để chuyển đổi định dạng
+    function convertDateFormat(inputDate) {
+        var formattedDate = moment(inputDate, 'HH:mm, DD/MM/YYYY').format('YYYY-MM-DDTHH:mm');
+        return formattedDate;
+    }
+
+    // Sử dụng hàm với một ví dụ
+    var inputDate = document.getElementById('endTimeUpdate').value;
+    var newFormatDate = convertDateFormat(inputDate);
+    console.log(newFormatDate);
+
+    let inputElement = document.getElementById('endTimeUpdate');
+    inputElement.value =newFormatDate
+
+
+    var inputDate1 = document.getElementById('startAtUpdate').value;
+    var newFormatDate1 = convertDateFormat(inputDate1);
+    console.log(newFormatDate);
+
+    let inputElement1 = document.getElementById('startAtUpdate');
+    inputElement1.value =newFormatDate1
+</script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+</html>

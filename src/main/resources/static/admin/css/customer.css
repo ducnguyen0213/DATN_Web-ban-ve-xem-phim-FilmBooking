@@ -1,0 +1,27 @@
+.search_customer{
+    background-color: aqua;
+    height: 50px;
+    width: 600px;
+    margin: 0px 0px 30px 400px;
+    border-radius: 30px;
+}
+.search_customer input{
+    outline: none;
+    background: transparent;
+    width: 500px;
+    margin: 10px 25px 0px 15px;
+    font-size: 20px;
+}
+.page_customer{
+    margin: 30px 0px 0px 600px;
+}
+.customer-html{
+    margin: 40px 40px 0px 340px;
+}
+.form_add_customer{
+    margin: 40px 0px 50px 0px;
+}
+.form_add_customer button{
+    margin: 40px 0px 0px 40px;
+    padding: 10px 30px 10px 30px;
+}

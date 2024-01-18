@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <title>Chi tiết phim</title>
+    <!-- <link rel="stylesheet" href="css/web.css"> -->
+    <link rel="stylesheet" th:href="@{/users/css/dangky.css}">
+    <link rel="stylesheet" th:href="@{/users/css/chitietphim.css}">
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+</head>
+
+<body>
+<!-- navbar -->
+<div th:replace="~{/layout/Header :: header}"></div>
+<br>
+<div style="margin-bottom: -20px; margin-top: 30px">
+    <form action="#"
+          th:object="${movie}"
+          method="get">
+        <section>
+
+            <div class="col1"><img src="" th:src="@{'http://localhost:8080/admin/assets/img/' + *{image}}" alt=""></div>
+            <div class="col2">
+                <!--                <input style="border: #ffffff" type="text" th:field="*{name}" id="name" placeholder="Name">-->
+                <h2 th:utext="*{name}"></h2><br>
+                <p th:utext="*{description}"></p> <br>
+                <div class="khoi"><b>ĐẠO DIỄN:</b>
+                    <th:block th:each="directors, iterStat : ${movie.directors}">
+                        <span th:text="${directors.name}"></span>
+                        <span th:if="${!iterStat.last}"></span>
+                    </th:block>
+                </div>
+                <div class="khoi"><b>DIỄN VIÊN:</b>
+                    <th:block th:each="performer, iterStat : ${movie.performers}">
+                        <span th:text="${performer.name}"></span>
+                        <span th:if="${!iterStat.last}"></span>
+                    </th:block>
+                </div>
+                <div class="khoi"><b>THỂ LOẠI:</b>
+                    <th:block th:each="type, iterStat : ${movie.movieTypes}">
+                        <span th:text="${type.name}"></span>
+                        <span th:if="${!iterStat.last}"> </span>
+                    </th:block>
+                </div>
+                <div class="khoi"><b>THỜI LƯỢNG (phút): </b>
+                    <p th:utext="*{movieDuration}"></p></div>
+                <div class="khoi"><b>NGÔN NGỮ:</b>
+                    <th:block th:each="languages, iterStat : ${movie.languages}">
+                        <span th:text="${languages.name}"></span>
+                        <span th:if="${!iterStat.last}"> </span>
+                    </th:block>
+                </div>
+                <div class="khoi"><b>NGÀY KHỞI CHIẾU:</b>
+                    <p id="ngaytao" th:utext="*{premiereDate}" value="dd/MM/yyyy"></p></div>
+            </div>
+        </section>
+        <div class="trailler">
+            <h2>TRAILLER</h2>
+            <hr style="margin-left: 700px;  margin-right: 700px; height: 3px; background-color: rgb(140, 140, 236);">
+            <div class="embed-responsive embed-responsive-16by9 video">
+                <iframe width="800" height="515" th:src="*{trailer}"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--  -->
+
+<div th:replace="~{/layout/Footer :: footer}"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<script>
+    var elements = document.querySelectorAll("#ngaytao");
+
+    // Loop through each element and update its inner HTML with the formatted date
+    elements.forEach(function (element) {
+        var myData = element.innerHTML;
+        var dateTime = new Date(myData);
+        var day = dateTime.getDate();
+        var formattedDay = String(day).padStart(2, '0');
+        var month = dateTime.getMonth() + 1;
+        var formattedMonth = String(month).padStart(2, '0');
+        var year = dateTime.getFullYear();
+        var formattedDate = formattedDay + "/" + formattedMonth + "/" + year;
+        element.innerHTML = formattedDate;
+    });
+</script>
+</html>

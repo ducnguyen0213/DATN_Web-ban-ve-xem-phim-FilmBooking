@@ -1,0 +1,68 @@
+@charset "utf-8";
+/* CSS Document */
+html, body {width: 100%;height: 100%;}
+html , body , h1 , h2 , h3 , h4 , h5 , p , header, nav, article, section, aside, figure, figcaption, footer {margin:0px;padding:0px;}
+header, article, section, aside, figure, figcaption, footer {display:block} 
+
+/* body {
+  background: #fdf3e7;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;  
+} */
+
+/* header {
+  background: #3B3738;
+  color: #fdf3e7;
+  padding: 20px;
+  text-align: center;
+} */
+
+/*
+////////////
+//Team Page Popup
+////////////
+*/
+
+section.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 998;
+}
+section.modalWindow {
+    display: none;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    z-index: 999 !important;
+    width: 600px;
+    min-height: 200px;
+    margin-left: -300px;
+    background: #FFF;
+    cursor: default;
+}
+section.modal.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 997;
+    cursor: pointer;
+}
+section.modalWindow section.modalWrapper {
+    margin: 30px;
+    border: 1px solid #DADADA;
+    padding: 15px;
+    text-align: left;
+    line-height: 20px !important;
+  height: 300px;
+}
+.closeBtn {
+    position: absolute;
+    right: 10px;
+    top: 6px;
+    cursor: pointer;
+}

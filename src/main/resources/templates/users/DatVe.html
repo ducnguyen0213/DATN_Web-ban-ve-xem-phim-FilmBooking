@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt vé</title>
+    <link rel="stylesheet" th:href="@{/users/css/datve.css}">
+    <link rel="stylesheet" th:href="@{/users/css/doan.css}">
+
+    <link rel="icon" th:href="@{/users/img//logo.png}" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+</head>
+
+<body>
+<!-- navbar -->
+<div th:replace="~{/layout/Header :: header}"></div>
+<li th:if="${customer != null}">
+    <br>
+    <div class="error_container" style=" color: red;position: sticky; top: 0;z-index: 10;display: none;" id="modalView">
+        <div class="error_block">
+            <div class="error_imager">
+                <img src="https://img.icons8.com/external-flaticons-flat-flat-icons/64/000000/external-error-security-flaticons-flat-flat-icons.png"/>
+
+            </div>
+            <div class="error_message">
+                <p class="error_head">Thông báo</p>
+                <p>Khách hàng chưa chọn chỗ ngồi ! </p>
+            </div>
+            <div class="error_undo">
+                <button type="submit" id="butt1">X</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div th:if="${Message}" class="alert error">
+        <input type="checkbox" id="alert1"/>
+        <label class="close" title="close" for="alert1">
+            x
+        </label>
+        <p class="inner">
+            <strong> [[${Message}]]!</strong>
+        </p>
+    </div>
+    <div id="frame">
+        <section class="split_frame">
+            <!--        đặt vé-->
+            <div id="div1" class="split_frame_1">
+                <div class="movie-container">
+                    <label>Phim:</label>
+                    <th:block th:each="schdeule : ${listSchedule}">
+                <span id="movie">
+                      [[${schdeule.movie.name}]]
+                    </span>
+                    </th:block>
+                </div>
+
+
+                <ul class="showcase">
+                    <li>
+                        <div class="seat"></div>
+                        <small>Chưa chọn</small>
+                    </li>
+                    <li>
+                        <div class="seat" style="background-color: #31d7a9"></div>
+                        <small> Đang chọn</small>
+                    </li>
+                    <li>
+                        <div class="seat " style="background-color: #fff"></div>
+                        <small>Đã Chọn</small>
+                    </li>
+                    <li>
+                        <div class="seat " style="background-color: #e00000"></div>
+                        <small>Đang bảo trì</small>
+                    </li>
+                </ul>
+                <ul class="showcase" style="margin-left: -5px">
+                    <li>
+                        <div class="seat"></div>
+                        <small>Ghế đơn</small>
+                    </li>
+                    <li>
+                        <div class="seat" style="width: 60px"></div>
+                        <small> Ghế đôi</small>
+                    </li>
+                </ul>
+
+                <div class="container">
+                    <div class="movie-screen">
+                        <img th:src='@{/users/img/screen-thumb.png}' alt='screen'/>
+                        <!--                    <img th:src="@{/admin/img/screen-thumb.png}" alt="">-->
+                    </div>
+
+                    <div class="row-container">
+
+                        <!-- Iterate over the grouped seats in the Thymeleaf template -->
+                        <div th:each="entry : ${groupedSeats}">
+                            <!--                            <h2 th:text="'Seats starting with ' + ${entry.key}"></h2>-->
+                            <div class="row">
+                                <div th:each="seat : ${entry.value}" class="seat" th:onclick="hienGiaMoi(this)"
+                                     data-selected="false" th:value="${seat.seatType.name}"
+                                     th:disabled="${seat.isOccupied == '1'}" th:attr="data-value=${seat.ticketId}"
+                                     th:classappend="${seat.isOccupied == '1'} ? 'occupied' : ''"
+                                     th:class="${seat.status == 1 ? 'seat  black' : (seat.status == 0 ? (seat.seatType.name == 'Ghế đôi' ? 'seat seattow' : 'seat') : 'seat red')}">
+                                    [[${seat.code}]]
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <hr style="margin-top: 50px; opacity: 0.7; max-width: 100%">
+
+                        <div class="text-wrapper">
+                            <div id="seatOne" style="display: flex">
+                                <p class="text" id="priceDon"></p>
+                                <p class="text" id="count" style="margin-left: 260px;margin-top: -35px;;"></p>
+                            </div>
+                            <div id="seatTow" style="display: flex;margin-top: -15px;">
+                                <p class="text" id="priceDoi"></p>
+                                <p class="text" id="countSeatTow" style="margin-left: 265px;margin-top: -33px "></p>
+                            </div>
+
+                            <p class="text" id="total" style=" margin-left: -6px; margin-top: -17px;"></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--        chọn đồ ăn -->
+            <div id="div2" style="display: none;" class="split_frame_1">
+                <div class="movie-container">
+                    <label>Phim:</label>
+                    <th:block th:each="schdeule : ${listSchedule}">
+                <span id="movie1">
+                      [[${schdeule.movie.name}]]
+                    </span>
+                    </th:block>
+                </div>
+                <hr style="opacity: 0.4; width: 900px;">
+                <div class="tt">
+                    <h3><i class='fas fa-user-tag'></i> THÔNG TIN THANH TOÁN</h3>
+                </div>
+                <div class="tt-1">
+                    <div class="tt-name">
+                        <b> Họ Tên: </b>
+                        <br>
+                        <br>
+                        <p>[[${customer.name}]]</p>
+                    </div>
+                    <div class="tt-name">
+                        <b> Số điện thoại: </b>
+                        <br>
+                        <br>
+                        <p>[[${customer.phoneNumber}]]</p>
+                    </div>
+                    <div class="tt-name">
+                        <b> Email: </b>
+                        <br>
+                        <br>
+                        <p>[[${customer.email}]]</p>
+                    </div>
+                </div>
+                <div class="tt-2">
+                    <b> Ghế : </b>
+                    <p id="price_quantity"></p>
+
+                </div>
+                <hr style="opacity: 0.4; width: 900px;">
+                <div class="combo">
+                    <h3><img th:src="@{/users/img/combo.png}" width="30px" height="35px" alt=""> ĐỒ ĂN </h3>
+                </div>
+                <div class="input-box">
+                    <input style="border-color: #0abfbc" type="text" id="searchInput" onkeyup="searchList()"
+                           placeholder="Search.."/>
+                    <span class="search"><i class="uil uil-search search-icon"></i></span>
+                    <i class="uil uil-times close-icon"></i>
+                </div>
+
+                <div class="combo_tt">
+                    <b>Hình ảnh </b>
+                    <b>Tên Combo </b>
+                    <b>Mô tả</b>
+                    <b> Chọn số lượng </b>
+                </div>
+                <hr style="opacity: 0.6; width: 900px;">
+
+                <div id="wrapper">
+                    <div class="scrollbar" id="style-default">
+                        <div class="force-overflow">
+                            <th:block th:each="Service : ${listService}">
+                                <div class="combo_tt">
+                                    <img th:src="'http://localhost:8080/admin/assets/img/'+${Service.image}" alt=""
+                                         width="70px" height="70px">
+                                    <b style="margin-left: -110px" id="nameService"
+                                       th:value="${Service.id}">[[${Service.name}]] </b>
+                                    <p style="margin-left: -80px" class="mot">[[${Service.description}]] => Giá : <b
+                                            class="priceService">[[${Service.price}]]</b></p>
+                                    <div class="cart-quantity cart-column">
+                                        <input class="cart-quantity-input" type="number" min="0" value="0"
+                                               onchange="sumService()">
+                                        <!--                                        <button onclick="increaseValue()">+</button>-->
+                                        <!--                                        <button onclick="decreaseValue()">-</button>-->
+                                    </div>
+                                </div>
+                                <hr style="opacity: 0.6; width: 900px;">
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+
+                <hr style="opacity: 0.4; width: 900px;">
+                <!--  -->
+                <div class="tt">
+                    <h3><i class="fa-thin fa-percent"></i> ƯU ĐÃI</h3>
+                </div>
+                <details class="accordion">
+                    <summary class="accordion-header">
+                        <div class="accordion-header-content">
+                            <span class="accordion-header-content-label">Ưu đãi <i>(Nhấn vào đây để hiện thị danh sách voucher)</i></span>
+                            <h3 class="accordion-header-content-title">FilmBooking Voucher</h3>
+                        </div>
+                    </summary>
+                    <div class="accordion-content">
+                        <b>Chọn Voucher (Có thể chọn 1 Voucher)</b>
+                        <br>
+                        <br>
+                        <div class="box">
+                            <i class="fa-brands fa-searching"></i>
+                            <input type="text" id="voucherSearchInput" placeholder="Search..">
+                        </div>
+                        <br>
+                        <table class="tablee" style="margin-top: -20px">
+                            <thead>
+                            <tr>
+                                <th>Mã Voucher</th>
+                                <th>Phần trăm giảm</th>
+                                <th>Ngày hết hạn</th>
+                                <th>Acction</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="voucher : ${listVoucher}">
+                                <tr>
+                                    <td th:value="${voucher.id}">
+                                        [[${voucher.code}]]
+                                    </td>
+                                    <td class="phantramgiam">
+                                        [[${voucher.percent}]]
+                                    </td>
+                                    <td th:text="${#temporals.format(voucher.endDate, 'dd/MM/yyyy')}"></td>
+                                    <td>
+                                        <input type="checkbox" onclick="getPhanTramGiam(this)">
+                                    </td>
+                                </tr>
+                            </th:block>
+                            <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+                <br>
+                <!--  -->
+                <details class="accordion ">
+                    <summary class="accordion-header">
+                        <div class="accordion-header-content">
+                            <span class="accordion-header-content-label">Ưu đãi <i>(Nhấn vào đây để xem điểm tích
+                                    lũy)</i></span>
+                            <h3 class="accordion-header-content-title">Điểm FilmBooking</h3>
+                        </div>
+                    </summary>
+                    <div class="accordion-content">
+                        <i style="opacity: 0.6;">(Đổi điểm : 1000 điểm = 1.000 vnđ)</i>
+                        <div class="classic-2">
+                            <b>Điểm hiện có:
+                                <br>
+                                <br>
+                                <p id="poin"></p></b>
+                            <div><b>Nhập điểm:</b><br><br>
+                                <input type="number" id="inputNumber" min="0" oninput="convertToVND()">
+                            </div>
+                            <b>Số tiền được giảm <br><br>
+                                <p id="result">0đ</p>
+                                <p style="font-size: 15px" id="error"></p>
+                            </b>
+                            <button id="yourButtonId" class="cn">Đổi điểm</button>
+                        </div>
+                    </div>
+                </details>
+                <br>
+                <div class="tt">
+                    <h3><i class='fa fa-credit-card'></i> CHỌN PHƯƠNG THỨC THANH TOÁN</h3>
+                </div>
+                <div class="cartt">
+
+                    <div style="display: grid;
+                    grid-template-columns: 0.3fr 0.3fr ;">
+                        <div class="cartt_radio">
+                            <input type="radio" id="thenoidia" name="optradio" checked> <img src="img/the1.png" alt=""
+                                                                                             width="50px"
+                                                                                             height="45px"> Thẻ nội
+                            địa</label>
+                        </div>
+                        <div class="cartt_radio">
+                            <input type="radio" id="quetma" name="optradio"> <img src="img/the2.png" alt="" width="50px"
+                                                                                  height="45px"> Quét mã</label>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <i style="margin-left: 20px;">Vui lòng kiểm tra thông tin đầy đủ trước khi qua bước tiếp theo.
+                    *Vé mua rồi không hoàn trả lại dưới mọi hình thức.</i>
+                <br>
+                <hr style="opacity: 0.4; width: 900px;">
+                <br>
+                <div class="sum">
+                    <p>Tổng tiền vé :</p>
+                    <p style="margin-left: 20px;margin-bottom: 10px; color: red;" id="tongtien"></p>
+                    <p>Tổng tiền đồ ăn :</p>
+                    <p style="margin-left: 20px;margin-bottom: 10px; color: red;" id="totalPrice">0</p>
+                    <p>Tiền được giảm:</p>
+                    <p style="margin-left: 20px;margin-bottom: 10px; color: red;" id="voucher">0</p>
+                    <p>Số tiền cần thanh toán:</p>
+                    <p style="margin-left: 20px;margin-bottom: 10px; color: red;" id="thanhtien"></p>
+
+                </div>
+
+            </div>
+
+            <!--        -->
+            <div id="split_frame_2" class="split_frame_2">
+                <th:block th:each="schdeule : ${listSchedule}">
+                    <div class="block">
+                        <img th:src="'http://localhost:8080/admin/assets/img/'+${schdeule.movie.image}" alt="">
+                        <div class="block_1">
+                            <h3 id="tenphim">[[${schdeule.movie.name}]]</h3><br>
+                            <p>2D Phụ đề</p>
+                        </div>
+                    </div>
+                    <div class="infor">
+                        <p><i class='fa fa-film'></i> Thể loại </p>
+                        <th:block th:each="type, iterStat : ${schdeule.movie.movieTypes}">
+                            <span th:text="${type.name}"></span>
+                            <span th:if="${!iterStat.last}"> </span>
+                        </th:block>
+                    </div>
+                    <div class="infor">
+                        <p><i class='fa fa-history'></i> Thời lượng </p>
+                        <b>[[${schdeule.movie.movieDuration}]] phút</b>
+                    </div>
+                    <p style="opacity: 0.3;">
+                        --------------------------------------------------------------------------------</p>
+                    <div class="infor">
+                        <p><i class='fa fa-tv'></i> Rạp/Phòng chiếu </p>
+                        <b id="phong">[[${schdeule.room.name}]]</b>
+                    </div>
+                    <div class="infor">
+                        <p><i class='fas fa-calendar-alt'></i> Ngày chiếu </p>
+                        <b id="ngay">[[${schdeule.startAt}]]</b>
+                    </div>
+                    <div class="infor">
+                        <p><i class='fa fa-history'></i> Giờ chiếu </p>
+                        <b id="gio">[[${schdeule.startAt}]]</b>
+                    </div>
+
+                </th:block>
+                <div class="infor">
+                    <p><i class='fa fa-wheelchair'></i> Ghế ngồi </p>
+                    <b id="chair"></b>
+                </div>
+                <div style="display: grid;grid-template-columns: auto auto auto auto;flex-wrap: nowrap; margin-left: -30px">
+                    <button class="cn" id="showDivButton" onclick="showContinueButton()">Tiếp tục</button>
+                    <button class="cn" style="display: none" id="showDivThanhToan" onclick="showContinueThanhToan()">
+                        Tiếp tục
+                    </button>
+                    <button class="cn" id="comeBack" onclick="showBackButton()" style="display: none;">Quay lại</button>
+                </div>
+
+            </div>
+
+        </section>
+        <!--        -->
+        <div style="display: none" id="div3">
+            <div class="containerr">
+                <fieldset class="card_info">
+                    <legend>Thanh toán đơn hàng</legend>
+                    <form th:action="@{/submitOrder}" method="post">
+                        <div class="card_info_movie">
+                            <b for="orderInfo">Tên phim: </b>
+                            <p id="orderInfo"></p>
+                            <input type="hidden" name="orderInfo" value="Giao dịch được thực hiện tại Web FimlBooking">
+                            <input type="hidden" name="nameFiml" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Rạp/Phòng chiếu: </b>
+                            <p id="phong2"></p>
+                            <input type="hidden" name="roomm" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Ngày chiếu: </b>
+                            <p id="ngaychieu"></p>
+                            <input type="hidden" name="datedate" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Giờ chiếu: </b>
+                            <p id="giochieu"></p>
+                            <input type="hidden" name="timetime" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Đồ ăn: </b>
+                            <p id="doan">không có</p>
+                            <input type="hidden" name="ServiceService" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tên ghế: <p id="sove"></p></b>
+                            <p id="tenghe"></p>
+                            <input type="hidden" name="seatseat" value="">
+                            <input type="hidden" name="seatCountCount" value="">
+
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tổng tiền vé: </b>
+                            <p id="tongtienve"></p>
+                            <input type="hidden" name="priceSeatSeat" value="">
+
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tổng đồ ăn: </b>
+                            <p id="tongtiendoan">0</p>
+                            <input type="hidden" name="priceServiceService" value="">
+
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tiền được giảm: </b>
+                            <p id="tiendcgiam">0</p>
+                            <input type="hidden" name="discountcount" value="">
+                            <input type="hidden" name="point" value="">
+
+                        </div>
+                        <hr>
+                        <br>
+                        <div class="card_info_movie">
+                            <b for="amount">Thành tiền: </b>
+                            <p id="amount"></p>
+                            <input type="hidden" name="amount" value="">
+                        </div>
+                        <hr style="opacity: 0.3; width: 600px;">
+                        <br>
+
+                        <input type="hidden" id="selectedSeats" name="selectedSeats">
+                        <input type="hidden" id="priceTicket" name="priceTicket">
+                        <input type="hidden" id="selectedService" name="selectedService">
+                        <input type="hidden" id="selectedQuantity" name="selectedQuantity">
+                        <input type="hidden" id="selectedPrice" name="selectedPrice">
+                        <input type="hidden" id="selectedPromition" name="selectedPromition">
+                        <button type="submit" id="cancel" class="buttonn cancel-button">Thanh toán</button>
+                    </form>
+
+                </fieldset>
+                <button class="buttonnn cancel-button" id="comeBack2" onclick="showBackButtonComBack()">Quay lại
+                </button>
+            </div>
+        </div>
+        <!--        -->
+        <div style="display: none" id="div4">
+            <div class="containerr">
+                <fieldset class="card_info1">
+                    <legend>Thanh toán đơn hàng</legend>
+                    <form th:action="@{/filmbooking/thongtinthanhtoan}" method="post">
+                        <div class="card_info_movie">
+                            <b>Tên phim: </b>
+                            <p id="orderInfor"></p>
+                            <input type="hidden" name="orderInfor" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Rạp/Phòng chiếu: </b>
+                            <p id="phong3"></p>
+                            <input type="hidden" name="room" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Ngày chiếu: </b>
+                            <p id="ngaychieu1"></p>
+                            <input type="hidden" name="date" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Giờ chiếu: </b>
+                            <p id="giochieu1"></p>
+                            <input type="hidden" name="time" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Đồ ăn: </b>
+                            <p id="doan1">không có</p>
+                            <input type="hidden" name="Serviced" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tên ghế: <p id="sove1"></p></b>
+                            <p id="tenghe1"></p>
+                            <input type="hidden" id="nameSeat" name="seat">
+                            <input type="hidden" name="seatCount" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tổng tiền vé: </b>
+                            <p id="tongtienve1"></p>
+                            <input type="hidden" name="priceSeat" value="">
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tổng đồ ăn: </b>
+                            <p id="tongtiendoan1">0</p>
+                            <input type="hidden" name="priceService" value="">
+
+                        </div>
+                        <div class="card_info_movie">
+                            <b>Tiền được giảm: </b>
+                            <p id="tiendcgiam1">0</p>
+                            <input type="hidden" name="discount" value="">
+                            <input type="hidden" name="pointt" value="">
+
+                        </div>
+                        <hr>
+                        <br>
+                        <div class="card_info_movie">
+                            <b for="amount1">Thành tiền: </b>
+                            <p id="amount1"></p>
+                            <input type="hidden" name="amount1" value="">
+
+                        </div>
+                        <hr style="opacity: 0.3; width: 600px;">
+                        <br>
+
+                        <input type="hidden" id="selectedSeats1" name="selectedSeats1">
+                        <input type="hidden" id="priceTicket1" name="priceTicket1">
+                        <input type="hidden" id="selectedService1" name="selectedService1">
+                        <input type="hidden" id="selectedQuantity1" name="selectedQuantity1">
+                        <input type="hidden" id="selectedPrice1" name="selectedPrice1">
+                        <input type="hidden" id="selectedPromition1" name="selectedPromition1">
+                        <div style="  display: grid;grid-template-columns: auto auto auto auto;flex-wrap: nowrap; ">
+
+                            <img style="display: none" id="image" th:src="@{/users/img/maqr.png}" alt="sample66"/>
+                            <button type="submit" id="cancel1" class="buttonn1 cancel-button">Hoàn thành thanh toán
+                            </button>
+                        </div>
+                        <div id="thongtinthanhtoan">
+                            <i>Đơn hàng sẽ được xác nhận sau 15 phút khi bạn hoàn thành thanh toán.</i> <br>
+                            <i>Nếu thanh toán chưa thành công thì đơn hàng tự động hủy.</i>
+                        </div>
+                    </form>
+                    <button type="submit" id="cancel2" class="buttonn cancel-button" onclick="XuLyThanhToan()">Xử lý
+                        thanh toán
+                    </button>
+                </fieldset>
+                <button class="buttonnn cancel-button" id="comeBack3" onclick="showButtonComBack()">Quay lại
+                </button>
+            </div>
+        </div>
+        <p class="countdown"> Thời gian còn lại </p>
+        <th:block th:each="listGeneralSetting : ${listGeneralSetting}">
+            <div id="countdown"> [[${listGeneralSetting.waitingTime}]]:00</div>
+        </th:block>
+        <br>
+    </div>
+    <!---->
+    <div id="foo" class="modal">
+        <div class="modal__content">
+            <h1>CSS Only Modal</h1>
+
+            <p>
+                You can use the :target pseudo-class to create a modals with Zero JavaScript. Enjoy!
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by <a href="https://twitter.com/denicmarko" target="_blank">@denicmarko</a>
+            </div>
+
+            <a href="#" class="modal__close">&times;</a>
+        </div>
+    </div>
+    <br>
+</li>
+<li th:unless="${customer != null}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        window.location.href = '/filmbooking/login';
+        /*]]>*/
+    </script>
+</li>
+<div th:replace="~{/layout/Footer :: footer}"></div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/js/all.min.js"></script>
+<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+<script th:src="@{/users/js/datve.js}"></script>
+<script th:inline="javascript">
+
+    const button1 = document.querySelector("#butt1")
+    const container1 = document.querySelector(".error_container")
+
+    button1.addEventListener("click", () => {
+        container1.style.display = "none"
+    })
+    setTimeout(() => {
+        container1.style.display = "none";
+
+    }, 4000)
+
+
+    // lấy ra giá ghế
+    var listScheduleData = [[${listSchedule}]];
+
+
+    var price = document.getElementById("price");
+    for (var i = 0; i < listScheduleData.length; i++) {
+        var schedule = listScheduleData[i];
+        // Sử dụng dữ liệu trong JavaScript
+    }
+    var priceticket = schedule.price;
+
+    var listTicket = [[${listTicket}]];
+    var uniquePrices = new Set();
+
+    for (var i = 0; i < listTicket.length; i++) {
+        var ticket = listTicket[i];
+        uniquePrices.add(ticket.price);
+    }
+
+    var uniquePricesArray = Array.from(uniquePrices);
+
+    if (uniquePricesArray.length >= 2) {
+        uniquePricesArray.sort((a, b) => a - b);
+        var priceTicket1 = uniquePricesArray[0];
+        var priceTicket2 = uniquePricesArray[1];
+
+
+    } else {
+        console.log("There are not enough unique prices in the list.");
+    }
+
+    let priceInput = document.getElementById("priceTicket");
+    priceInput.value = priceticket;
+    let priceInput1 = document.getElementById("priceTicket1");
+    priceInput1.value = priceticket;
+    let formattedPriceticket = priceTicket2.toLocaleString("vi-VN", {style: "currency", currency: "VND"});
+    let formattedPriceticket1 = priceTicket1.toLocaleString("vi-VN", {style: "currency", currency: "VND"});
+
+
+    var price_ticket = formattedPriceticket;
+    var price_ticket1 = formattedPriceticket1;
+    //
+    // console.log(price_ticket)
+    // console.log(price_ticket1)
+
+    var selectedSeatIds = [];
+    var selectedSeatIds1 = [];
+    var clickedSeats = [];
+
+    function hienGiaMoi(seat) {
+        var priceElement = document.getElementById("priceDon");
+        var priceElement1 = document.getElementById("priceDoi");
+        var seatIndex = clickedSeats.indexOf(seat);
+
+
+        if (seat.classList.contains('occupied')) {
+            alert("Ghế đã được bán!");
+            return;
+        }
+
+        if (seat.classList.contains('black')) {
+            alert("Ghế đang được bảo trì!");
+            return;
+        }
+
+        if (seatIndex === -1) {
+            clickedSeats.push(seat);
+            // seat.style.backgroundColor = "green";
+        } else {
+            clickedSeats.splice(seatIndex, 1);
+            // seat.style.backgroundColor = "white";
+        }
+        if (clickedSeats.length === 0) {
+            if (priceElement && priceElement1) { // Check if priceElement exists
+                priceElement.innerHTML = "";
+                priceElement1.innerHTML = "";
+            }
+        } else {
+            var selectedValue = seat.getAttribute('value');
+            console.log(selectedValue)
+                console.log(price_ticket)
+            console.log(price_ticket1)
+            if (selectedValue === "Ghế đôi") {
+
+                priceElement1.innerHTML = "Giá ghế đôi: " + price_ticket + " x ";
+            } else {
+
+
+                priceElement.innerHTML = "Giá ghế đơn: " + price_ticket1;
+            }
+        }
+
+        var isSelected = seat.getAttribute('data-selected') === 'true';
+        var seatIdd = seat.getAttribute('data-value');
+        var selectedSeatsInput = document.getElementById('selectedSeats');
+        var selectedSeatsInputt = document.getElementById('selectedSeats1');
+        if (isSelected) {
+            // Deselect the seat
+            seat.setAttribute('data-selected', 'false');
+            // seat.classList.remove('selected');
+            var index = selectedSeatIds.indexOf(seatIdd);
+            if (index !== -1) {
+                selectedSeatIds.splice(index, 1);
+            }
+            var index = selectedSeatIds1.indexOf(seatIdd);
+            if (index !== -1) {
+                selectedSeatIds1.splice(index, 1);
+            }
+        } else {
+            // Select the seat
+            seat.setAttribute('data-selected', 'true');
+            // seat.classList.add('selected');
+            selectedSeatIds.push(seatIdd);
+            selectedSeatIds1.push(seatIdd);
+        }
+
+        if (selectedSeatsInput) { // Check if selectedSeatsInput exists
+            selectedSeatsInput.value = selectedSeatIds.join(',');
+        }
+        if (selectedSeatsInputt) { // Check if selectedSeatsInput exists
+            selectedSeatsInputt.value = selectedSeatIds1.join(',');
+        }
+
+        //
+    }
+
+
+    var priceServiced = document.getElementsByClassName("priceService");
+    for (var i = 0; i < priceServiced.length; i++) {
+        var giaTri = parseInt(priceServiced[i].innerHTML);
+        let formattedGiaTri = giaTri.toLocaleString("vi-VN", {style: "currency", currency: "VND"});
+        priceServiced[i].innerHTML = formattedGiaTri;
+
+    }
+
+    function updateSelectedCount() {
+        const count = document.getElementById("count");
+        const countSeatTow = document.getElementById("countSeatTow");
+        const total = document.getElementById("total");
+        const price_quantity = document.getElementById("price_quantity");
+        const tongtien = document.getElementById("tongtien");
+        const thanhtien = document.getElementById("thanhtien");
+        var priceElement = document.getElementById("seatOne");
+        var priceElement1 = document.getElementById("seatTow");
+
+        let price_Service = document.getElementById("totalPrice").textContent;
+        let total_priceService = price_Service.replace("₫", "").replace(".", "");
+        let price_Count = document.getElementById("voucher").textContent;
+        let total_priceCount = price_Count.replace("₫", "").replace(".", "").replace("-", "");
+
+        const seats = document.querySelectorAll(".container .seat:not(.seattow)");
+        const selectedSeats = Array.from(seats).filter(seat => seat.getAttribute("data-selected") === "true");
+        const selectedSeatsCount = selectedSeats.length;
+
+        const seatstow = document.querySelectorAll(".container .seat.seattow");
+        const selectedSeatsTow = Array.from(seatstow).filter(seat => seat.getAttribute("data-selected") === "true");
+
+        const selectedSeatsCountTow = selectedSeatsTow.length;
+
+        if (clickedSeats.length === 0) {
+            count.textContent = "";
+            countSeatTow.textContent = "";
+            total.textContent = "";
+        } else {
+            if (selectedSeatsCount === 0) {
+                count.style.display = "";
+                priceElement.style.display = 'none';
+            } else {
+                count.textContent = " x " + selectedSeatsCount;
+                priceElement.style.display = 'block';
+            }
+
+
+            if (selectedSeatsCountTow === 0) {
+                countSeatTow.style.display = "";
+                priceElement1.style.display = 'none';
+            } else {
+                priceElement1.style.display = 'block';
+                countSeatTow.textContent = selectedSeatsCountTow;
+            }
+            document.getElementById("sove").innerHTML = "(" + selectedSeatsCount + "ghế đơn" + "," + selectedSeatsCountTow + "ghế đôi" + ")";
+            document.getElementById("sove1").innerHTML = "(" + selectedSeatsCount + "ghế đơn" + "," + selectedSeatsCountTow + "ghế đôi" + ")";
+            document.getElementsByName("seatCount")[0].value = "(" + selectedSeatsCount + "ghế đơn" + "," + selectedSeatsCountTow + "ghế đôi" + ")";
+            document.getElementsByName("seatCountCount")[0].value = "(" + selectedSeatsCount + "ghế đơn" + "," + selectedSeatsCountTow + "ghế đôi" + ")";
+
+            var seatDon = selectedSeatsCount * priceTicket1;
+            var seatDoi = selectedSeatsCountTow * priceTicket2;
+            // console.log(selectedSeatsCount);
+            // console.log(selectedSeatsCountTow);
+            // console.log(priceTicket1);
+            // console.log(priceTicket2);
+            // console.log(seatDon);
+            // console.log(seatDoi);
+            var summoney = parseFloat(seatDoi) + parseFloat(seatDon);
+            let formattedTotalPrice = summoney.toLocaleString("vi-VN", {style: "currency", currency: "VND"});
+            total.textContent = "Tổng tiền: " + formattedTotalPrice;
+            document.getElementById("tongtienve").innerHTML = formattedTotalPrice;
+            document.getElementById("tongtienve1").innerHTML = formattedTotalPrice;
+            document.getElementsByName("priceSeat")[0].value = formattedTotalPrice;
+            document.getElementsByName("priceSeatSeat")[0].value = formattedTotalPrice;
+
+            var number = selectedSeatsCount + " x " + price_ticket + " = " + formattedTotalPrice;
+
+            let Number = parseFloat(summoney);
+            let Number1 = parseFloat(total_priceService);
+            let Number2 = parseFloat(total_priceCount);
+
+
+            price_quantity.textContent = number;
+            tongtien.textContent = formattedTotalPrice;
+
+            thanhtien.textContent = (Number + Number1 - Number2).toLocaleString("vi-VN", {
+                style: "currency",
+                currency: "VND"
+            });
+            ;
+        }
+    }
+
+    var listGeneralSetting = [[${listGeneralSetting}]];
+    for (var i = 0; i < listGeneralSetting.length; i++) {
+        var GeneralSetting = listGeneralSetting[i];
+        // Sử dụng dữ liệu trong JavaScript
+    }
+    var timeSetting = GeneralSetting.waitingTime;
+    const countdownElement = document.getElementById("countdown");
+
+    // Đặt thời gian ban đầu là 9 phút (540 giây)
+    let timeInSeconds = timeSetting * 60;
+
+    // Hàm để đếm ngược
+    function countdown() {
+        const minutes = Math.floor(timeInSeconds / 60);
+        const seconds = timeInSeconds % 60;
+
+        // Định dạng thời gian thành chuỗi "MM:SS"
+        const formattedTime = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+        // Gán giá trị định dạng thời gian vào phần tử hiển thị
+        countdownElement.textContent = formattedTime;
+
+        if (timeInSeconds > 0) {
+            // Giảm thời gian đi 1 giây
+            timeInSeconds--;
+
+            // Tiếp tục đếm ngược sau 1 giây
+            setTimeout(countdown, 1000);
+        } else {
+            // Đã hết thời gian đếm ngược
+            // countdownElement.textContent = "Hết thời gian!";
+            window.location.href = "/filmbooking/trangchu";
+        }
+    }
+
+    countdown();
+
+
+    var listPoint = [[${listPoint}]];
+    console.log(listPoint)
+    var element = document.getElementById('poin');
+    element.innerHTML = listPoint;
+
+
+</script>
+<link
+        rel="stylesheet"
+        href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+/>
+</html>

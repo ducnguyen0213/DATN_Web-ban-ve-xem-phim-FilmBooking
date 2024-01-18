@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+</head>
+<body>
+<section th:if="${suatChieuMap}">
+    <th:block th:each="movieEntry : ${suatChieuMap}">
+        <div class="tab-content">
+            <div class="tab-pane active">
+                <div class="card">
+<!--                    <div class="card-image "><img th:src="${movieEntry.key.split('_')[3]}" width="250px" height="350px" alt=""></div>-->
+                    <div class="content">
+                        <h2 th:text="${movieEntry.key.split('_')[0]}"></h2>
+                        <hr style="margin-top: 10px;margin-bottom: 10px">
+                        <th:block th:each="roomEntry : ${movieEntry.value}">
+                            <h4>[[${roomEntry.key}]]</h4>
+                            <div class="bottom">
+                                <th:block th:each="time : ${roomEntry.value}">
+                                    <button class="end">
+                                        <a style="text-decoration:  none" id="gio">[[${time}]]</a></button>
+                                </th:block>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div>
+        </div></th:block>
+</section>
+</body>
+<script th:src="@{/users/js/lichchieu.js}"></script>
+</html>

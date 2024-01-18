@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trang chủ</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}" />
+    <link rel="stylesheet" th:href="@{/admin/css/thong-ke.css}" />
+  </head>
+  <body>
+    <div th:replace="~{/layout/header-admin :: header}"></div>
+    <section class="trang-chu-html">
+      <br />
+      <h2>THỐNG KÊ</h2>
+      <hr />
+      <div class="chartOne">
+        <div id="myChart" style="width: 100%; height: 400px"></div>
+      </div>
+      <div class="thong-ke-date">
+        <form action="/home">
+          <div class="flex_one">
+            <label for="startDate">Ngày bắt đầu:</label>
+            <input
+              type="date"
+              class="form-control"
+              name="startDate"
+              id="startDate"
+            />
+          </div>
+          <div class="flex_two">
+            <label for="endDate">Ngày kết thúc:</label>
+            <input
+              type="date"
+              class="form-control"
+              name="endDate"
+              id="endDate"
+            />
+          </div>
+          <button type="submit" class="btn btn-success">Thống kê</button>
+        </form>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="bieu-do-tron">
+            <div id="myChartOne" style="width: 100%; height: 400px"></div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="bieu-do-cot">
+            <div id="myChartTwo" style="width: 100%; height: 400px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <br />
+    <script>
+      var thanhXuan = [[${thanhXuan}]];
+      var myDinh = [[${myDinh}]];
+      var mipec = [[${mipec}]];
+    </script>
+    <script th:inline="javascript">
+      var revenueTicket = [[${revenueTicket}]];
+      var revenueService= [[${revenueService}]];
+
+      // Iterate over the cinemaData array in JavaScript
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script th:src="@{/admin/js/index.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script th:src="@{/admin/js/tong-quan.js}"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+      integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+      integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

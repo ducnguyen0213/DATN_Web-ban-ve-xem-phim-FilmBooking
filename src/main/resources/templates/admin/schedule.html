@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lịch chiếu phim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{@{/admin/css/drop-down.css}}">
+    <link rel="stylesheet" th:href="@{@{/admin/css/phan-trang.css}}">
+    <link rel="stylesheet" th:href="@{@{/admin/css/bill.css}}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+</head>
+<body>
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<section class="schedule-html">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+    <div th:if="${successMessage}" style="margin-left: 50px" class="alert alert-success d-flex align-items-center"
+         role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill"/>
+        </svg>
+        <div>
+            <strong>[[${successMessage}]]</strong>
+            <button style="margin-left: 850px" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <div th:if="${errorMessage}" style="margin-left: 50px" class="alert alert-danger d-flex align-items-center"
+         role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill"/>
+        </svg>
+
+        <div>
+            <strong>[[${errorMessage}]]</strong>
+            <button style="margin-left: 850px" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <div class="row" style="margin-bottom: 20px">
+        <div class="col-xl-6">
+            <h2>QUẢN LÝ SUẤT CHIẾU</h2>
+        </div>
+        <div class="col-xl-3" style="text-align: -webkit-right">
+            <a th:href="@{/schedule/chi-tiet-calendar-schedule}" onclick="overLoad()">
+                <button class="btn btn-outline-primary" style="display: flex; padding: 10px 20px 10px 20px">
+                    <i class='bx bx-calendar'></i>
+                    <span>Chi tiết lịch chiếu</span>
+                </button>
+            </a>
+        </div>
+        <div class="col-xl-3" style="text-align: -webkit-right">
+            <a th:href="@{/schedule}" onclick="overLoad()">
+                <button class="btn btn-outline-primary" style="display: flex; padding: 10px 20px 10px 20px">
+                    <i class='bx bx-calendar-check' ></i>
+                    <span>Xác nhận lịch chiếu</span>
+                </button>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <form th:action="@{/schedule/batch-save/1}" method="post" class="them_lich_hang_loat"
+              onsubmit="validateSchedule(event)">
+            <div class="row">
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="input-box">
+                                <label>Thời gian bắt đầu:</label>
+                                <input
+                                        type="datetime-local"
+                                        name="startTime"
+                                        id="startTime"
+                                />
+                            </div>
+                            <span id="startTimeErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                            <div class="input-box">
+                                <label>Thời gian kết thúc:</label>
+                                <input
+                                        type="datetime-local"
+                                        name="endTime"
+                                        id="endTime"
+                                        required="false"
+                                />
+                            </div>
+                            <span id="endTimeErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                            <div class="button_add_schedule">
+                                <div style="">
+                                    <input type="hidden" name="listMovieChecked" id="selectedMovieList1"/>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="select-btn">
+                                <span class="btn-text">Danh sách phim</span>
+                                <span class="arrow-dwn"><i class='bx bx-chevron-down'></i></span>
+                            </div>
+                            <div class="checkbox-list">
+                                <nav class="navbar bg-body-tertiary" style="margin-bottom: 10px; border-radius: 10px">
+                                    <div class="container-fluid">
+                                        <input class="form-control me-2" type="text" placeholder="Search"
+                                               id="searchInput" name="keyword">
+                                    </div>
+                                </nav>
+                                <ul class="checkbox-ul" style="padding-left: 0px">
+                                    <th:block th:each="m : ${movieId}">
+                                        <div class="form-check">
+                                            <li class="item" id="liMovie">
+                                                <img th:src="'http://localhost:8080/admin/assets/img/'+${m.image}"
+                                                     alt="..."/>
+                                                <label>
+                                                    <label class="form-check-label"></label>
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           id="danhSachPhim"
+                                                           name="checkboxItem" th:value="${m.id}"
+                                                           onchange="showSelectedMovies(this)"/>
+                                                    <span style="padding: 20px 150px 20px 20px">[[${m.name}]] ([[${m.movieDuration}]] phút)</span>
+                                                </label>
+                                                <span id="danhSachPhimErr"
+                                                      style="color: red; margin: 10px 0px 0px 0px"></span>
+                                            </li>
+                                        </div>
+                                    </th:block>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="text_phim_vua_them">
+                        <h4>Danh sách phim đã chọn</h4>
+                    </div>
+                    <div class="table_phim_vua_them">
+                        <ul id="selectedMovieList">
+                        </ul>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <div class="row">
+                        <div class="col-6">
+                            <!--                            <span id="endTimeErr" style="color: red; margin: 10px 0px 0px 0px"></span>-->
+                            <div class="button_add_schedule">
+                                <div style="">
+                                    <input type="hidden" name="listRoomChecked" id="selectedRoomList1"/>
+                                </div>
+                                <button
+                                        type="submit"
+                                        class="btn btn-outline-success"
+                                        id="addButton"
+                                >
+                                    Thêm lịch chiếu hàng loạt
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="select-btn-room">
+                                <span class="btn-text">Danh sách phòng</span>
+                                <span class="arrow-dwn"><i class='bx bx-chevron-down'></i></span>
+                            </div>
+                            <div class="checkbox-list">
+                                <nav class="navbar bg-body-tertiary" style="margin-bottom: 10px; border-radius: 10px">
+                                    <div class="container-fluid">
+                                        <input class="form-control me-2" type="text" placeholder="Search"
+                                               id="searchRoomInput" name="keyword">
+                                    </div>
+                                </nav>
+                                <ul class="checkbox-ul">
+                                    <th:block th:each="r : ${roomId}">
+                                        <div class="form-check">
+                                            <li class="itemRoom">
+                                                <label>
+                                                    <label class="form-check-label"></label>
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           id="danhSachPhong"
+                                                           name="checkboxItemRoom" th:value="${r.id}"
+                                                           onchange="showSelectedRoom(this)"/>
+                                                    <span style="padding: 20px 200px 20px 0px">[[${r.name}]]</span>
+                                                </label>
+                                                <span id="danhSachPhongErr"
+                                                      style="color: red; margin: 10px 0px 0px 0px"></span>
+                                            </li>
+                                        </div>
+                                    </th:block>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="text_phim_vua_them">
+                        <h4>Danh sách phòng đã chọn</h4>
+                    </div>
+                    <div class="table_phim_vua_them">
+                        <ul id="selectedRoomList">
+                        </ul>
+                        <br>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="update-and-loc">
+        <div class="row">
+            <div class="col-12">
+                <div class="form-loc-schedule">
+                    <form th:action="@{/schedule/find-all/page/1}" method="get">
+                        <div class="row">
+                            <div class="col-2">
+                                <select size="1" id="nameCinema" name="nameCinema" class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="">-- Chọn rạp --</option>
+                                    <option th:each="cinema : ${cinemaId}" th:value="${cinema.name}"
+                                            th:text="${cinema.name}"></option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <select size="1" id="nameMovie" name="nameMovie" class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="">-- Chọn phim --</option>
+                                    <option th:each="movie : ${movieId}" th:value="${movie.name}"
+                                            th:text="${movie.name}"></option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <select size="1" id="startAt" name="startAt" class="form-select"
+                                        aria-label="Default select example">
+                                    <option value="">-- Chọn ngày --</option>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <select class="form-select" name="status" aria-label="Default select example">
+                                    <option value="">-- Chọn trạng thái--</option>
+                                    <option value="Đang chiếu" th:selected="${schedule.status == 'Đang chiếu'}">Đang
+                                        chiếu
+                                    </option>
+                                    <option value="Đã chiếu" th:selected="${schedule.status == 'Đã chiếu'}">Đã chiếu
+                                    </option>
+                                    <option value="Sắp chiếu" th:selected="${schedule.status == 'Sắp chiếu'}">Sắp
+                                        chiếu
+                                    </option>
+                                    <option value="Hủy" th:selected="${schedule.status == 'Hủy'}">Hủy</option>
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-outline-success" onclick="overLoad()">Lọc lịch
+                                    chiếu
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Mã lịch trình</th>
+                <th scope="col">Phim chiếu</th>
+                <th scope="col">Phòng chiếu</th>
+                <th scope="col">Giá vé</th>
+                <th scope="col">Giờ bắt đầu</th>
+                <th scope="col">Giờ kết thúc</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Hành động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="schedule : ${listSchedule}">
+                <td>[[${schedule.code}]]</td>
+                <td>[[${schedule.movie.name}]]</td>
+                <td>[[${schedule.room.name}]]</td>
+                <td id="price">[[${schedule.price}]]</td>
+                <td id="ngaybatdau">[[${schedule.startAt}]]</td>
+                <td id="ngayketthuc">[[${schedule.finishAt}]]</td>
+                <td>[[${schedule.status}]]</td>
+                <td>
+                    <a>
+                        <button class="btn btn-outline-success"
+                                data-bs-toggle="modal"
+                                th:attr="data-bs-target='#exampleModal_' + ${schedule.id}">
+                            <i class='bx bxs-edit-alt'></i>
+                        </button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+    <div class="phanTrang_Schedule">
+        <nav aria-label="Page navigation example" style="text-align: center">
+            <ul class="pagination">
+                <th:block th:if="${currentPage > 1}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{'/schedule/find-all/page/' + ${currentPage - 1}+ ${nameCinema
+                         == null ? '' : '?nameCinema=' + nameCinema} + ${nameMovie == null ? '' : '&nameMovie=' + nameMovie}
+                         + ${startAt == null ? '' : '&startAt=' + startAt} + ${startTime == null ? '' : '&startTime=' + startTime}
+                         + ${endTime == null ? '' : '&endTime=' + endTime}}"
+                           aria-label="Previous" onclick="overLoad()">
+                            &laquo;
+                        </a>
+                    </li>
+                </th:block>
+                <!--                <th:block th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">-->
+                <!--                    <li class="page-item">-->
+                <!--                        <a class="page-link" th:href="@{'/schedule/find-all/page/' + ${pageNumber} + ${nameCinema-->
+                <!--                         == null ? '' : '?nameCinema='+nameCinema} + ${nameMovie == null ? '' : '&nameMovie=' + nameMovie}-->
+                <!--                         + ${startAt == null ? '' : '&startAt=' + startAt} + ${startTime == null ? '' : '&startTime=' + startTime}-->
+                <!--                         + ${endTime == null ? '' : '&endTime=' + endTime}}" onclick="overLoad()" aria-current="page">-->
+                <!--                            [[${pageNumber}]]-->
+                <!--                        </a>-->
+                <!--                    </li>-->
+                <!--                </th:block>-->
+                <th:block th:if="${currentPage < totalPages}">
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{'/schedule/find-all/page/' + ${currentPage + 1}  + ${nameCinema
+                         == null ? '' : '?nameCinema=' + nameCinema} + ${nameMovie == null ? '' : '&nameMovie=' + nameMovie}
+                         + ${startAt == null ? '' : '&startAt=' + startAt} + ${startTime == null ? '' : '&startTime=' + startTime}
+                         + ${endTime == null ? '' : '&endTime=' + endTime}}"
+                           aria-label="Next" onclick="overLoad()">
+                            &raquo;
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+        </nav>
+    </div>
+</section>
+</section>
+<th:block th:each="schedule : ${listSchedule}">
+    <div class="modal" th:attrappend="id='exampleModal_' + ${schedule.id}">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height: 460px;margin-top: 100px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết suất chiếu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="row g-3" th:object="${schedule}" th:action="@{/schedule/update/{id}(id=${schedule.id})}"
+                      method="post">
+                    <div style="display: none" class="col-md-6">
+                        <label class="form-label">Id</label>
+                        <input type="text" class="form-control" id="id" name="id" th:value="${schedule.id}"
+                               disabled
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mã suất chiếu</label>
+                        <input type="text" class="form-control" id="code" name="code" th:value="${schedule.code}"
+                               disabled required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tên phim/Phòng chiếu/Rạp chiếu</label>
+                        <input type="text" class="form-control" id="name" name="name" th:value="${schedule.name}"
+                               disabled required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Giá </label>
+                        <input type="number" class="form-control" name="price" th:value="${schedule.price}"
+                               required disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Thời gian bắt đầu</label>
+                        <input type="datetime-local" class="form-control" name="startAt" th:value="${schedule.startAt}"
+                               disabled required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Thời điểm kết thúc </label>
+                        <input type="datetime-local" class="form-control" id="finishAt" name="finishAt"
+                               th:value="${schedule.finishAt}"0
+                               disabled required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Trạng thái</label>
+                        <select class="form-select" name="status" aria-label="Default select example">
+                            <option value="Đang chiếu" th:selected="${schedule.status == 'Đang chiếu'}">Đang chiếu
+                            </option>
+                            <option value="Đã chiếu" th:selected="${schedule.status == 'Đã chiếu'}">Đã chiếu</option>
+                            <option value="Sắp chiếu" th:selected="${schedule.status == 'Sắp chiếu'}">Sắp chiếu</option>
+                            <option value="Hủy" th:selected="${schedule.status == 'Hủy'}">Hủy</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-primary"
+                                onclick="return confirm('Bạn muốn cập nhật lại lịch chiếu !')">Sửa
+                        </button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script th:src="@{/admin/js/drop-down.js}"></script>
+<script th:src="@{/admin/js/schedule.js}"></script>
+<script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        let input = this.value.toLowerCase();
+        let names = document.getElementsByClassName('item');
+
+        for (let i = 0; i < names.length; i++) {
+            let name = names[i].textContent.toLowerCase();
+            if (name.includes(input)) {
+                names[i].style.display = '';
+            } else {
+                names[i].style.display = 'none';
+            }
+        }
+    });
+    document.getElementById('searchRoomInput').addEventListener('input', function () {
+        let input = this.value.toLowerCase();
+        let names = document.getElementsByClassName('itemRoom');
+
+        for (let i = 0; i < names.length; i++) {
+            let name = names[i].textContent.toLowerCase();
+            if (name.includes(input)) {
+                names[i].style.display = '';
+            } else {
+                names[i].style.display = 'none';
+            }
+        }
+    });
+    var priceElements = document.querySelectorAll("#price");
+    priceElements.forEach(function (element) {
+        var price = parseFloat(element.innerHTML);
+        var formattedPrice = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'}).format(price);
+        // Set the formatted price as the inner HTML of the element
+        element.innerHTML = formattedPrice;
+    });
+
+    var elements = document.querySelectorAll("#ngaybatdau,#ngayketthuc");
+
+    // Loop through each element and update its inner HTML with the formatted date
+    elements.forEach(function (element) {
+        var myData = element.innerHTML;
+        var dateTime = new Date(myData);
+        var day = dateTime.getDate();
+        var formattedDay = String(day).padStart(2, '0');
+        var month = dateTime.getMonth() + 1;
+        var formattedMonth = String(month).padStart(2, '0');
+        var year = dateTime.getFullYear();
+        var hour = dateTime.getHours(); // Lấy giờ (0-23)
+        var formattedHour = String(hour).padStart(2, '0');
+        var minute = dateTime.getMinutes();
+        var formattedMinute = String(minute).padStart(2, '0');
+        var formattedDate = formattedDay + "/" + formattedMonth + "/" + year + " " + formattedHour + ":" + formattedMinute;
+        element.innerHTML = formattedDate;
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script th:src="@{/admin/js/pagination.js}"></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+</html>

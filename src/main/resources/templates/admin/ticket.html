@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý vé</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<section class="rated-html">
+    <div class="loc_lich_chieu">
+        <div class="row">
+            <div class="col-6">
+                <form th:action="@{/ticket/find-all/page/1}" method="get">
+                    <div class="search_by_ticket">
+                        <div class="text-loc-ticket">
+                            <h4>Lọc vé theo suất chiếu</h4>
+                        </div>
+                        <select class="form-select" aria-label="Default select example" id="scheduleNames">
+                            <th:block th:each="s : ${scheduleNames}">
+                                <option th:value="${s}">[[${s}]]</option>
+                            </th:block>
+                        </select>
+                        <select class="form-select" aria-label="Default select example" id="scheduleDate" name="id">
+                            <th:block th:each="s : ${scheduleDate}">
+                                <option th:value="${s}">[[${s}]]</option>
+                            </th:block>
+                        </select>
+                        <select class="form-select" aria-label="Default select example" name="status">
+                            <option value="">Tất cả</option>
+                            <option value="đã bán">Đã bán</option>
+                            <option value="chưa bán">Chưa bán</option>
+                        </select>
+                        <button type="submit" class="btn btn-outline-success" onclick="overLoad()">Tìm kiếm vé</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="table_customer">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="row">Tên vé</th>
+                <th scope="col">Vị trí ghế</th>
+                <th scope="col">Thời gian</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ticket : ${listTicket}">
+                <td>[[${ticket.schedule.name}]]</td>
+                <td>[[${ticket.seat.code}]]</td>
+                <td>[[${ticket.schedule.startAt}]]</td>
+                <td>[[${ticket.status}]]</td>
+                <td>
+                    <a th:href="@{'/ticket/delete/' + ${ticket.id}}" onclick="overLoad()">
+                        <button type="button" class="btn btn-primary">
+                            <i class='bx bx-show-alt'></i>
+                        </button>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="phanTrang_Ticket">
+        <nav aria-label="Page navigation example" style="text-align: center">
+            <ul class="pagination">
+                <th:block th:if="${currentPage > 1}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/ticket/find-all/page/' + ${currentPage - 1} + ${idSchedule == null ? '' : '?id=' + idSchedule} + ${status == null ? '' : '?status=' + status}}"
+                           aria-label="Previous" onclick="overLoad()">
+                            &laquo;
+                        </a>
+                    </li>
+                </th:block>
+                <th:block th:each="pageNumber : ${#numbers.sequence(1, totalPages)}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/ticket/find-all/page/' + ${pageNumber}  + ${idSchedule == null ? '' : '?id=' + idSchedule}+ ${status == null ? '' : '?status=' + status}}"
+                           onclick="overLoad()">
+                            [[${pageNumber}]]
+                        </a>
+                    </li>
+                </th:block>
+                <th:block th:if="${currentPage < totalPages}">
+                    <li class="page-item">
+                        <a class="page-link"
+                           th:href="@{'/ticket/find-all/page/' + ${currentPage + 1}  + ${idSchedule == null ? '' : '?id=' + idSchedule}+ ${status == null ? '' : '?status=' + status}}"
+                           aria-label="Next" onclick="overLoad()">
+                            &raquo;
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+        </nav>
+    </div>
+</section>
+<script th:inline="javascript">
+    var scheduleNames = [[${scheduleNames}]];
+    var scheduleDate = [[${scheduleDate}]];
+
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('scheduleNames').addEventListener('change', function () {
+            var selectedScheduleName = this.value;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/ticket/schedule-date?schedule-name=' + selectedScheduleName, true);
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    var options = document.getElementById('scheduleDate');
+                    options.innerHTML = '';
+                    data.forEach(function (value) {
+                        var option = document.createElement('option');
+                        option.value = value.id;
+                        option.text = value.startAt;
+                        options.appendChild(option);
+                    });
+                }
+            };
+
+            xhr.send();
+        });
+    });
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+</html>

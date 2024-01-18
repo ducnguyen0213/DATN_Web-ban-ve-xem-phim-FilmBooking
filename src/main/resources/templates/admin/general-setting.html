@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cài đặt cấu hình hệ thống</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+<body>
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<section class="cinema-html">
+    <h1>Cấu hình rạp chiếu</h1>
+    <form onsubmit="validateSetting(event)" th:action="@{/general-setting/update}" method="post" th:object="${general}"  th:modelAttribute="${general}" >
+        <th:block th:each="g : ${listSetting}">
+            <div class="row">
+                <div class="col-xl-6">
+                    <label>Thời gian mở cửa:</label>
+                    <div>
+                        <input type="time" class="form-control" id="open_time" th:field="*{businessHours}">
+                    </div>
+                    <span id="open_time_err" style="color: red"></span>
+                </div>
+                <div class="col-xl-6">
+                    <label>Thời gian đóng cửa:</label>
+                    <div>
+                        <input type="time" class="form-control" id="close_time" th:field="*{closeTime}">
+                    </div>
+                    <span id="close_time_err" style="color: red"></span>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-xl-4">
+                    <label>Giá cố định:</label>
+                    <div>
+                        <input type="number" class="form-control" id="show_time" th:field="*{fixedTicketPrice}"><br>
+                    </div>
+                    <span id="show_time_err" style="color: red"></span>
+                </div>
+                <div class="col-xl-4">
+                    <label>Thời gian giao giữa các suất chiếu:</label>
+                    <div>
+                        <input type="number"  class="form-control" id="show_time_giao" th:field="*{breakTime}"><br>
+                    </div>
+                    <span id="show_time_giao_err" style="color: red"></span>
+                </div>
+                <div class="col-xl-4">
+                    <label>Thời gian thao tác đặt vé:</label>
+                    <div>
+                        <input type="number" class="form-control" id="payment_time" th:field="*{waitingTime}"><br>
+                    </div>
+                    <span id="payment_time_err" style="color: red"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-4">
+                    <label>Thời gian thay đổi giá:</label>
+                    <div>
+                        <input type="time"  class="form-control" id="price_change_time" th:field="*{timeBeginsToChange}"               >
+                    </div>
+                    <span id="price_change_time_err" style="color: red"></span>
+                </div>
+                <div class="col-xl-4">
+                    <label>Phần trăm tăng giá cuối tuần:</label>
+                    <div>
+                        <input type="number"  class="form-control" id="weekend_price_increase" th:field="*{percentWeekend}"><br>
+                    </div>
+                    <span id="weekend_price_increase_err" style="color: red"></span>
+                </div>
+                <div class="col-xl-4">
+                    <label>Phần trăm tăng giá sau 17h :</label>
+                    <div>
+                        <input type="number" class="form-control" id="weekday_price_increase" th:field="*{percentDay}"><br>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-4">
+                    <label>Thời gian chờ xác nhận hóa đơn:</label>
+                    <div>
+                        <input type="number"  class="form-control" th:field="*{confirmationWaitingTime}"><br>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <label>Phân trăm cộng điểm của tổng hóa đơn:</label>
+                    <div>
+                        <input type="number"  class="form-control" th:field="*{percentagePlusPoints}"><br>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <label>Phân trăm cộng điểm khi hóa đơn bị hủy:</label>
+                    <div>
+                        <input type="number"  class="form-control" th:field="*{pointsCompensationPercentage}"><br>
+                    </div>
+                    <span id="weekday_price_increase_err" style="color: red"></span>
+                </div>
+            </div>
+        </th:block>
+        <br>
+        <button style="margin-left: 10px" type="submit" class="btn btn-outline-success" onclick="return confirm('Bạn muốn cập nhật lại cài đặt !')">Cập nhật cài đặt</button>
+    </form>
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script th:src="@{/admin/js/setting.js}"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+</html>

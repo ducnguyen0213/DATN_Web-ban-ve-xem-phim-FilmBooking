@@ -1,0 +1,100 @@
+/*Phân trang của ticket*/
+.phanTrang_Ticket {
+  margin: 40px 0px 0px 0px;
+}
+.phanTrang_Ticket nav {
+  margin-left: 630px;
+}
+/*Phân trang movie*/
+.phanTrang_Movie {
+  margin: 40px 0px 0px 0px;
+  padding-bottom: 10px;
+  margin: 40px 0px 0px -100px;
+}
+.phanTrang_Movie nav {
+  margin-left: 630px;
+}
+/*phân trang seat*/
+.phanTrang_Seat {
+  margin: 40px 0px 0px 0px;
+}
+.phanTrang_Seat nav {
+  margin-left: 630px;
+}
+/*Phân trang Service*/
+.phanTrang_Service {
+  margin: 40px 0px 0px 0px;
+}
+.phanTrang_Service nav {
+  margin-left: 630px;
+}
+/*Phân trang customer*/
+
+.phanTrang_Customer {
+  margin: 40px 0px 0px 0px;
+}
+.phanTrang_Customer nav {
+  margin-left: 630px;
+}
+/*Phân trang rank*/
+.phanTrang_Rank {
+  margin: 40px 0px 0px 0px;
+}
+.phanTrang_Rank nav {
+  margin-left: 630px;
+}
+/*Phân trang rated*/
+.phanTrang_Rated {
+  margin: 40px 0px 0px 0px;
+}
+.phanTrang_Rated nav {
+  margin-left: 630px;
+}
+/*Phân trang Room*/
+.phanTrang_Room {
+  margin: 40px 0px 0px 0px;
+  padding-bottom: 10px;
+}
+.phanTrang_Room nav {
+  margin-left: 630px;
+}
+/*Phân trang cinema*/
+.phanTrang_Cinema {
+  margin: 40px 0px 0px 0px;
+  /*padding-bottom: 10px;*/
+}
+.phanTrang_Cinema nav {
+  margin-left: 630px;
+}
+.phanTrang_Schedule {
+  margin: 40px 0px 0px 0px;
+  padding-bottom: 10px;
+}
+.phanTrang_Schedule nav {
+  margin-left: 630px;
+}
+/*Phân trang promotion*/
+.phanTrang_Promotion {
+  margin: 40px 0px 0px 0px;
+  /*padding-bottom: 10px;*/
+}
+.phanTrang_Promotion nav {
+  margin: 0px 0px 0px 600px;
+}
+.page-link {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  background-color: #fafafa;
+  padding: 5px 10px; /* Thêm padding để tăng kích thước của nút phân trang */
+}
+
+.page-link:hover {
+  background-color: #6b8af5;
+}
+
+.page-link.active {
+  background-color: #6b8af5;
+  color: white;
+}

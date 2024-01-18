@@ -1,0 +1,33 @@
+/* .form_add_seat_type button{
+padding: 10px 50px 10px 50px;
+margin: 50px 0px 20px 550px;
+}
+.form_add_seat_type{
+    margin-left: -20px;
+}
+.input-box{
+    border-bottom: 2px solid rgb(119, 119, 119);
+    margin: 20px 50px 0px 0px;
+    position: relative;
+}
+.input-box label{
+    position: absolute;
+    transform: translateY(-50%);
+    pointer-events: none;
+    transition: .5s;
+}
+.row{
+    margin: 20px 0px 0px 0px;
+}
+.input-box input:focus~label,
+.input-box input:valid~label{
+    top: -88px;
+}
+.input-box input{
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+} */

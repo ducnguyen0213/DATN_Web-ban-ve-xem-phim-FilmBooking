@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ghế Film Bookings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <!--    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">-->
+    <!--    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">-->
+    <style>
+        /*.form-control {*/
+        /*    width: 250px;*/
+        /*    margin-left: 421px;*/
+        /*    margin-top: -37px;*/
+        /*}*/
+
+        /*.form-select {*/
+        /*    width: 300px;*/
+        /*    margin-left: 80px;*/
+        /*    margin-top: -50px;*/
+        /*}*/
+
+        /*.btn {*/
+        /*    margin-top: 50px;*/
+        /*    width: 100px;*/
+        /*    margin-left: 35px;*/
+        /*}*/
+        /*#staticBackdrop {*/
+        /*    color: #2c3e50;*/
+        /*    -webkit-font-smoothing: antialiased;*/
+        /*    -moz-osx-font-smoothing: grayscale;*/
+        /*}*/
+    </style>
+</head>
+<body>
+
+
+<div class="container" style="margin-bottom: 50px">
+    <div th:each="seat, iterStat : ${seatList}">
+        <div th:if="${iterStat.index == 0 or seat.room.name != seatList[iterStat.index - 1].room.name}">
+            <h2>[[${seat.room.name}]]</h2>
+        </div>
+    </div>
+    <ul class="showcase">
+        <li>
+            <div class="seat"></div>
+            <small>Ghế đang hoạt động</small>
+        </li>
+        <li>
+            <div class="seat " style="background-color: #e00000"></div>
+            <small>Ghế đang bảo trì</small>
+        </li>
+        <li>
+            <div class="seat " style="background-color: #706f6f"></div>
+            <small>Ghế bỏ không dùng</small>
+        </li>
+    </ul>
+    <ul class="showcase" style="margin-right: 135px">
+        <li>
+            <div class="seat"></div>
+            <small>Ghế đơn</small>
+        </li>
+        <li>
+            <div class="seattow "></div>
+            <small>Ghế ghế đôi</small>
+        </li>
+    </ul>
+    <div class="movie-screen">
+        <img th:src='@{/users/img/screen-thumb.png}' alt='screen'/>
+        <!--                    <img th:src="@{/admin/img/screen-thumb.png}" alt="">-->
+    </div>
+    <div class="row-container" style="display: contents;">
+        <div th:each="entry : ${groupedSeats}">
+            <!--                            <h2 th:text="'Seats starting with ' + ${entry.key}"></h2>-->
+            <div class="row">
+                <div th:each="seat : ${entry.value}" class="seat"
+                     th:class="${seat.status == 1 ? 'seat black ' :(seat.status == 0 ? 'seat' : 'seat bo')}"
+                     th:classappend="${seat.seatType.name == 'Ghế đôi'} ? 'seattow' : 'seat'">
+                    <button data-bs-toggle="modal"
+                            th:attr="data-bs-target='#exampleModal_' + ${seat.id}">[[${seat.code}]]
+                    </button>
+                </div>
+                <button style="    width: 40px;height: 40px;margin-top: 4px;margin-left: 5px"
+                        id="buttonSeatt" class="btn btn-outline-primary"
+                        data-bs-toggle="modal" data-bs-target="#staticBackdrop">+
+                </button>
+            </div>
+        </div>
+
+
+        <div>
+            <button style="margin-top: 50px; margin-left: 245px; width: 150px;" class="btn btn-outline-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#exampleModall">Thêm hàng ghế
+            </button>
+        </div>
+
+    </div>
+
+</div>
+<!--Thêm hàng ghế-->
+<div class="modal fade" id="exampleModall" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="height: 100%">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabell">Thêm ghế</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{/seat/saveUpdate}" method="post" onsubmit="validateFormRated(event)">
+
+                <div class="modal-body">
+                    <span id="lineSeatErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                    <div class="seat_input">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="input-box">
+                                    <label>Mời số lượng hàng ghế</label>
+                                    <input type="number" id="inputNumber" min="0" oninput="displayLettersBefore()">
+                                </div>
+
+                            </div>
+                            <div id="result"></div>
+                            <input style="display: none" type="text" name="roomId" id="roomId" value="">
+
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="modal-footer" style="border-top: none">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                    <button type="submit" id="addSeat" class="btn btn-primary">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Thêm ghế-->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="height: 415px">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Thêm ghế</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessages}">
+            </div>
+            <form th:action="@{/seat/saveUpdateSeat}" th:object="${seat}" method="post"
+                  style="margin-left: 50px" onsubmit="validateCinema(event)">
+                <div class="modal-body">
+                    <input type="hidden" th:field="*{id}"/>
+                    <input type="hidden" id="IdRoomm" th:field="*{room}" value=""/>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <label>Nhập hàng ghế</label>
+                                <!--                                <input disabled type="text" id="line" class="line"  th:field="*{line}"/>-->
+                                <input type="text" id="line" th:field="*{line}" style="pointer-events: none;"/>
+                            </div>
+                            <span id="lineErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-box">
+                                <label>Nhập số ghế</label>
+                                <input type="number" id="number" th:field="*{number}" max="100" min="0"/>
+                            </div>
+                            <span id="numbertErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="select_cinema">
+                                <label>Trạng thái</label>
+
+                                <select th:field="*{status}" class="form-select" aria-label="Default select example"
+                                        style="margin-top: 10px;width: 350px;margin-left: -5px">
+
+                                    <option value="0">Hoạt động</option>
+                                    <option value="1">Không hoạt động</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="select_cinema">
+                                <label>Thể loại ghế</label>
+                                <select th:field="*{seatType}"
+                                        class="form-select"
+                                        aria-label="Default select example"
+                                        style="margin-top: 10px;width: 350px;margin-left: -5px"
+                                >
+                                    <th:block th:each="seatType : ${seatTypeList}">
+                                        <option th:value="${seatType.id}">
+                                            [[${seatType.name}]]
+                                        </option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        <span style="color: red; margin: 10px 0px 0px -1px">[[${errorMessages}]]</span>
+                        <br>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-primary" onclick="return confirm('Bạn muốn thêm ghế !')">
+                            Thêm
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!--Update ghế-->
+<th:block th:each="seat : ${seatList}">
+    <div class="modal" th:attrappend="id='exampleModal_' + ${seat.id}">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height: 365px; margin-top: 100px">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết ghế</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="row g-3" th:object="${seat}" th:action="@{/seat/update/{id}(id=${seat.id})}" method="post">
+                    <div style="display: none" class="col-md-6">
+                        <label class="form-label">Id</label>
+                        <input type="text" class="form-control" id="id" name="ID" th:value="${seat.id}"
+                               disabled
+                               required>
+                    </div>
+
+                    <div style="display: none" class="col-md-6">
+                        <label class="form-label">Id</label>
+                        <input type="text" class="form-control" name="number" th:value="${seat.number}"
+                               disabled
+                               required>
+                    </div>
+                    <div style="display: none" class="col-md-6">
+                        <label class="form-label">Id</label>
+                        <input type="text" class="form-control" name="line" th:value="${seat.line}"
+                               disabled
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ghế</label>
+                        <input type="text" class="form-control" id="code" name="code" th:value="${seat.code}"
+                               disabled required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Phòng</label>
+                        <input type="text" class="form-control" id="room" name="room" th:value="${seat.room.name}"
+                               disabled required>
+                    </div>
+                    <div class="col-md-6" style="display: none">
+                        <label class="form-label">Phòng</label>
+                        <input type="text" class="form-control" id="idRoom" name="room"
+                               th:value="${seat.room.id}"
+                               disabled required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"> Trạng thái (Ghế có trạng thái : [[${seat.status == 0 ? 'Ghế đang hoạt
+                            động' : 'Ghế đang bảo trì'}]])</label>
+                        <select name="status" class="form-select" aria-label="Default select example">
+                            <option value="0" th:selected="${seat.status == 0}">Đang hoạt động</option>
+                            <option value="1" th:selected="${seat.status == 1}">Đang bảo trì</option>
+                            <option value="2" th:selected="${seat.status == 2}">Không dùng</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"> Thể loại ghế (Thể loại hiện tại :[[${seat.seatType.name}]])</label>
+                        <select id="seatType" name="seatType" class="form-select" aria-label="Default select example">
+                            <th:block th:each="type : ${seatTypeList}">
+                                <option th:value="${type.id}" th:text="${type.name}"
+                                        th:selected="${type.id == seat.seatType.id}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-primary"
+                                onclick="return confirm('Bạn muốn cập nhật lại ghế !')">Sửa
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</th:block>
+<script th:src="@{/admin/js/index.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/seat.js}"></script>
+<script th:src="@{/admin/js/seat-manager.js}"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script th:inline="javascript" x>
+    function convertNumberToLetters(number) {
+        if (number < 1 || number > 10) {
+            return "Số lượng không hợp lý";
+        } else {
+            let result = "";
+
+
+            let seatTypeList = [[${seatTypeList}]];
+
+            for (let i = 1; i <= number; i++) {
+
+                // result1 += String.fromCharCode(64 + i);
+                result += `<input class="letter-box" id="listLineCodes" name="listLineCodes"  style="width: 117px;height: 40px" type="text"  placeholder="Nhập tên hàng" onBlur="checkDuplicateLineForRoom()" >`;
+                result += `<select class="form-select" style="width: 300px;margin-left: 145px;margin-top: -50px;" name="listSeatTypeId" id="listSeatTypeId">`;
+
+                seatTypeList.forEach(seatType => {
+                    result += `<option value="${seatType.id}">${seatType.name}</option>`;
+                });
+
+                result += `</select> `;
+                result += `<input required type="number" class="form-control" style="  width: 250px;margin-left: 461px;margin-top: -37px;" min="0" max="20" placeholder="Số lượng ghế trên 1 hàng" name="listNumberOfSeatPerLine" id="listNumberOfSeatPerLine">`;
+
+            }
+
+            return result;
+        }
+
+    }
+
+
+    function displayLettersBefore() {
+        let inputNumber = parseInt(document.getElementById("inputNumber").value);
+        let result = convertNumberToLetters(inputNumber);
+        document.getElementById("result").innerHTML = result;
+    }
+
+    var value = document.getElementById("idRoom").value;
+
+    document.getElementById("roomId").value = value;
+    console.log(value)
+    document.getElementById("IdRoomm").value = value;
+
+    function checkDuplicateLineForRoom() {
+        var roomId = document.getElementById("idRoom").value;
+        var line = document.getElementById("listLineCodes").value;
+        var errorSpan = document.getElementById("lineSeatErr");
+        var submitButton = document.getElementById("addSeat"); // Replace "submitButton" with the actual ID of your submit button
+
+        // Client-side validation for line containing numbers
+        if (/\d/.test(line)) {
+            errorSpan.textContent = "Tên hàng không được chứa số!";
+            // submitButton.disabled = true; // Disable the submit button
+        } else {
+            errorSpan.textContent = "";
+            // submitButton.disabled = TR; // Enable the submit button
+            fetch('/seat/checkDuplicateLineForRoom?listLineCodes=' + line + "&idRoom=" + roomId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isDuplicate) {
+                        errorSpan.textContent = "";
+                        // submitButton.disabled = true; // Disable the submit button
+                    } else {
+                       errorSpan.textContent = "Hàng đã tồn tại trong phòng này!!!";
+                        // submitButton.disabled = false; // Enable the submit button
+                    }
+                })
+                .catch(error => console.error('Lỗi: ' + error));
+        }
+    }
+
+</script>
+</body>
+</html>

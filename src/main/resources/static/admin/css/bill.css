@@ -1,0 +1,311 @@
+.search_date {
+  background-color: aqua;
+  width: 600px;
+  height: 120px;
+  border-radius: 20px;
+  margin: 0px 0px 30px 0px;
+}
+.date_start {
+  margin: 30px 0px 20px 20px;
+}
+.date_start input {
+  width: 170px;
+  height: 30px;
+  border-radius: 7px;
+  margin: -40px 0px 0px 160px;
+  border: none;
+  /* background: transparent; */
+  font-size: 20px;
+}
+.date_start label {
+  margin: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.date_stop input {
+  width: 170px;
+  height: 30px;
+  border-radius: 7px;
+  margin: -33px 0px 0px 180px;
+  border: none;
+  /* background: transparent; */
+  font-size: 20px;
+}
+.date_stop label {
+  margin: 10px 0px 0px 30px;
+  font-size: 20px;
+  font-weight: bold;
+}
+.search_date button {
+  margin: -110px 0px 0px 400px;
+  padding: 5px 40px 5px 40px;
+  font-size: 20px;
+}
+.search_date button span {
+  padding-right: 10px;
+}
+.page_bill_Service {
+  margin: 30px 0px 0px 550px;
+}
+.bill-html {
+  margin: 40px 40px 0px 340px;
+}
+.input-container input[type="date"],
+.input-container input[type="text"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+/* INPUT CONTAINER  */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  height: auto;
+  min-width: 335px;
+  height: 60px;
+  padding: 5px 10px 10px 10px;
+  background: #fff;
+  border-radius: 8px;
+  filter: drop-shadow(0px 0px 3px #000);
+  -webkit-filter: drop-shadow(0px 0px 3px #000);
+  overflow: hidden;
+  cursor: pointer;
+}
+.input-container:hover,
+.input-container:focus,
+.input-container:active {
+  transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+}
+
+.input-container label {
+  position: relative;
+  width: 100%;
+  font-family: "Segoe UI";
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  line-height: 20px;
+  color: #09f;
+  margin-left: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.input-container input {
+  position: relative;
+  align-items: center;
+  width: auto;
+  height: auto;
+  font-family: "Lekton", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+  line-height: 21px;
+  text-transform: uppercase;
+  margin-left: 0px;
+}
+
+/* BUTTON CONTAINER */
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 197px;
+  height: 65px;
+  padding: 1px;
+  padding-bottom: 2px;
+  background: #09f;
+  border-radius: 8px;
+  filter: drop-shadow(0px 0px 3px #000);
+  -webkit-filter: drop-shadow(0px 0px 3px #000);
+  overflow: hidden;
+  cursor: pointer;
+}
+.button-container:hover,
+.button-container:focus {
+  background: #09f;
+  filter: drop-shadow(0px 0px 3px #09f);
+  -webkit-filter: drop-shadow(0px 0px 3px #09f);
+}
+/* -- button -- */
+.button-container .button {
+  position: relative;
+  width: 100%;
+  min-height: 63px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+  background: #fff;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+.button-container:hover .button:hover {
+  background: #000;
+  color: #fff;
+}
+.button-container:hover .button:active {
+  background: #000;
+  color: #fff;
+  background: #09f;
+  filter: drop-shadow(0px 0px 3px #09f);
+  -webkit-filter: drop-shadow(0px 0px 3px #09f);
+}
+/* -- button ok -- */
+.button-container .button.ok {
+  background: #131313;
+  color: #fff;
+}
+.button-container:hover .button.ok:hover {
+  background: #131313;
+  color: #09f;
+  text-shadow: 0px 0px 10px #09f;
+  -webkit-text-shadow: 0px 0px 10px #09f;
+}
+.button-container:hover .button.ok:active {
+  color: #fff;
+  background: #09f;
+  filter: drop-shadow(0px 0px 3px #000);
+  -webkit-filter: drop-shadow(0px 0px 3px #000);
+}
+
+/* RESERVATION BOX */
+.reservation-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  height: auto;
+  padding: 20px;
+  border-radius: 7px;
+  background-color: rgba(255, 255, 255, 1);
+  width: 378px;
+}
+.reservation-box .static {
+  position: relative;
+  display: flex;
+  align-items: center;
+  float: left;
+  width: auto;
+  margin-right: 20px;
+}
+.reservation-box .flex {
+  position: relative;
+  display: flex;
+  float: left;
+  flex-direction: table;
+  align-items: center;
+  gap: 20px;
+  width: auto;
+}
+.reservation-box .top {
+  display: flex;
+  flex-direction: table;
+}
+.reservation-box .bottom {
+  position: relative;
+  width: 100%;
+  text-align: right;
+}
+
+.reservation-box .info {
+  width: auto;
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: right;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+.reservation-box .info:hover,
+.reservation-box .info:focus,
+.reservation-box .info:active {
+  color: #000;
+  border-bottom: 2px solid #09f;
+}
+
+/* RESERVATION BOX SMALL */
+.reservation-box.small,
+.reservation-box.small .flex {
+  flex-direction: column;
+}
+.reservation-box.small .top {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.reservation-box.small .static {
+  margin-right: 0px;
+}
+.reservation-box.small .bottom {
+  text-align: center;
+}
+.reservation-box.small .button-container {
+  min-width: 217px;
+}
+
+/* ------------ Testkit ------------ */
+.test {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 66px;
+  height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.test svg {
+  rotate: 0deg;
+}
+.test svg path {
+  fill: #000;
+}
+.test:hover {
+  background: rgba(255, 255, 255, 1);
+}
+.test.small svg {
+  rotate: 90deg;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+th,
+td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+th {
+  background-color: #f2f2f2;
+}
+.pagination {
+  margin-top: 10px;
+}
+.pagination button {
+  background-color: #000000;
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}

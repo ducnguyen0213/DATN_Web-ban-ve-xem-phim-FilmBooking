@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lí khuyến mãi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/bill.css}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>-->
+    <!--    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>-->
+
+</head>
+<body>
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<section class="promotion-html">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </symbol>
+    </svg>
+    <div th:if="${successMessage}" style="margin-left: 50px" class="alert alert-success d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:">
+            <use xlink:href="#check-circle-fill"/>
+        </svg>
+        <div>
+            <strong>[[${successMessage}]]</strong>
+            <button style="margin-left: 850px" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+    <div th:if="${errorMessage}" style="margin-left: 50px" class="alert alert-danger d-flex align-items-center"
+         role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+            <use xlink:href="#exclamation-triangle-fill"/>
+        </svg>
+
+        <div>
+            <strong>[[${errorMessage}]]</strong>
+            <button style="margin-left: 850px" type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+    <h2>QUẢN LÝ KHUYẾN MÃI</h2>
+    <hr>
+    <form th:action="@{/promotion/save}" th:object="${promotion}" method="post" class="form_add_promotion" onsubmit="validatePPromotion(event)">
+        <div class="promotion_input">
+            <input type="hidden" th:field="*{id}">
+            <div class="row g-3">
+                <div class="col">
+                    <div class="input-box">
+                        <label>Mã phiếu giảm giá</label>
+                        <input type="text" id="codePromotion" th:field="*{code}"/>
+                    </div>
+                    <span id="codePromotionErr" style="color: red"></span>
+                </div>
+                <div class="col">
+                    <div class="input-box">
+                        <label>Tên phiếu giảm giá</label>
+                        <input type="text" id="namePromotion" th:field="*{name}"/>
+                    </div>
+                    <span id="namePromotionErr" style="color: red"></span>
+
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col">
+                    <div class="select-rank-pomotion">
+                        <label>Hạng áp dụng</label>
+                        <select
+                                class="form-select"
+                                aria-label="Default select example"
+                                th:field="*{rankCustomer}"
+                        >
+                            <th:block th:each="rankCustomer : ${rankCustomer}">
+                                <option
+                                        th:value="${rankCustomer.id}"
+                                >([[${rankCustomer.name}]])
+                                </option>
+                            </th:block>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="input-box">
+                        <label>Phần trăm giảm</label>
+                        <input type="number" id="percentPromotion" th:field="*{percent}"/>
+                    </div>
+                    <span id="percentPromotionErr" style="color: red"></span>
+
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col">
+                    <div class="input-box">
+                        <label>Số lượng</label>
+                        <input type="number" id="quantityPromotion" th:field="*{quantity}"/>
+                    </div>
+                    <span id="quantityPromotionErr" style="color: red"></span>
+
+                </div>
+                <div class="col">
+                    <div class="date">
+                        <div class="datePromtion">
+                            <div class="col-5">
+                                <spanl>Ngày ra mắt</spanl>
+                                <input
+                                        type="datetime-local"
+                                        id="startDatePromotion"
+                                        placeholder="mm/dd/yyyy"
+                                        th:field="*{startDate}"
+                                />
+                                <span id="startDatePromotionErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                            </div>
+                            <br>
+                            <div class="col-5" style="margin-left: 20px">
+                                <span>Ngày kết thúc</span>
+                                <input
+                                        type="datetime-local"
+                                        id="endDatePromotion"
+                                        placeholder="mm/dd/yyyy"
+                                        th:field="*{endDate}"
+                                />
+                                <span id="endDatePromotionErr" style="color: red; margin: 10px 0px 0px 0px"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col">
+                    <div class="input-box">
+                        <label>Mô tả</label>
+                        <input type="text" th:field="*{description}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-outline-success" onclick="return confirm('Bạn muốn thêm khuyến mãi !')">
+            Thêm
+        </button>
+    </form>
+
+    <div class="table_movie">
+        <div class="form_search_movie">
+            <div class="input-box-1">
+                <input type="text" id="searchInput"
+                       placeholder="Tìm kiếm khuyến mãi"/>
+                <button type="submit"><i class="bx bx-search-alt-2"></i></button>
+            </div>
+        </div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Mã giảm giá</th>
+                <th scope="col">Tên phiếu</th>
+                <th scope="col">Phần trăm giảm</th>
+                <th scope="col">Hạng áp dụng</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="promotion : ${listPromotion}">
+                <td>[[${promotion.code}]]</td>
+                <td>[[${promotion.name}]]</td>
+                <td>[[${promotion.percent}]]</td>
+                <td>[[${promotion.rankCustomer.name}]]</td>
+                <!--                <td id="ngaytao">[[${promotion.startDate}]]</td>-->
+
+                <td>[[${promotion.quantity}]]</td>
+                <td>
+                    <div th:if="${promotion.startDate.isAfter(T(java.time.LocalDateTime).now())}"> Chưa bắt đầu</div>
+
+                    <div th:if="${promotion.startDate.isBefore(T(java.time.LocalDateTime).now()) and promotion.endDate.isAfter(T(java.time.LocalDateTime).now())}">
+                        Đang diễn ra
+                    </div>
+                    <div th:if="${promotion.endDate.isBefore(T(java.time.LocalDateTime).now())}"> Đã kết
+                        thúc
+                    </div>
+                </td>
+                <td>
+                   <a th:href="@{'/promotion/delete/' + ${promotion.id}}">
+                        <button
+                                type="button"
+                                class="btn btn-outline-danger"
+                                onclick="return confirm('Bạn muốn xóa khuyến mãi này !')"
+                        >
+                            <i class="bx bxs-trash"></i>
+                        </button>
+                    </a>
+                    <a>
+                        <button
+                                class="btn btn-outline-primary"
+                                data-bs-toggle="modal"
+                                th:attr="data-bs-target='#exampleModal_' + ${promotion.id}">
+                            <i class='bx bxs-edit-alt'></i>
+                        </button>
+                    </a>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="pagination">
+            <!-- Pagination buttons will be added here dynamically using JavaScript -->
+        </div>
+    </div>
+</section>
+<br>
+<th:block th:each="promotion : ${listPromotion}">
+    <div class="modal" th:attrappend="id='exampleModal_' + ${promotion.id}">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height: 600px">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Chi tiết khuyến mãi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="row g-3" th:object="${promotion}" th:action="@{/promotion/update/{id}(id=${promotion.id})}" method="post">
+                    <div style="display: none" class="col-md-6">
+                        <label class="form-label">Id</label>
+                        <input type="text" class="form-control" id="id" name="ID" th:value="${promotion.id}"
+                               disabled
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label  class="form-label">Mã khuyến mãi</label>
+                        <input type="text" class="form-control" id="code" name="code" th:value="${promotion.code}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label  class="form-label">Tên </label>
+                        <input type="text" class="form-control" id="name" name="name" th:value="${promotion.name}"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label  class="form-label">Phần trăm khuyên mãi</label>
+                        <input type="number" class="form-control" id="percent" name="percent" th:value="${promotion.percent}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label  class="form-label">Số lượng </label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" th:value="${promotion.quantity}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label  class="form-label">Ngày bắt đầu</label>
+                        <input type="datetime-local" class="form-control" id="startDate" name="startDate" th:value="${promotion.startDate}"
+                               required>
+                    </div>
+                    <div class="col-md-6">
+                        <label  class="form-label">Ngày kết thúc</label>
+                        <input type="datetime-local" class="form-control" id="endDate" name="endDate" th:value="${promotion.endDate}"
+                               required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label  class="form-label">Mô tả</label>
+                        <textarea class="form-control"  id="description" name="description" th:text="${promotion.description}" rows="3"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            Hạng rank (Hạng áp dụng hiện tại :[[${promotion.rankCustomer.name}]])
+                        </label>
+                        <select id="rankCustomer" name="rankCustomer" class="form-select" aria-label="Default select example">
+                            <th:block th:each="rank : ${rankCustomer}">
+                                <option th:value="${rank.id}" th:text="${rank.name}" th:selected="${rank.id == promotion.rankCustomer.id}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-primary" onclick="return confirm('Bạn muốn sửa khuyến mãi này !')">Sửa</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</th:block>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script th:src="@{/admin/js/pagination.js}"></script>
+<script th:src="@{/admin/js/promotion.js}"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+<script>
+    var elements = document.querySelectorAll("#ngaytao, #ngaykt");
+
+    // Loop through each element and update its inner HTML with the formatted date
+    elements.forEach(function (element) {
+        var myData = element.innerHTML;
+        var dateTime = new Date(myData);
+        var day = dateTime.getDate();
+        var formattedDay = String(day).padStart(2, '0');
+        var month = dateTime.getMonth() + 1;
+        var formattedMonth = String(month).padStart(2, '0');
+        var year = dateTime.getFullYear();
+        var hour = dateTime.getHours(); // Lấy giờ (0-23)
+        var formattedHour = String(hour).padStart(2, '0');
+        var minute = dateTime.getMinutes();
+        var formattedMinute = String(minute).padStart(2, '0');
+        var formattedDate = formattedDay + "/" + formattedMonth + "/" + year + " " + formattedHour + ":" + formattedMinute;
+        element.innerHTML = formattedDate;
+    });
+    const searchInput = document.getElementById('searchInput');
+
+    searchInput.addEventListener('input', function () {
+        const searchText = this.value.trim().toLowerCase();
+        const discountCodes = document.querySelectorAll('.table_movie tbody tr');
+
+        discountCodes.forEach(function (code) {
+            const codeText = code.getElementsByTagName('td')[0].textContent.trim().toLowerCase();
+
+            if (codeText.includes(searchText)) {
+                code.style.display = '';
+            } else {
+                code.style.display = 'none';
+            }
+        });
+    });
+</script>
+</html>

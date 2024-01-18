@@ -1,0 +1,52 @@
+.pages{
+    margin: 20px 0px 20px 600px ;
+}
+.girdaa{
+    margin: 40px 40px 0px 340px;
+}
+.cinema-html{
+    margin: 40px 40px 0px 340px;
+}
+.trang-chu-html{
+    margin: 0px 0px 0px 300px;
+}
+.chartOne{
+    padding: 30px;
+    border-radius: 30px;
+    margin:30px 30px 0px 30px;
+    box-shadow: 0px 0px 10px 4px #d2d2d2;
+}
+.bieu-do-tron{
+    padding: 30px;
+    border-radius: 30px;
+    margin: 0px 0px 0px 15px;
+    box-shadow: 0px 0px 10px 4px #d2d2d2;
+}
+.bieu-do-cot{
+    padding: 30px;
+    border-radius: 30px;
+    margin:0px 15px 0px 0px;
+    box-shadow: 0px 0px 10px 4px #d2d2d2;
+}
+.thong-ke-date{
+    margin: 30px 30px 30px 40px;
+    /* width:400px; */
+}
+.thong-ke-date form{
+    display:flex;
+}
+.thong-ke-date form input{
+    border:1px solid darkgrey
+}
+.thong-ke-date button{
+    margin: 17px 10px;
+    padding: 0px 25px;
+}
+.thong-ke-date .flex_one{
+    width:690px;
+    margin: 0px 0px 0px 10px
+}
+.thong-ke-date .flex_two{
+    width: 690px;
+    margin: 0px 0px 0px 10px
+}

@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chi tiết lịch chiếu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/phan-trang.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/bill.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/calendar.css}">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.css"
+          integrity="sha512-IScV5kvJo+TIPbxENerxZcEpu9VrLUGh1qYWv6Z9aylhxWE4k4Fch3CHl0IYYmN+jrnWQBPlpoTVoWfSMakoKA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700&display=swap" rel="stylesheet">
+    <!--    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.css'>-->
+</head>
+<body>
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<div id="loading-overlay">
+    <div class="spinner"></div>
+</div>
+<section class="promotion-html">
+    <div th:replace="~{/layout/header-admin :: header}"></div>
+    <a th:href="@{/schedule/find-all}">
+        <div class="backPage">
+            <i class='bx bx-chevron-left'></i>
+            <span>Quay lại</span>
+        </div>
+    </a>
+    <div class="containerCl">
+        <div class="calendar">
+            <div class="header">
+                <div class="mouth"></div>
+                <div class="btns">
+                    <div class="btn today-btn">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="btn prev-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </div>
+                    <div class="btn next-btn">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="weekdays">
+                <div class="day">Chủ nhật</div>
+                <div class="day">Thứ 2</div>
+                <div class="day">Thứ 3</div>
+                <div class="day">Thứ 4</div>
+                <div class="day">Thứ 5</div>
+                <div class="day">Thứ 6</div>
+                <div class="day">Thứ 7</div>
+            </div>
+            <div th:each="p : ${list}" class="days">
+                <!-- Prev mouth days -->
+            </div>
+        </div>
+    </div>
+    <!--    <th:block th:each="p : ${list}">-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog " style="width: 1500px">
+            <div class="modal-content " style="width: 1000px">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="selectedDate"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="container-schedule">
+
+                    </div>
+                    <div class="pagination">
+                        <!-- Pagination buttons will be added here dynamically using JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--    </th:block>-->
+</section>
+<script th:inline="javascript">
+    const daysContainer = document.querySelector(".days"),
+        nextBtn = document.querySelector(".next-btn"),
+        prevBtn = document.querySelector(".prev-btn"),
+        todayBtn = document.querySelector(".today-btn"),
+        mouth = document.querySelector(".mouth")
+
+    const mouths = [
+        'Tháng 1',
+        'Tháng 2',
+        'Tháng 3',
+        'Tháng 4',
+        'Tháng 5',
+        'Tháng 6',
+        'Tháng 7',
+        'Tháng 8',
+        'Tháng 9',
+        'Tháng 10',
+        'Tháng 11',
+        'Tháng 12'
+    ];
+    const day = [
+        'Thứ 2',
+        'Thứ 3',
+        'Thứ 4 ',
+        'Thứ 5',
+        'Thứ 6',
+        'Thứ 7',
+        'Chủ nhật'
+    ]
+
+    const date = new Date();
+
+    let currentMouth = date.getMonth();
+
+    let currentYear = date.getFullYear();
+
+    function renderCalendar() {
+        date.setDate(1);
+        const firstDay = new Date(currentYear, currentMouth, 1);
+        const lastDay = new Date(currentYear, currentMouth + 1, 0);
+        const lastDayIndex = lastDay.getDay();
+        const lastDayDate = lastDay.getDate();
+        const prevLastDay = new Date(currentYear, currentMouth, 0);
+        const prevLastDayDate = prevLastDay.getDate();
+        const nectDays = 7 - lastDayIndex - 1;
+
+        mouth.innerHTML = `${mouths[currentMouth]} ${currentYear}`;
+
+        // update days
+        let days = "";
+
+        for (let x = firstDay.getDay(); x > 0; x--) {
+            days += `<div class="day prev">${prevLastDayDate - x + 1}</div>`
+        }
+
+        for (let i = 1; i <= lastDayDate; i++) {
+            if (i === new Date().getDate() &&
+                currentMouth === new Date().getMonth() &&
+                currentYear === new Date().getFullYear()
+            ) {
+                days += `<div class="day today" data-bs-toggle="modal" data-bs-target="#exampleModal">${i}</div>`;
+            } else {
+                days += `<div class="day" data-bs-target="#exampleModal" data-bs-toggle="modal">${i}</div>`;
+            }
+        }
+
+
+        // next mouth days
+        for (let j = 1; j <= nectDays; j++) {
+            days += `<div class="day next">${j}</div>`
+        }
+        hideTodayBtn();
+        daysContainer.innerHTML = days;
+    }
+
+    renderCalendar();
+
+    nextBtn.addEventListener("click", () => {
+        currentMouth++;
+        if (currentMouth > 11) {
+            currentMouth = 0;
+            currentYear++;
+        } else {
+            renderCalendar();
+        }
+    });
+    prevBtn.addEventListener("click", () => {
+        currentMouth--;
+        if (currentMouth < 0) {
+            currentMouth = 11;
+            currentYear--;
+        } else {
+            renderCalendar();
+        }
+    })
+
+    todayBtn.addEventListener("click", () => {
+        currentMouth = date.getMonth();
+        currentYear = date.getFullYear();
+        renderCalendar();
+    });
+
+    function hideTodayBtn() {
+        if (
+            currentMouth === new Date().getMonth() &&
+            currentYear === new Date().getFullYear()
+        ) {
+            todayBtn.style.display = "none";
+        } else {
+            todayBtn.style.display = "flex";
+        }
+    }
+
+    const dayElements = document.querySelectorAll('.day');
+    var itemMap = {}
+    var startTime = undefined;
+    let inputValues2 = {};
+    dayElements.forEach(day => {
+        day.addEventListener('click', () => {
+            const selectedDay = day.textContent;
+            const a = `${currentYear}-${currentMouth + 1}-${selectedDay}`;
+            const h1Element = document.getElementById('selectedDate');
+            h1Element.textContent = ' Ngày: ' + formatCustomDateH1(a);
+            var date1 = ''
+            fetch('http://localhost:8080/schedule/chi-tiet-calendar-schedule/detail?date=' + a)
+                .then(response => {
+                    console.log(response)
+                    if (!response.ok) {
+                        console.log(date1 = a)
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    itemMap = {};
+                    startTime = undefined;
+                    let scheduleModal = document.getElementById("container-schedule");
+                    scheduleModal.innerHTML = '';
+                    data.forEach(function (item, index) {
+
+                        if (index === 0) startTime = item.startAt;
+                        const newRowHTML =
+                                    `<table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" style="text-align: center">Hình ảnh</th>
+                                                <th scope="col" style="text-align: center">Phim</th>
+                                                <th scope="col" style="text-align: center">Giờ bắt đầu</th>
+                                                <th scope="col" style="text-align: center">Giờ kết thúc</th>
+                                                <th scope="col" style="text-align: center">Phòng chiếu</th>
+                                                <th scope="col" style="text-align: center">Giá vé</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <th scope="row"><img width="100" height="150"
+                                                                 src="http://localhost:8080/admin/assets/img/${item.movie.image}">
+                                            </th>
+                                            <td style="width: 200px">${item.movie.name}</td>
+                                            <td style="width: 200px; text-align: center; font-size: 20px; font-weight: bold">${getHourAndMinute(item.startAt)}</td>
+                                            <td style="width: 200px; text-align: center; font-size: 20px; font-weight: bold">${getHourAndMinute(item.finishAt)}</td>
+                                            <td style="width: 200px; font-size: 18px">${item.room.name}</td>
+                                            <td style="width: 200px; font-size: 20px; color: red">${formatCurrency(item.price)}</td>
+
+                                        </tbody>
+                                    </table>
+                                `;
+                        // convertToISOString(item.startAt);
+                        item.operatingStatus = 1;
+                        scheduleModal.innerHTML += newRowHTML;
+                    })
+
+                }).catch(error => {
+                console.log('fetch error:', error);
+            });
+        })
+    });
+
+    function formatCustomDateH1(inputString) {
+        // Chuyển đổi chuỗi thành đối tượng Date
+        let dateObject = new Date(inputString);
+
+        // Lấy thông tin từ đối tượng Date
+        let day = String(dateObject.getDate()).padStart(2, '0');
+        let month = String(dateObject.getMonth() + 1).padStart(2, '0');
+        let year = dateObject.getFullYear();
+        let hours = String(dateObject.getHours()).padStart(2, '0');
+        let minutes = String(dateObject.getMinutes()).padStart(2, '0');
+        let seconds = String(dateObject.getSeconds()).padStart(2, '0');
+        // Xây dựng chuỗi định dạng mới
+        return `${day}/${month}/${year}`;
+    }
+
+    function getHourAndMinute(dateString) {
+        const dateObject = new Date(dateString);
+        const hour = dateObject.getHours();
+        const minute = dateObject.getMinutes();
+
+        // Chuyển đổi giờ và phút thành chuỗi với định dạng hh:mm
+        const formattedTime = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+
+        return formattedTime;
+    }
+    function formatCurrency(price) {
+        // Chuyển đổi giá tiền thành chuỗi và thêm dấu phẩy phân cách hàng nghìn
+        const formattedPrice = price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+        // Thêm đơn vị tiền tệ (VND)
+        return formattedPrice + ' ' + 'vnđ';
+    }
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.9.0/sweetalert2.min.js"
+        integrity="sha512-GAaXlfJeIbLNG2LQu2v4pf8YEc7iPz+GE3LZyUmdR7d7Id5JsER9vmJVxMKw1MqmdlVh3NXxTxQVd9AS53G+4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<!--<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>-->
+<script th:src="@{/admin/js/index.js}"></script>
+<script th:src="@{/admin/js/phan-trang-schedule.js}"></script>
+<!--<script th:src="@{/admin/js/calendar.js}"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+
+</body>
+</html>

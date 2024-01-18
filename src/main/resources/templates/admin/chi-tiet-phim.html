@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chi tiết phim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+            integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+    />
+    <link
+            rel="shortcut icon"
+            type="image/png"
+            th:href="@{/admin/assets/imgLogo/logo.png}"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/index.css}">
+    <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet" th:href="@{/admin/css/movie.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/customer.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/home.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/promotion.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/room.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/schedule.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/seat-manager.css}">
+    <link rel="stylesheet" th:href="@{/admin/css/modal.css}">
+</head>
+<body>
+<div th:replace="~{/layout/header-admin :: header}"></div>
+<div class="detail_movie_all">
+    <div class="row">
+        <div class="col-5">
+            <div class="item_movie_detail">
+                <img th:src="@{'http://localhost:8080/admin/assets/img/' + ${detailMovie.image}}" alt="" width="400"
+                     height="600"/>
+            </div>
+        </div>
+        <div class="col-7">
+            <div class="text_movie_detail">
+                <h3>[[${detailMovie.name}]]</h3>
+                <p>[[${detailMovie.description}]]</p>
+                <div class="row">
+                    <div class="col-5">
+                        <div class="text_h4">
+                            <h4>ĐẠO DIỄN:</h4>
+                            <h4>DIỄN VIÊN:</h4>
+                            <h4>THỂ LOẠI:</h4>
+                            <h4>THỜI LƯỢNG PHIM:</h4>
+                            <h4>NGÔN NGỮ:</h4>
+                            <h4>NGÀY KHỞI CHIẾU:</h4>
+                            <h4>NGÀY KẾT THÚC:</h4>
+                            <h4>TRẠNG THÁI:</h4>
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="text_thong_tin">
+                            <p>
+                                 <span th:each="director : ${detailMovie.directors}">
+                                    <span th:text="${director.name}"></span>,
+                                     <!-- Add a comma or other separator between director names if needed -->
+<!--                                    <span th:if="${!#lists.last(directors)}">, </span>-->
+                                 </span>
+                            </p>
+                            <p>
+                                <span th:each="performer : ${detailMovie.performers}">
+                                    <span th:text="${performer.name}"></span>,
+                                <!-- Add a comma or other separator between director names if needed -->
+<!--                                    <span th:if="${!#lists.last(performers)}">, </span>-->
+                                 </span>
+                            </p>
+                            <p><span th:each="mt : ${detailMovie.movieTypes}">
+                                    <span th:text="${mt.name}"></span>,
+                                <!-- Add a comma or other separator between director names if needed -->
+<!--                                    <span th:if="${!#lists.last(directors)}">, </span>-->
+                                 </span>
+                            </p>
+                            <p>[[${detailMovie.movieDuration}]] phút</p>
+                            <p>
+                                <span th:each="lg : ${detailMovie.languages}">
+                                    <span th:text="${lg.name}"></span>,
+                                    <!-- Add a comma or other separator between director names if needed -->
+                                 </span>
+                            </p>
+                            <p th:text="${#dates.format(detailMovie.premiereDate, 'dd/MM/yyyy')}"></p>
+                            <p th:text="${#dates.format(detailMovie.endDate, 'dd/MM/yyyy')}"></p>
+                            <p>[[${detailMovie.status}]]</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="hr-movie">
+    <div class="trailer_detail_movie">
+        <iframe width="100%" height="600" th:src="${detailMovie.trailer}"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<script th:src="@{/admin/js/index.js}"></script>
+<script
+        type="module"
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+></script>
+<script
+        nomodule
+        src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+</html>
