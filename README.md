@@ -36,7 +36,7 @@ Dự án FilmBooking cung cấp một số chức năng chính như sau:
   
 ## Các công nghệ sử dụng
 
-- **Ngôn ngữ:** Java Spring Boot
+- **Ngôn ngữ:** Java Spring Boot - jdk 17
 - **Cơ sở dữ liệu:** MySQL - MySQL Workbench
 - **IDEA:** IntelliJ IDEA Ultimate - Version: 2020.3.4 - Windows x64 (exe)
 - **Tool:** Swagger
