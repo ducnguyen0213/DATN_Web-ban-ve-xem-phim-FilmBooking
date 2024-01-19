@@ -107,8 +107,8 @@ public class BillAdminController {
         try {
             if (service.update(id, bill) instanceof Bill) {
                 String email = bill.getCustomer().getEmail();
-                final String username = "toanhd290803@gmail.com";
-                final String password = "tjfv pjmw qsca jkkr"; // Replace <your-password> with your actual password
+                final String username = "ducnguyen1302cat@gmail.com";
+                final String password = "vtzo bcyi iefk qtvj"; // Replace <your-password> with your actual password
 
                 Properties props = new Properties();
                 props.put("mail.smtp.auth", "true");
@@ -124,7 +124,7 @@ public class BillAdminController {
 
                 try {
                     Message message = new MimeMessage(session);
-                    message.setFrom(new InternetAddress("toanhd290803@gmail.com"));
+                    message.setFrom(new InternetAddress("ducnguyen1302cat@gmail.com"));
 
                     // Populate multiple recipients
                     String[] recipients = {email}; // Replace with actual recipient emails

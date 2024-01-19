@@ -23,10 +23,10 @@ public interface MovieRepository extends JpaRepository<Movie, String> {
     List<Movie> showPhimSapChieuAndDangChieu();
 
     String movie = ("SELECT DISTINCT  m.*\n" +
-            "            from projectLinh.cinema c\n" +
-            "            join projectLinh.room r on r.cinema_id = c.id\n" +
-            "            join projectLinh.schedule s on s.room_id = r.id\n" +
-            "           join projectLinh.movie m on m.id = s.movie_id\n" +
+            "            from datn.cinema c\n" +
+            "            join datn.room r on r.cinema_id = c.id\n" +
+            "            join datn.schedule s on s.room_id = r.id\n" +
+            "           join datn.movie m on m.id = s.movie_id\n" +
             "            where m.id=:movieId\n" +
             "            and c.id =:cinemaId");
 

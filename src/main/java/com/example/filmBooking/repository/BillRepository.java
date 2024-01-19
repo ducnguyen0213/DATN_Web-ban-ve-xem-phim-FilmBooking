@@ -16,10 +16,10 @@ import java.math.BigDecimal;
 
 
 public interface BillRepository extends JpaRepository<Bill, String> {
-    @Query(value = "SELECT * FROM projectLinh.bill b where b.status = 0;", nativeQuery = true)
+    @Query(value = "SELECT * FROM datn.bill b where b.status = 0;", nativeQuery = true)
     Page<Bill> billStatusZero(Pageable pageable);
 
-    @Query(value = "SELECT * FROM projectLinh.bill b where b.status = 1;", nativeQuery = true)
+    @Query(value = "SELECT * FROM datn.bill b where b.status = 1;", nativeQuery = true)
     Page<Bill> billStatusOne(Pageable pageable);
 
     //    Page<Bill> findByDateCreateBetweenAndDateCreate
@@ -75,27 +75,27 @@ public interface BillRepository extends JpaRepository<Bill, String> {
             "    r.name,\n" +
             "    b.status,b.total_money, b.point,b.use_points\n" +
             "FROM\n" +
-            "    projectLinh.bill b\n" +
+            "    datn.bill b\n" +
             "        JOIN\n" +
-            "    projectLinh.customer cu ON cu.id = b.customer_id\n" +
+            "    datn.customer cu ON cu.id = b.customer_id\n" +
             "        JOIN\n" +
-            "    projectLinh.bill_ticket bt ON b.id = bt.bill_id\n" +
+            "    datn.bill_ticket bt ON b.id = bt.bill_id\n" +
             "        JOIN\n" +
-            "    projectLinh.ticket t ON bt.ticket_id = t.id\n" +
+            "    datn.ticket t ON bt.ticket_id = t.id\n" +
             "        JOIN\n" +
-            "    projectLinh.seat se ON se.id = t.seat_id\n" +
+            "    datn.seat se ON se.id = t.seat_id\n" +
             "        JOIN\n" +
-            "    projectLinh.schedule s ON t.schedule_id = s.id\n" +
+            "    datn.schedule s ON t.schedule_id = s.id\n" +
             "        JOIN\n" +
-            "    projectLinh.movie m ON s.movie_id = m.id\n" +
+            "    datn.movie m ON s.movie_id = m.id\n" +
             "        JOIN\n" +
-            "    projectLinh.room r ON s.room_id = r.id\n" +
+            "    datn.room r ON s.room_id = r.id\n" +
             "        JOIN\n" +
-            "    projectLinh.cinema c ON r.cinema_id = c.id\n" +
+            "    datn.cinema c ON r.cinema_id = c.id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.bill_service bf ON b.id = bf.bill_id\n" +
+            "    datn.bill_service bf ON b.id = bf.bill_id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.service f ON bf.service_id = f.id\n" +
+            "    datn.service f ON bf.service_id = f.id\n" +
             "WHERE\n" +
             "    cu.id = :customerId\n" +
             "        AND b.status = 1\n" +
@@ -122,27 +122,27 @@ public interface BillRepository extends JpaRepository<Bill, String> {
             "    r.name,\n" +
             "    b.status,b.total_money, b.point,b.use_points\n" +
             "FROM\n" +
-            "    projectLinh.bill b\n" +
+            "    datn.bill b\n" +
             "        JOIN\n" +
-            "    projectLinh.customer cu ON cu.id = b.customer_id\n" +
+            "    datn.customer cu ON cu.id = b.customer_id\n" +
             "        JOIN\n" +
-            "    projectLinh.bill_ticket bt ON b.id = bt.bill_id\n" +
+            "    datn.bill_ticket bt ON b.id = bt.bill_id\n" +
             "        JOIN\n" +
-            "    projectLinh.ticket t ON bt.ticket_id = t.id\n" +
+            "    datn.ticket t ON bt.ticket_id = t.id\n" +
             "        JOIN\n" +
-            "    projectLinh.seat se ON se.id = t.seat_id\n" +
+            "    datn.seat se ON se.id = t.seat_id\n" +
             "        JOIN\n" +
-            "    projectLinh.schedule s ON t.schedule_id = s.id\n" +
+            "    datn.schedule s ON t.schedule_id = s.id\n" +
             "        JOIN\n" +
-            "    projectLinh.movie m ON s.movie_id = m.id\n" +
+            "    datn.movie m ON s.movie_id = m.id\n" +
             "        JOIN\n" +
-            "    projectLinh.room r ON s.room_id = r.id\n" +
+            "    datn.room r ON s.room_id = r.id\n" +
             "        JOIN\n" +
-            "    projectLinh.cinema c ON r.cinema_id = c.id\n" +
+            "    datn.cinema c ON r.cinema_id = c.id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.bill_service bf ON b.id = bf.bill_id\n" +
+            "    datn.bill_service bf ON b.id = bf.bill_id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.service f ON bf.service_id = f.id\n" +
+            "    datn.service f ON bf.service_id = f.id\n" +
             "WHERE\n" +
             "    cu.id = :customerId\n" +
             "        AND b.status = 0\n" +
@@ -169,27 +169,27 @@ public interface BillRepository extends JpaRepository<Bill, String> {
             "    r.name,\n" +
             "    b.status, b.total_money, cu.name, cu.phone_number, b.point, b.waiting_time,b.use_points,b.id\n" +
             "FROM\n" +
-            "    projectLinh.bill b\n" +
+            "    datn.bill b\n" +
             "        JOIN\n" +
-            "    projectLinh.customer cu ON cu.id = b.customer_id\n" +
+            "    datn.customer cu ON cu.id = b.customer_id\n" +
             "        JOIN\n" +
-            "    projectLinh.bill_ticket bt ON b.id = bt.bill_id\n" +
+            "    datn.bill_ticket bt ON b.id = bt.bill_id\n" +
             "        JOIN\n" +
-            "    projectLinh.ticket t ON bt.ticket_id = t.id\n" +
+            "    datn.ticket t ON bt.ticket_id = t.id\n" +
             "        JOIN\n" +
-            "    projectLinh.seat se ON se.id = t.seat_id\n" +
+            "    datn.seat se ON se.id = t.seat_id\n" +
             "        JOIN\n" +
-            "    projectLinh.schedule s ON t.schedule_id = s.id\n" +
+            "    datn.schedule s ON t.schedule_id = s.id\n" +
             "        JOIN\n" +
-            "    projectLinh.movie m ON s.movie_id = m.id\n" +
+            "    datn.movie m ON s.movie_id = m.id\n" +
             "        JOIN\n" +
-            "    projectLinh.room r ON s.room_id = r.id\n" +
+            "    datn.room r ON s.room_id = r.id\n" +
             "        JOIN\n" +
-            "    projectLinh.cinema c ON r.cinema_id = c.id\n" +
+            "    datn.cinema c ON r.cinema_id = c.id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.bill_service bf ON b.id = bf.bill_id\n" +
+            "    datn.bill_service bf ON b.id = bf.bill_id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.service f ON bf.service_id = f.id\n" +
+            "    datn.service f ON bf.service_id = f.id\n" +
             "WHERE\n" +
             "    b.id = :idBill\n" +
             "GROUP BY b.trading_code , m.name , m.image , c.name , s.start_at , b.date_create , bt.total_money , r.name , " +
@@ -215,7 +215,7 @@ public interface BillRepository extends JpaRepository<Bill, String> {
     List<Bill> findBillsByTradingCodeAndDateCho(@Param("tradingCode") String tradingCode,
                                                 @Param("dateCreate") LocalDate dateCreate);
 
-    @Query(value = "SELECT * FROM projectLinh.bill b where b.status = 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM datn.bill b where b.status = 0", nativeQuery = true)
     List<Bill> billStatusZero2();
 
 
@@ -236,27 +236,27 @@ public interface BillRepository extends JpaRepository<Bill, String> {
             "    r.name,\n" +
             "    b.status,b.total_money, b.point, b.waiting_time,b.use_points\n" +
             "FROM\n" +
-            "    projectLinh.bill b\n" +
+            "    datn.bill b\n" +
             "        JOIN\n" +
-            "    projectLinh.customer cu ON cu.id = b.customer_id\n" +
+            "    datn.customer cu ON cu.id = b.customer_id\n" +
             "        JOIN\n" +
-            "    projectLinh.bill_ticket bt ON b.id = bt.bill_id\n" +
+            "    datn.bill_ticket bt ON b.id = bt.bill_id\n" +
             "        JOIN\n" +
-            "    projectLinh.ticket t ON bt.ticket_id = t.id\n" +
+            "    datn.ticket t ON bt.ticket_id = t.id\n" +
             "        JOIN\n" +
-            "    projectLinh.seat se ON se.id = t.seat_id\n" +
+            "    datn.seat se ON se.id = t.seat_id\n" +
             "        JOIN\n" +
-            "    projectLinh.schedule s ON t.schedule_id = s.id\n" +
+            "    datn.schedule s ON t.schedule_id = s.id\n" +
             "        JOIN\n" +
-            "    projectLinh.movie m ON s.movie_id = m.id\n" +
+            "    datn.movie m ON s.movie_id = m.id\n" +
             "        JOIN\n" +
-            "    projectLinh.room r ON s.room_id = r.id\n" +
+            "    datn.room r ON s.room_id = r.id\n" +
             "        JOIN\n" +
-            "    projectLinh.cinema c ON r.cinema_id = c.id\n" +
+            "    datn.cinema c ON r.cinema_id = c.id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.bill_service bf ON b.id = bf.bill_id\n" +
+            "    datn.bill_service bf ON b.id = bf.bill_id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.service f ON bf.service_id = f.id\n" +
+            "    datn.service f ON bf.service_id = f.id\n" +
             "WHERE\n" +
             "    cu.id = :customerId\n" +
             "        AND b.status = 2\n" +
@@ -285,27 +285,27 @@ public interface BillRepository extends JpaRepository<Bill, String> {
             "    r.name,\n" +
             "    b.status,b.total_money, b.point,b.use_points\n" +
             "    FROM\n" +
-            "    projectLinh.bill b\n" +
+            "    datn.bill b\n" +
             "        JOIN\n" +
-            "    projectLinh.customer cu ON cu.id = b.customer_id\n" +
+            "    datn.customer cu ON cu.id = b.customer_id\n" +
             "        JOIN\n" +
-            "    projectLinh.bill_ticket bt ON b.id = bt.bill_id\n" +
+            "    datn.bill_ticket bt ON b.id = bt.bill_id\n" +
             "        JOIN\n" +
-            "    projectLinh.ticket t ON bt.ticket_id = t.id\n" +
+            "    datn.ticket t ON bt.ticket_id = t.id\n" +
             "        JOIN\n" +
-            "    projectLinh.seat se ON se.id = t.seat_id\n" +
+            "    datn.seat se ON se.id = t.seat_id\n" +
             "        JOIN\n" +
-            "    projectLinh.schedule s ON t.schedule_id = s.id\n" +
+            "    datn.schedule s ON t.schedule_id = s.id\n" +
             "        JOIN\n" +
-            "    projectLinh.movie m ON s.movie_id = m.id\n" +
+            "    datn.movie m ON s.movie_id = m.id\n" +
             "        JOIN\n" +
-            "    projectLinh.room r ON s.room_id = r.id\n" +
+            "    datn.room r ON s.room_id = r.id\n" +
             "        JOIN\n" +
-            "    projectLinh.cinema c ON r.cinema_id = c.id\n" +
+            "    datn.cinema c ON r.cinema_id = c.id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.bill_service bf ON b.id = bf.bill_id\n" +
+            "    datn.bill_service bf ON b.id = bf.bill_id\n" +
             "        LEFT JOIN\n" +
-            "    projectLinh.service f ON bf.service_id = f.id\n" +
+            "    datn.service f ON bf.service_id = f.id\n" +
             "     WHERE\n" +
             "    cu.id = :customerId\n" +
             "     GROUP BY b.trading_code , m.name , m.image , c.name , s.start_at , b.date_create , bt.total_money , r.name , b.status , b.id , b.total_money, b.point,b.use_points\n" +

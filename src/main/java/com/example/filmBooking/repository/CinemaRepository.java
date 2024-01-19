@@ -15,10 +15,10 @@ public interface CinemaRepository extends JpaRepository<Cinema, String> {
     Integer findNumberOfRoom(String id);
 
     String cinema = ("SELECT DISTINCT c.name, c.id, c.address, c.description, c.code, c.capacity\n" +
-            "FROM projectLinh.cinema c\n" +
-            "JOIN projectLinh.room r ON c.id = r.cinema_id\n" +
-            "JOIN projectLinh.schedule s ON r.id = s.room_id\n" +
-            "JOIN projectLinh.movie m ON s.movie_id = m.id\n" +
+            "FROM datn.cinema c\n" +
+            "JOIN datn.room r ON c.id = r.cinema_id\n" +
+            "JOIN datn.schedule s ON r.id = s.room_id\n" +
+            "JOIN datn.movie m ON s.movie_id = m.id\n" +
             "where c.id=:cinemaId and m.id=:movieId");
     @Query(value = cinema, nativeQuery = true)
     List<Cinema> getCinema(@Param("movieId") String movieId

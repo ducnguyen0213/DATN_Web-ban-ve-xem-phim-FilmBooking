@@ -14,10 +14,10 @@ import java.util.List;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, String> {
     String Start_at = ("SELECT DISTINCT  DATE(s.start_at)\n"
-            + "FROM projectLinh.cinema c\n"
-            + "JOIN projectLinh.room r ON c.id = r.cinema_id\n"
-            + "JOIN projectLinh.schedule s ON r.id = s.room_id\n"
-            + "JOIN projectLinh.movie m ON s.movie_id = m.id\n"
+            + "FROM datn.cinema c\n"
+            + "JOIN datn.room r ON c.id = r.cinema_id\n"
+            + "JOIN datn.schedule s ON r.id = s.room_id\n"
+            + "JOIN datn.movie m ON s.movie_id = m.id\n"
             + "where c.id=:cinemaId and m.id=:movieId  and  s.status  IN ('Sắp chiếu', 'Đang chiếu')  ORDER BY  DATE(s.start_at) ASC");
 
     @Query(value = Start_at, nativeQuery = true)
@@ -25,10 +25,10 @@ public interface ScheduleRepository extends JpaRepository<Schedule, String> {
 
     //   lấy ra thời gian
     String time = ("\n" + "\tselect distinct   DATE_FORMAT(s.start_at , '%H:%i'), r.name, s.price\n"
-            + "\tfrom projectLinh.cinema c\n"
-            + "\tjoin projectLinh.room r on r.cinema_id = c.id\n"
-            + "\tjoin projectLinh.schedule s on s.room_id = r.id\n"
-            + "\tjoin projectLinh.movie m on m.id = s.movie_id\n"
+            + "\tfrom datn.cinema c\n"
+            + "\tjoin datn.room r on r.cinema_id = c.id\n"
+            + "\tjoin datn.schedule s on s.room_id = r.id\n"
+            + "\tjoin datn.movie m on m.id = s.movie_id\n"
             + "where m.id=:movieId\n"
             + " and c.id =:cinemaId and  s.status like 'Sắp chiếu' and  s.operating_status like '1' and  DATE(s.start_at)=:start_at   ORDER BY  DATE_FORMAT(s.start_at , '%H:%i') ASC");
 
@@ -37,13 +37,13 @@ public interface ScheduleRepository extends JpaRepository<Schedule, String> {
 
     //   lấy ra schedule
     String schedule = ("SELECT DISTINCT   s.*\n"
-            + "   FROM projectLinh.cinema c\n"
+            + "   FROM datn.cinema c\n"
             + "" +
-            " JOIN projectLinh.room r ON c.id = r.cinema_id\n"
-            + "  JOIN projectLinh.schedule s ON r.id = s.room_id\n"
-            + " JOIN projectLinh.movie m ON s.movie_id = m.id\n"
-            + " join projectLinh.ticket t on t.schedule_id = s.id\n"
-            + "   join projectLinh.seat se on se.id= t.seat_id\n"
+            " JOIN datn.room r ON c.id = r.cinema_id\n"
+            + "  JOIN datn.schedule s ON r.id = s.room_id\n"
+            + " JOIN datn.movie m ON s.movie_id = m.id\n"
+            + " join datn.ticket t on t.schedule_id = s.id\n"
+            + "   join datn.seat se on se.id= t.seat_id\n"
             + "    WHERE c.id = :cinemaId AND m.id = :movieId\n"
             + "     AND DATE(s.start_at ) = :startAt \n"
             + "            AND DATE_FORMAT(s.start_at, '%H:%i') = :startTime AND r.name = :nameRoom");
@@ -57,13 +57,13 @@ public interface ScheduleRepository extends JpaRepository<Schedule, String> {
 
 
     String schedule1 = ("SELECT DISTINCT   s.*\n"
-            + "   FROM projectLinh.cinema c\n"
+            + "   FROM datn.cinema c\n"
             + "" +
-            " JOIN projectLinh.room r ON c.id = r.cinema_id\n"
-            + "  JOIN projectLinh.schedule s ON r.id = s.room_id\n"
-            + " JOIN projectLinh.movie m ON s.movie_id = m.id\n"
-            + " join projectLinh.ticket t on t.schedule_id = s.id\n"
-            + "   join projectLinh.seat se on se.id= t.seat_id\n"
+            " JOIN datn.room r ON c.id = r.cinema_id\n"
+            + "  JOIN datn.schedule s ON r.id = s.room_id\n"
+            + " JOIN datn.movie m ON s.movie_id = m.id\n"
+            + " join datn.ticket t on t.schedule_id = s.id\n"
+            + "   join datn.seat se on se.id= t.seat_id\n"
             + "    WHERE m.name = :movieName\n"
             + "     AND s.start_at  = :startAt AND r.name = :nameRoom");
 
@@ -121,7 +121,7 @@ public interface ScheduleRepository extends JpaRepository<Schedule, String> {
     @Query("from Schedule s where s.name like %:name%")
     List<Schedule> findAllByName(String name);
     
-    @Query(value = "select * from projectLinh.schedule s where DATE(s.start_at) = Date(?1)  and s.operating_status = 1", nativeQuery = true)
+    @Query(value = "select * from datn.schedule s where DATE(s.start_at) = Date(?1)  and s.operating_status = 1", nativeQuery = true)
     List<Schedule> findByDateStartAt(String date);
 
 }

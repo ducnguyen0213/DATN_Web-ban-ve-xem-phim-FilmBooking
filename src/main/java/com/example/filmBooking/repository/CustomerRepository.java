@@ -29,22 +29,22 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
     Integer findPointById(@Param("customerId") String customerId);
 
     String customer = ("SELECT sum(b.point), SUM(b.total_money) AS total_money_sum, r.name, c.point, sum(b.use_points)\n" +
-            "FROM projectLinh.customer c\n" +
-            "JOIN projectLinh.rank_customer r ON c.rank_customer_id = r.id\n" +
-            "JOIN projectLinh.bill b ON c.id = b.customer_id\n" +
+            "FROM datn.customer c\n" +
+            "JOIN datn.rank_customer r ON c.rank_customer_id = r.id\n" +
+            "JOIN datn.bill b ON c.id = b.customer_id\n" +
             "WHERE c.id = :customerId and b.status = 1");
 
     @Query(value = customer, nativeQuery = true)
     List<Object[]> getCustommerById(@Param("customerId") String customerId);
 
     String point = ("SELECT r.point \n" +
-            "FROM projectLinh.rank_customer r\n" +
+            "FROM datn.rank_customer r\n" +
             "WHERE r.point > \n" +
             "(SELECT point \n" +
-            "FROM projectLinh.rank_customer r\n" +
+            "FROM datn.rank_customer r\n" +
             "WHERE r.id = \n" +
             "(SELECT rank_customer_id\n" +
-            "FROM projectLinh.customer c \n" +
+            "FROM datn.customer c \n" +
             "WHERE c.id = :customerId)\n" +
             ")\n" +
             "ORDER BY point \n" +

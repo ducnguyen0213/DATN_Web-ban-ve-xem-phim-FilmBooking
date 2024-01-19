@@ -26,10 +26,10 @@ public interface SeatRepository extends JpaRepository<Seat, String> {
     Page<Seat> searchByRoom(@Param("roomId") String roomId, Pageable pageable);
 
     @Query(value = "SELECT s, b.dateCreate FROM Seat s \n" +
-            "               JOIN projectLinh.ticket t ON t.seat.id = s.id\n" +
-            "               JOIN projectLinh.bill_ticket bt ON bt.ticket.id = t.id \n" +
-            "               JOIN projectLinh.bill b ON bt.bill.id = b.id \n" +
-            "               JOIN projectLinh.customer c ON b.customer.id = c.id\n" +
+            "               JOIN datn.ticket t ON t.seat.id = s.id\n" +
+            "               JOIN datn.bill_ticket bt ON bt.ticket.id = t.id \n" +
+            "               JOIN datn.bill b ON bt.bill.id = b.id \n" +
+            "               JOIN datn.customer c ON b.customer.id = c.id\n" +
             "               WHERE c.id = :customerId", nativeQuery = true)
     List<Object[]> findSeatsByCustomerId(@Param("customerId") String customerId);
 
@@ -37,12 +37,12 @@ public interface SeatRepository extends JpaRepository<Seat, String> {
 
 
     String seat = ("SELECT DISTINCT se.*\n" +
-            "            FROM projectLinh.cinema c\n" +
-            "            JOIN projectLinh.room r ON c.id = r.cinema_id\n" +
-            "            JOIN projectLinh.schedule s ON r.id = s.room_id\n" +
-            "            JOIN projectLinh.movie m ON s.movie_id = m.id\n" +
-            "            join projectLinh.ticket t on t.schedule_id = s.id\n" +
-            "            join projectLinh.seat se on se.id= t.seat_id\n" +
+            "            FROM datn.cinema c\n" +
+            "            JOIN datn.room r ON c.id = r.cinema_id\n" +
+            "            JOIN datn.schedule s ON r.id = s.room_id\n" +
+            "            JOIN datn.movie m ON s.movie_id = m.id\n" +
+            "            join datn.ticket t on t.schedule_id = s.id\n" +
+            "            join datn.seat se on se.id= t.seat_id\n" +
             "            WHERE c.id = :cinemaId AND m.id = :movieId\n" +
             "            AND DATE(s.start_at ) = :startAt \n" +
             "            AND DATE_FORMAT(s.start_at, '%H:%i') = :startTime " +
@@ -64,12 +64,12 @@ public interface SeatRepository extends JpaRepository<Seat, String> {
 //    Seat findByCodeLike(String code);
 
     String seat1 = ("SELECT DISTINCT se.*\n" +
-            "            FROM projectLinh.cinema c\n" +
-            "            JOIN projectLinh.room r ON c.id = r.cinema_id\n" +
-            "            JOIN projectLinh.schedule s ON r.id = s.room_id\n" +
-            "            JOIN projectLinh.movie m ON s.movie_id = m.id\n" +
-            "            join projectLinh.ticket t on t.schedule_id = s.id\n" +
-            "            join projectLinh.seat se on se.id= t.seat_id\n" +
+            "            FROM datn.cinema c\n" +
+            "            JOIN datn.room r ON c.id = r.cinema_id\n" +
+            "            JOIN datn.schedule s ON r.id = s.room_id\n" +
+            "            JOIN datn.movie m ON s.movie_id = m.id\n" +
+            "            join datn.ticket t on t.schedule_id = s.id\n" +
+            "            join datn.seat se on se.id= t.seat_id\n" +
             "            WHERE  m.name = :movieName\n" +
             "            AND s.start_at  = :startAt AND r.name = :nameRoom\n" +
             "            ORDER BY se.code ASC");
@@ -80,21 +80,21 @@ public interface SeatRepository extends JpaRepository<Seat, String> {
                         @Param("nameRoom") String nameRoom);
 
 
-    String SeatByRoom = ("select s.* from projectLinh.seat s\n" +
-            "join projectLinh.room r on s.room_id = r.id\n" +
+    String SeatByRoom = ("select s.* from datn.seat s\n" +
+            "join datn.room r on s.room_id = r.id\n" +
             "where r.name=:roomName\n" +
             "ORDER BY s.code ASC");
 
     @Query(value = SeatByRoom, nativeQuery = true)
     List<Seat> getSeatByRoom(@Param("roomName") String roomName);
 
-//    @Query(value = "select s.* from projectLinh.seat s\n" +
-//            "Join projectLinh.room r where r.name =:roomname;", nativeQuery = true)
+//    @Query(value = "select s.* from datn.seat s\n" +
+//            "Join datn.room r where r.name =:roomname;", nativeQuery = true)
 //    List<Seat> SeatRoom(@Param("roomname") String roomname);
 
 
-    String seatSeatAll = ("select s.* from projectLinh.seat s\n" +
-            "join projectLinh.room r on s.room_id = r.id\n" +
+    String seatSeatAll = ("select s.* from datn.seat s\n" +
+            "join datn.room r on s.room_id = r.id\n" +
             "where r.id=:idRoom\n" +
             "ORDER BY s.code ASC");
 

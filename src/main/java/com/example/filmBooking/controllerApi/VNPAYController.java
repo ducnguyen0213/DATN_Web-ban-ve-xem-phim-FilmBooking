@@ -204,8 +204,8 @@ public class VNPAYController {
         Date currentTime = new Date();
 
         String email = customer.getEmail();
-        final String username = "toanhd290803@gmail.com";
-        final String password = "tjfv pjmw qsca jkkr"; // Replace <your-password> with your actual password
+        final String username = "ducnguyen1302cat@gmail.com";
+        final String password = "vtzo bcyi iefk qtvj"; // Replace <your-password> with your actual password
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -221,7 +221,7 @@ public class VNPAYController {
 
         try {
             Message message = new MimeMessage(session2);
-            message.setFrom(new InternetAddress("toanhd290803@gmail.com"));
+            message.setFrom(new InternetAddress("ducnguyen1302cat@gmail.com"));
 
             // Populate multiple recipients
             String[] recipients = {email}; // Replace with actual recipient emails
@@ -395,8 +395,8 @@ public class VNPAYController {
         Date currentTime = new Date();
 
         String email = customer.getEmail();
-        final String username = "toanhd290803@gmail.com";
-        final String password = "tjfv pjmw qsca jkkr"; // Replace <your-password> with your actual password
+        final String username = "ducnguyen1302cat@gmail.com";
+        final String password = "vtzo bcyi iefk qtvj"; // Replace <your-password> with your actual password
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");
@@ -412,7 +412,7 @@ public class VNPAYController {
 
         try {
             Message message = new MimeMessage(session1);
-            message.setFrom(new InternetAddress("toanhd290803@gmail.com"));
+            message.setFrom(new InternetAddress("ducnguyen1302cat@gmail.com"));
 
             // Populate multiple recipients
             String[] recipients = {email}; // Replace with actual recipient emails
@@ -453,8 +453,8 @@ public class VNPAYController {
             Transport.send(message);
 // Create and send the second email
             Message message2 = new MimeMessage(session1);
-            message2.setFrom(new InternetAddress("toanhdph21327@fpt.edu.vn"));
-            message2.setRecipients(Message.RecipientType.TO, InternetAddress.parse("toanhdph21327@fpt.edu.vn")); // Replace with the second recipient's email
+            message2.setFrom(new InternetAddress("ducnguyen1302cat@gmail.com"));
+            message2.setRecipients(Message.RecipientType.TO, InternetAddress.parse("ducnguyen1302cat@gmail.com")); // Replace with the second recipient's email
             message2.setSubject("Có đơn hànng mới chờ xác nhận!");
             StringBuilder emailContent1 = new StringBuilder();
             emailContent1.append("Khách hàng : ").append(customer.getName()).append("\n");

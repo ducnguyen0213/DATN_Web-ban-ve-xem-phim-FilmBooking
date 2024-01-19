@@ -27,12 +27,12 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
 
     String ticket = ("SELECT DISTINCT  t.* \n" +
-            "            FROM projectLinh.cinema c\n" +
-            "            JOIN projectLinh.room r ON c.id = r.cinema_id\n" +
-            "            JOIN projectLinh.schedule s ON r.id = s.room_id\n" +
-            "            JOIN projectLinh.movie m ON s.movie_id = m.id\n" +
-            "            join projectLinh.ticket t on t.schedule_id = s.id\n" +
-            "            join projectLinh.seat se on se.id= t.seat_id\n" +
+            "            FROM datn.cinema c\n" +
+            "            JOIN datn.room r ON c.id = r.cinema_id\n" +
+            "            JOIN datn.schedule s ON r.id = s.room_id\n" +
+            "            JOIN datn.movie m ON s.movie_id = m.id\n" +
+            "            join datn.ticket t on t.schedule_id = s.id\n" +
+            "            join datn.seat se on se.id= t.seat_id\n" +
             "            WHERE c.id = :cinemaId AND m.id = :movieId\n" +
             "            AND DATE(s.start_at ) = :startAt \n" +
             "            AND DATE_FORMAT(s.start_at, '%H:%i') = :startTime" +
@@ -46,12 +46,12 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
                                           @Param("nameRoom") String nameRoom);
 
     String ticket1 = ("SELECT DISTINCT  t.* \n" +
-            "            FROM projectLinh.cinema c\n" +
-            "            JOIN projectLinh.room r ON c.id = r.cinema_id\n" +
-            "            JOIN projectLinh.schedule s ON r.id = s.room_id\n" +
-            "            JOIN projectLinh.movie m ON s.movie_id = m.id\n" +
-            "            join projectLinh.ticket t on t.schedule_id = s.id\n" +
-            "            join projectLinh.seat se on se.id= t.seat_id\n" +
+            "            FROM datn.cinema c\n" +
+            "            JOIN datn.room r ON c.id = r.cinema_id\n" +
+            "            JOIN datn.schedule s ON r.id = s.room_id\n" +
+            "            JOIN datn.movie m ON s.movie_id = m.id\n" +
+            "            join datn.ticket t on t.schedule_id = s.id\n" +
+            "            join datn.seat se on se.id= t.seat_id\n" +
             "             WHERE m.name = :movieName\n" +
             "            AND s.start_at  = :startAt   AND r.name = :nameRoom\n" +
             "            AND t.status like 'đã bán'");
@@ -63,12 +63,12 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
 
 
     String ticketShow = ("SELECT DISTINCT  t.* \n" +
-            "            FROM projectLinh.cinema c\n" +
-            "            JOIN projectLinh.room r ON c.id = r.cinema_id\n" +
-            "            JOIN projectLinh.schedule s ON r.id = s.room_id\n" +
-            "            JOIN projectLinh.movie m ON s.movie_id = m.id\n" +
-            "            join projectLinh.ticket t on t.schedule_id = s.id\n" +
-            "            join projectLinh.seat se on se.id= t.seat_id\n" +
+            "            FROM datn.cinema c\n" +
+            "            JOIN datn.room r ON c.id = r.cinema_id\n" +
+            "            JOIN datn.schedule s ON r.id = s.room_id\n" +
+            "            JOIN datn.movie m ON s.movie_id = m.id\n" +
+            "            join datn.ticket t on t.schedule_id = s.id\n" +
+            "            join datn.seat se on se.id= t.seat_id\n" +
             "            WHERE c.id = :cinemaId AND m.id = :movieId\n" +
             "            AND DATE(s.start_at ) = :startAt \n" +
             "            AND DATE_FORMAT(s.start_at, '%H:%i') = :startTime  AND r.name = :nameRoom");
@@ -81,12 +81,12 @@ public interface TicketRepository extends JpaRepository<Ticket, String> {
                             @Param("nameRoom") String nameRoom);
 
     String ticketShow1 = ("SELECT DISTINCT  t.* \n" +
-            "            FROM projectLinh.cinema c\n" +
-            "            JOIN projectLinh.room r ON c.id = r.cinema_id\n" +
-            "            JOIN projectLinh.schedule s ON r.id = s.room_id\n" +
-            "            JOIN projectLinh.movie m ON s.movie_id = m.id\n" +
-            "            join projectLinh.ticket t on t.schedule_id = s.id\n" +
-            "            join projectLinh.seat se on se.id= t.seat_id\n" +
+            "            FROM datn.cinema c\n" +
+            "            JOIN datn.room r ON c.id = r.cinema_id\n" +
+            "            JOIN datn.schedule s ON r.id = s.room_id\n" +
+            "            JOIN datn.movie m ON s.movie_id = m.id\n" +
+            "            join datn.ticket t on t.schedule_id = s.id\n" +
+            "            join datn.seat se on se.id= t.seat_id\n" +
             "             WHERE m.name = :movieName\n" +
             "            AND s.start_at  = :startAt  AND r.name = :nameRoom");
 
