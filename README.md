@@ -32,7 +32,24 @@ Dự án FilmBooking cung cấp một số chức năng chính như sau:
 - Chỉnh sửa sơ đồ ghế nhanh và excel
 - Gửi mail xác nhận đơn hàng
 - Thêm khuyến mãi với từng khách hàng
-- Tích điểm point
+- Tích điểm point'
+  
+## Các công nghệ sử dụng
+
+- **Ngôn ngữ:** Java Spring Boot
+- **Cơ sở dữ liệu:** MySQL - MySQL Workbench
+- **IDEA:** IntelliJ IDEA Ultimate - Version: 2020.3.4 - Windows x64 (exe)
+- **Tool:** Swagger
+
+
+## Lưu ý
+
+Dự án đã có file DB sử dựng MySQL, bạn cần chỉnh sửa lại thứ tự insert để có thể thêm các bảng không có khóa ngoại trước.
+
+## Swagger
+
+Khi chạy dự án, bạn có thể truy cập Swagger UI tại đường dẫn: [http://localhost:8080/swagger-ui/index.html#](http://localhost:8080/swagger-ui/index.html#)
+
 
 ## Chức năng vẫn còn thiếu
 
@@ -45,9 +62,6 @@ Dự án vẫn đang trong quá trình phát triển và còn một số chức 
 - Đăng nhập với tư cách admin
 - Tìm kiếm với multiselect của Performer, Director, Language, Movie_type
 
-## Lưu ý
-
-Dự án đã có file DB sử dựng MySQL, bạn cần chỉnh sửa lại thứ tự insert để có thể thêm các bảng không có khóa ngoại trước.
 
 ## Liên hệ và thắc mắc
 
