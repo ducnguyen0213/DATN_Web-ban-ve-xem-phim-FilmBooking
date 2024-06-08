@@ -296,13 +296,13 @@
                     <div style="display: grid;
                     grid-template-columns: 0.3fr 0.3fr ;">
                         <div class="cartt_radio">
-                            <input type="radio" id="thenoidia" name="optradio" checked> <img src="img/the1.png" alt=""
+                            <input type="radio" id="thenoidia" name="optradio" checked> <img th:src="@{/users/img/the1.png}" alt=""
                                                                                              width="50px"
                                                                                              height="45px"> Thẻ nội
                             địa</label>
                         </div>
                         <div class="cartt_radio">
-                            <input type="radio" id="quetma" name="optradio"> <img src="img/the2.png" alt="" width="50px"
+                            <input type="radio" id="quetma" name="optradio"> <img th:src="@{/users/img/qr-code.png}" alt="" width="50px"
                                                                                   height="45px"> Quét mã</label>
                         </div>
                     </div>
@@ -535,7 +535,7 @@
                         <input type="hidden" id="selectedPromition1" name="selectedPromition1">
                         <div style="  display: grid;grid-template-columns: auto auto auto auto;flex-wrap: nowrap; ">
 
-                            <img style="display: none" id="image" th:src="@{/users/img/maqr.png}" alt="sample66"/>
+                            <img style="display: none; width: 17rem; height: auto" id="image" th:src="@{/users/img/maqr.png}" alt="sample66"/>
                             <button type="submit" id="cancel1" class="buttonn1 cancel-button">Hoàn thành thanh toán
                             </button>
                         </div>
