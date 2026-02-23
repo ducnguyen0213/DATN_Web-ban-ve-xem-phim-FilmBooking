@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<html class="no-js" lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>ĐĂNG NHẬP FILMBOOKING</title>
@@ -13,19 +13,21 @@
 <div th:replace="~{/layout/Header :: header}"></div>
 <br>
 <div id="login-box">
-    <div th:if="${session.ERR_LOGIN != null}" class="alert alert-danger" id="yourElementId" role="alert">
-        [[${session.ERR_LOGIN}]]
+    <div th:if="${ERR_LOGIN != null}" class="alert alert-danger" id="yourElementId" role="alert">
+        [[${ERR_LOGIN}]]
     </div>
     <div class="left">
         <h1>ĐĂNG NHẬP</h1>
         <div style="margin-top: 70px;">
-            <form action="/filmbooking/login" method="post">
+            <form id="loginForm" th:action="@{/filmbooking/login}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <input type="text" name="email" placeholder="E-mail"/>
                 <input type="password" name="password" placeholder="Password"/>
                 <input type="checkbox" id="remember" name="remember"/>
                 <label for="remember">Nhớ mật khẩu</label>
                 <input type="submit" name="signup_submit" value="ĐĂNG NHẬP"/>
             </form>
+            <p style="margin-top: 15px;"><a th:href="@{/filmbooking/forgot-password}" style="color: #16a085;">Quên mật khẩu?</a></p>
         </div>
 
     </div>

@@ -5,6 +5,7 @@ import com.example.filmBooking.repository.LanguageRepository;
 import com.example.filmBooking.service.LanguageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.filmBooking.repository.MovieRepository;
 import com.example.filmBooking.model.Movie;
 
@@ -57,10 +58,10 @@ public class LanguageServiceImpl implements LanguageService {
     }
     
     @Override
+    @Transactional(readOnly = true)
     public List<Language> findNameByMovieId(String id) {
         Movie movie = movieRepository.findById(id).get();
-        List<Language> listLanguage = movie.getLanguages();
-        return listLanguage;
+        return movie.getLanguages();
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.example.filmBooking.repository.MovieTypeRepository;
 import com.example.filmBooking.service.MovieTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.filmBooking.model.Movie;
 import com.example.filmBooking.repository.MovieRepository;
 
@@ -59,10 +60,10 @@ public class MovieTypeServiceImpl implements MovieTypeService {
     }
     
     @Override
+    @Transactional(readOnly = true)
     public List<MovieType> findMovieTyprbyMovieId(String movieId) {
         Movie movie = movieRepository.findById(movieId).get();
-        List<MovieType> movieTypes = movie.getMovieTypes();
-        return movieTypes;
+        return movie.getMovieTypes();
     }
 
     @Override

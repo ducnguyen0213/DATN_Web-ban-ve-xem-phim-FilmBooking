@@ -5,6 +5,7 @@ import com.example.filmBooking.repository.DirectorRepository;
 import com.example.filmBooking.service.DirectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.filmBooking.repository.MovieRepository;
 import com.example.filmBooking.model.Movie;
 
@@ -57,10 +58,10 @@ public class DirectorServiceImpl implements DirectorService {
     }
     
     @Override
+    @Transactional(readOnly = true)
     public List<Director> findDireactorByMovieId(String movieId) {
         Movie movie = movieRepository.findById(movieId).get();
-        List<Director> directors = movie.getDirectors();
-        return directors;
+        return movie.getDirectors();
     }
 
     @Override

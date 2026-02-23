@@ -82,7 +82,7 @@
                 </tbody>
               </table>
             </div>
-            <form th:action="@{/filmbooking/update-thongtin}" method="post">
+            <form th:action="@{/filmbooking/update-thongtin/{id}(id=${customer.id})}" method="post">
               <div class="container" id="app">
                 <div>
                   <fieldset>
@@ -118,24 +118,6 @@
                       @focus="show"
                       data-layout="numeric"
                     />
-                  </fieldset>
-
-                  <fieldset>
-                    <legend>* Password</legend>
-                    <input
-                      type="password"
-                      th:value="${customer.password}"
-                      class="password"
-                      @focus="show"
-                      data-layout="numeric"
-                    />
-                    <button
-                      class="unmask"
-                      type="button"
-                      title="Mask/Unmask password to check content"
-                    >
-                      Unmask
-                    </button>
                   </fieldset>
                 </div>
                 <button type="submit" id="cancel" class="button cancel-button">
@@ -252,7 +234,7 @@
                         th:each="detail : ${entry.value}"
                       >
                         <!-- Display other details as per your requirement -->
-                        <span th:text="${detail[7]}">Detail 1</span>
+                        <span th:text="${@displayFormat.formatFoodsForDisplay(detail[7] != null ? detail[7].toString() : '')}">Detail 1</span>
                       </li>
                     </ul>
                   </td>
@@ -401,7 +383,7 @@
                         th:each="detail : ${entry.value}"
                       >
                         <!-- Display other details as per your requirement -->
-                        <span id="priceService" th:text="${detail[7]}"
+                        <span id="priceService" th:text="${@displayFormat.formatFoodsForDisplay(detail[7] != null ? detail[7].toString() : '')}"
                           >Detail 1</span
                         >
                       </li>
@@ -538,7 +520,7 @@
                         th:each="detail : ${entry.value}"
                       >
                         <!-- Display other details as per your requirement -->
-                        <span th:text="${detail[7]}">Detail 1</span>
+                        <span th:text="${@displayFormat.formatFoodsForDisplay(detail[7] != null ? detail[7].toString() : '')}">Detail 1</span>
                       </li>
                     </ul>
                   </td>

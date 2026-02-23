@@ -7,13 +7,18 @@ import com.example.filmBooking.repository.GeneralSettingRepository;
 import com.example.filmBooking.repository.TicketRepository;
 import com.example.filmBooking.service.impl.VNPayService;
 import com.example.filmBooking.service.impl.*;
+import com.example.filmBooking.util.DisplayFormatUtil;
+import com.example.filmBooking.util.EmailHtmlUtil;
 import com.google.zxing.BarcodeFormat;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,16 +26,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,6 +47,19 @@ import java.util.*;
 @SessionAttributes("soldTicketsCountBill")
 
 public class VNPAYController {
+
+    @Value("${vnpay.return-url-base:}")
+    private String vnpayReturnUrlBase;
+
+    @Value("${spring.mail.username:}")
+    private String mailFrom;
+
+    @Value("${app.mail.admin-to:}")
+    private String adminEmail;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
     @Autowired
     private VNPayService vnPayService;
 
@@ -64,6 +84,9 @@ public class VNPAYController {
     @Autowired
     private GeneralSettingRepository generalSettingRepository;
 
+    @Autowired
+    private TemplateEngine templateEngine;
+
     @GetMapping("/index")
     public String home() {
         return "users/orderfail";
@@ -79,6 +102,8 @@ public class VNPAYController {
                               @RequestParam("ServiceService") String ServiceService,
                               @RequestParam("seatseat") String seatseat,
                               @RequestParam("seatCountCount") String seatCountCount,
+                              @RequestParam(value = "seatCodesDon", required = false) String seatCodesDon,
+                              @RequestParam(value = "seatCodesDoi", required = false) String seatCodesDoi,
                               @RequestParam("priceSeatSeat") String priceSeatSeat,
                               @RequestParam("priceServiceService") String priceServiceService,
                               @RequestParam("discountcount") String discountcount,
@@ -91,7 +116,9 @@ public class VNPAYController {
                               @RequestParam(value = "selectedQuantity", required = false) List<Integer> selectedQuantity,
                               @RequestParam(value = "selectedPrice", required = false) List<BigDecimal> selectedPrice,
                               @RequestParam(value = "selectedPromition", required = false) Promotion selectedPromition) {
-        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String baseUrl = (vnpayReturnUrlBase != null && !vnpayReturnUrlBase.isBlank())
+                ? vnpayReturnUrlBase.trim().replaceAll("/$", "")
+                : request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         String vnpayUrl = vnPayService.createOrder(orderTotal, orderInfo, baseUrl);
         HttpSession session = request.getSession();
         Schedule schedule = (Schedule) session.getAttribute("schedule");
@@ -198,69 +225,34 @@ public class VNPAYController {
             }
         }
 
-        //        gửi về mail
+        // Gửi mail sau khi VNPay callback thành công — lưu nội dung vào session
         String thongbao = "không có";
         String thongbaos = "0";
         Date currentTime = new Date();
-
         String email = customer.getEmail();
-        final String username = "ducnguyen1302cat@gmail.com";
-        final String password = "vtzo bcyi iefk qtvj"; // Replace <your-password> with your actual password
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session2 = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
 
         try {
-            Message message = new MimeMessage(session2);
-            message.setFrom(new InternetAddress("ducnguyen1302cat@gmail.com"));
-
-            // Populate multiple recipients
-            String[] recipients = {email}; // Replace with actual recipient emails
-            InternetAddress[] recipientAddresses = new InternetAddress[recipients.length];
-            for (int i = 0; i < recipients.length; i++) {
-                recipientAddresses[i] = new InternetAddress(recipients[i]);
-            }
-            message.setRecipients(Message.RecipientType.TO, recipientAddresses);
-            StringBuilder emailContent = new StringBuilder();
-            message.setSubject("FilmBooking_Thông tin đơn hàng của bạn(Đơn hàng thanh toán thành công)");
-            emailContent.append("Tên phim : ").append(nameFiml).append("\n");
-            emailContent.append("Rạp/Phòng chiếu : ").append(roomm).append("\n");
-            emailContent.append("Ngày chiếu : ").append(datedate).append("\n");
-            emailContent.append("Giờ chiếu : ").append(timetime).append("\n");
-            if (ServiceService == null || ServiceService.isEmpty()) {
-                emailContent.append("Đồ ăn : ").append(thongbao).append("\n");
-            } else {
-                emailContent.append("Đồ ăn : ").append(ServiceService).append("\n");
-            }
-            emailContent.append("Ghế : ").append("(" + seatCountCount + ")" + seatseat).append("\n");
-            emailContent.append("Tổng tiền vé : ").append(priceSeatSeat).append("\n");
-            if (priceServiceService == null || priceServiceService.isEmpty()) {
-                emailContent.append("Tổng tiền đồ ăn : ").append(thongbaos).append("\n");
-            } else {
-                emailContent.append("Tổng tiền đồ ăn : ").append(priceServiceService).append("\n");
-            }
-            if (discountcount == null || discountcount.isEmpty()) {
-                emailContent.append("Tiền được giảm : ").append(thongbaos).append("\n");
-            } else {
-                emailContent.append("Tiền được giảm : ").append(discountcount).append("\n");
-            }
-            emailContent.append("Thành tiền : ").append(formattedPriceVN).append("\n");
-            emailContent.append("Thời gian thanh toán : ").append(currentTime).append("\n");
-            emailContent.append("Đơn hàng của bạn được đặt thành công! Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.");
-            message.setText(emailContent.toString());
-//            Transport.send(message);
-            session1.setAttribute("message", message);
-
-        } catch (MessagingException e) {
+            Context ctx = new Context();
+            ctx.setVariable("movieName", nameFiml);
+            ctx.setVariable("cinema", roomm);
+            ctx.setVariable("showDate", datedate);
+            ctx.setVariable("showTime", timetime);
+            String seatTypeDisplay = DisplayFormatUtil.formatSeatTypeWithCodes(seatCountCount, seatCodesDon, seatCodesDoi);
+            if ((seatCodesDon == null || seatCodesDon.isBlank()) && (seatCodesDoi == null || seatCodesDoi.isBlank()) && seatseat != null && !seatseat.isBlank())
+                seatTypeDisplay = seatTypeDisplay + " · Vị trí: " + formatSeatCodes(seatseat);
+            ctx.setVariable("seatTypeDisplay", seatTypeDisplay);
+            ctx.setVariable("seatCodes", formatSeatCodes(seatseat));
+            ctx.setVariable("foodsDisplay", DisplayFormatUtil.formatFoodsForDisplay(ServiceService == null || ServiceService.isEmpty() ? thongbao : ServiceService));
+            ctx.setVariable("ticketTotal", priceSeatSeat);
+            ctx.setVariable("foodTotal", (priceServiceService == null || priceServiceService.isEmpty()) ? thongbaos : priceServiceService);
+            ctx.setVariable("discount", (discountcount == null || discountcount.isEmpty()) ? thongbaos : discountcount);
+            ctx.setVariable("finalAmount", formattedPriceVN);
+            ctx.setVariable("paymentTime", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentTime));
+            String html1 = templateEngine.process("emails/payment-success", ctx);
+            session1.setAttribute("pendingMailHtml", html1);
+            session1.setAttribute("pendingMailSubject", "FilmBooking – Đơn hàng thanh toán thành công");
+            session1.setAttribute("pendingMailTo", email);
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
@@ -276,6 +268,8 @@ public class VNPAYController {
                                @RequestParam("Serviced") String Serviced,
                                @RequestParam("seat") String seat,
                                @RequestParam("seatCount") String seatCount,
+                               @RequestParam(value = "seatCodesDon", required = false) String seatCodesDon,
+                               @RequestParam(value = "seatCodesDoi", required = false) String seatCodesDoi,
                                @RequestParam("priceSeat") String priceSeat,
                                @RequestParam("priceService") String priceService,
                                @RequestParam("discount") String discount,
@@ -389,84 +383,51 @@ public class VNPAYController {
 
             }
         }
-//        gửi về mail
+        // Gửi mail từ cấu hình application.properties (Spring Mail)
         String thongbao = "không có";
         String thongbaos = "0";
         Date currentTime = new Date();
-
         String email = customer.getEmail();
-        final String username = "ducnguyen1302cat@gmail.com";
-        final String password = "vtzo bcyi iefk qtvj"; // Replace <your-password> with your actual password
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session1 = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
-            }
-        });
+        String adminTo = (adminEmail != null && !adminEmail.isBlank()) ? adminEmail : mailFrom;
 
         try {
-            Message message = new MimeMessage(session1);
-            message.setFrom(new InternetAddress("ducnguyen1302cat@gmail.com"));
+            MimeMessage message = mailSender.createMimeMessage();
+            message.setFrom(new InternetAddress(mailFrom));
+            message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject("FilmBooking – Đơn hàng đang chờ thanh toán");
+            String bodyPending = EmailHtmlUtil.paragraph("Đơn hàng của bạn đang chờ thanh toán. Chi tiết:")
+                    + EmailHtmlUtil.row("Tên phim", orderInfor)
+                    + EmailHtmlUtil.row("Rạp / Phòng chiếu", room)
+                    + EmailHtmlUtil.row("Ngày chiếu", date)
+                    + EmailHtmlUtil.row("Giờ chiếu", time)
+                    + EmailHtmlUtil.row("Đồ ăn", DisplayFormatUtil.formatFoodsForDisplay(Serviced == null || Serviced.isEmpty() ? thongbao : Serviced))
+                    + EmailHtmlUtil.rowHtml("Ghế", buildSeatDisplayForEmail(seatCount, seat, seatCodesDon, seatCodesDoi))
+                    + EmailHtmlUtil.row("Tổng tiền vé", priceSeat)
+                    + EmailHtmlUtil.row("Tổng tiền đồ ăn", (priceService == null || priceService.isEmpty()) ? thongbaos : priceService)
+                    + EmailHtmlUtil.row("Tiền được giảm", (discount == null || discount.isEmpty()) ? thongbaos : discount)
+                    + EmailHtmlUtil.row("Thành tiền", formattedPriceVN)
+                    + EmailHtmlUtil.row("Mã đơn hàng", transactionCode)
+                    + EmailHtmlUtil.row("Thời gian", new SimpleDateFormat("dd/MM/yyyy HH:mm").format(currentTime))
+                    + EmailHtmlUtil.paragraph("Đơn hàng đang chờ xác nhận. Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.");
+            String htmlPending = EmailHtmlUtil.wrap("Đơn hàng đang chờ thanh toán", bodyPending, "— FilmBooking");
+            message.setContent(htmlPending, "text/html; charset=utf-8");
+            mailSender.send(message);
 
-            // Populate multiple recipients
-            String[] recipients = {email}; // Replace with actual recipient emails
-            InternetAddress[] recipientAddresses = new InternetAddress[recipients.length];
-            for (int i = 0; i < recipients.length; i++) {
-                recipientAddresses[i] = new InternetAddress(recipients[i]);
-            }
-            message.setRecipients(Message.RecipientType.TO, recipientAddresses);
-            StringBuilder emailContent = new StringBuilder();
-            message.setSubject("Thông tin đơn hàng của bạn(Đơn hàng đang chờ thanh toán)");
-            emailContent.append("Tên phim : ").append(orderInfor).append("\n");
-            emailContent.append("Rạp/Phòng chiếu : ").append(room).append("\n");
-            emailContent.append("Ngày chiếu : ").append(date).append("\n");
-            emailContent.append("Giờ chiếu : ").append(time).append("\n");
-            if (Serviced == null || Serviced.isEmpty()) {
-                emailContent.append("Đồ ăn : ").append(thongbao).append("\n");
-            } else {
-                emailContent.append("Đồ ăn : ").append(Serviced).append("\n");
-            }
-            emailContent.append("Ghế : ").append("(" + seatCount + ")" + seat).append("\n");
-            emailContent.append("Tổng tiền vé : ").append(priceSeat).append("\n");
-            if (priceService == null || priceService.isEmpty()) {
-                emailContent.append("Tổng tiền đồ ăn : ").append(thongbaos).append("\n");
-            } else {
-                emailContent.append("Tổng tiền đồ ăn : ").append(priceService).append("\n");
-            }
-            if (discount == null || discount.isEmpty()) {
-                emailContent.append("Tiền được giảm : ").append(thongbaos).append("\n");
-            } else {
-                emailContent.append("Tiền được giảm : ").append(discount).append("\n");
-            }
-            emailContent.append("Thành tiền : ").append(formattedPriceVN).append("\n");
-            emailContent.append("Mã đơn hàng : ").append(transactionCode).append("\n");
-            emailContent.append("Thời gian thanh toán : ").append(currentTime).append("\n");
-
-            emailContent.append("Đơn hàng của bạn đang chờ xác nhận! Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi.");
-            message.setText(emailContent.toString());
-            Transport.send(message);
-// Create and send the second email
-            Message message2 = new MimeMessage(session1);
-            message2.setFrom(new InternetAddress("ducnguyen1302cat@gmail.com"));
-            message2.setRecipients(Message.RecipientType.TO, InternetAddress.parse("ducnguyen1302cat@gmail.com")); // Replace with the second recipient's email
-            message2.setSubject("Có đơn hànng mới chờ xác nhận!");
-            StringBuilder emailContent1 = new StringBuilder();
-            emailContent1.append("Khách hàng : ").append(customer.getName()).append("\n");
-            emailContent1.append("Số điện thoại : ").append(customer.getPhoneNumber()).append("\n");
-            emailContent1.append("Email : ").append(customer.getEmail()).append("\n");
-            emailContent1.append("Mã giao dịch : ").append(transactionCode).append("\n");
-            emailContent1.append("Đơn hàng thanh toán lúc: ").append(LocalDateTime.now()).append("\n");
-            emailContent1.append("Xác nhận đơn hàng:  ").append("http://localhost:8080/bill/detail/").append(bill.getId());
-            message2.setText(emailContent1.toString());
-            Transport.send(message2);
-        } catch (
-                MessagingException e) {
+            MimeMessage message2 = mailSender.createMimeMessage();
+            message2.setFrom(new InternetAddress(mailFrom));
+            message2.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(adminTo));
+            message2.setSubject("FilmBooking – Đơn hàng mới chờ xác nhận");
+            String detailUrl = "http://localhost:8080/bill/detail/" + bill.getId();
+            String bodyAdmin = EmailHtmlUtil.row("Khách hàng", customer.getName())
+                    + EmailHtmlUtil.row("Số điện thoại", customer.getPhoneNumber())
+                    + EmailHtmlUtil.row("Email", customer.getEmail())
+                    + EmailHtmlUtil.row("Mã giao dịch", transactionCode)
+                    + EmailHtmlUtil.row("Thời gian", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")))
+                    + EmailHtmlUtil.buttonLink(detailUrl, "Xác nhận đơn hàng");
+            String htmlAdmin = EmailHtmlUtil.wrap("Đơn hàng mới chờ xác nhận", bodyAdmin, "— FilmBooking");
+            message2.setContent(htmlAdmin, "text/html; charset=utf-8");
+            mailSender.send(message2);
+        } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
         return "users/ordersuccessfull";
@@ -529,10 +490,18 @@ public class VNPAYController {
                     billServiceService.save(billService);
                 }
             }
-//
             try {
-                Message message = (Message) session.getAttribute("message");
-                Transport.send(message);
+                String pendingHtml = (String) session.getAttribute("pendingMailHtml");
+                String pendingSubject = (String) session.getAttribute("pendingMailSubject");
+                String pendingTo = (String) session.getAttribute("pendingMailTo");
+                if (pendingHtml != null && pendingTo != null && mailFrom != null && !mailFrom.isBlank()) {
+                    MimeMessage message = mailSender.createMimeMessage();
+                    message.setFrom(new InternetAddress(mailFrom));
+                    message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(pendingTo));
+                    message.setSubject(pendingSubject != null ? pendingSubject : "FilmBooking – Đơn hàng thanh toán thành công");
+                    message.setContent(pendingHtml, "text/html; charset=utf-8");
+                    mailSender.send(message);
+                }
             } catch (MessagingException e) {
                 throw new RuntimeException(e);
             }
@@ -540,5 +509,28 @@ public class VNPAYController {
         } else {
             return "users/orderfail";
         }
+    }
+
+    /** "(0ghế đơn,2ghế đôi)" → "0 ghế đơn, 2 ghế đôi" */
+    private static String formatSeatTypeSummary(String seatCountCount) {
+        if (seatCountCount == null || seatCountCount.isBlank()) return "—";
+        String s = seatCountCount.trim().replaceAll("^[\\(\\[]+|[\\]\\)]+$", "").trim();
+        s = s.replaceAll("(\\d+)(ghế)", "$1 $2");
+        return s.replace(",", ", ");
+    }
+
+    /** "C6,C5" → "C5, C6" (thêm khoảng trắng, sắp xếp) */
+    private static String formatSeatCodes(String seatseat) {
+        if (seatseat == null || seatseat.isBlank()) return "—";
+        String[] codes = seatseat.split("\\s*,\\s*");
+        java.util.Arrays.sort(codes);
+        return String.join(", ", codes);
+    }
+
+    private static String buildSeatDisplayForEmail(String seatCount, String seat, String seatCodesDon, String seatCodesDoi) {
+        String s = DisplayFormatUtil.formatSeatTypeWithCodes(seatCount, seatCodesDon, seatCodesDoi);
+        if ((seatCodesDon == null || seatCodesDon.isBlank()) && (seatCodesDoi == null || seatCodesDoi.isBlank()) && seat != null && !seat.isBlank())
+            s = s + " · Vị trí: " + formatSeatCodes(seat);
+        return s;
     }
 }

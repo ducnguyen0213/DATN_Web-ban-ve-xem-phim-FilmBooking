@@ -28,11 +28,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import com.example.filmBooking.model.dto.DtoBill;
 import com.example.filmBooking.model.dto.DtoBillList;
+import com.example.filmBooking.util.EmailHtmlUtil;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 
-import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.*;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -134,11 +137,15 @@ public class BillAdminController {
                     }
                     message.setRecipients(Message.RecipientType.TO, recipientAddresses);
                     message.setSubject("Đơn hàng đã được xác nhận!");
-                    StringBuilder emailContent = new StringBuilder();
-                    emailContent.append("Đơn hàng của bạn đã được xác nhận  ").append(LocalDateTime.now()).append("\n");
-//                    emailContent.append("Mã bil: ").append(bill.getCode()).append("\n");
-                    emailContent.append("Mã giao dịch đơn hàng : ").append(bill.getTradingCode()).append("\n");
-                    message.setText(emailContent.toString());
+                    String timeConfirmed = LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                    String totalFormatted = NumberFormat.getCurrencyInstance(new Locale("vi", "VN")).format(bill.getTotalMoney());
+                    String body = EmailHtmlUtil.paragraph("Đơn hàng của bạn đã được xác nhận. Dưới đây là thông tin:")
+                            + EmailHtmlUtil.row("Mã giao dịch", bill.getTradingCode())
+                            + EmailHtmlUtil.row("Thời gian xác nhận", timeConfirmed)
+                            + EmailHtmlUtil.row("Thành tiền", totalFormatted)
+                            + EmailHtmlUtil.paragraph("Vui lòng kiểm tra tại mục Thông tin cá nhân > Hóa đơn đã thanh toán.");
+                    String html = EmailHtmlUtil.wrap("Đơn hàng đã được xác nhận", body, "— Đội ngũ FilmBooking");
+                    message.setContent(html, "text/html; charset=utf-8");
 
                     Transport.send(message);
                 } catch (MessagingException e) {

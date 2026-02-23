@@ -2,13 +2,18 @@ package com.example.filmBooking.controller;
 
 import com.example.filmBooking.model.Customer;
 import com.example.filmBooking.repository.BillRepository;
+import com.example.filmBooking.security.CustomUserDetails;
 import com.example.filmBooking.service.CustomerService;
 import com.example.filmBooking.service.impl.CustomerServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +33,12 @@ public class LoginController {
 
     @Autowired
     private BillRepository billRepository;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 //    @Autowired
 //    private HttpServletRequest request;
 
@@ -71,28 +82,48 @@ public class LoginController {
     public String login(
             @RequestParam(name = "email") String email,
             @RequestParam(name = "password") String password,
-            HttpServletRequest request, Model model
+            HttpServletRequest request,
+            Model model,
+            RedirectAttributes ra
     ) {
-//        Customer customer = customerService.findByEmail(email);?
-        Customer customer = customerService.findByEmail(email);
-        HttpSession sessionLogin = request.getSession();
-
-        if (customer == null || !customer.getPassword().equals(password)) {
-            sessionLogin.setAttribute("ERR_LOGIN", "Sai tên tài khoản hoặc mật khẩu");
-            return "redirect:/filmbooking/login";
-        } else {
+        try {
+            Authentication auth = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password));
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+            Customer customer = userDetails.getCustomer();
+            HttpSession sessionLogin = request.getSession();
             sessionLogin.setAttribute("customer", customer);
-            String soldTicketsCountBill = billRepository.countSoldTicket(customer.getId());
-            model.addAttribute("soldTicketsCountBill", soldTicketsCountBill);
-
             return "redirect:/filmbooking/trangchu";
+        } catch (Exception e) {
+            // Fallback: mật khẩu trong DB có thể vẫn là plain (chưa chạy HashAllPasswordsRunner)
+            Customer customer = service.findByEmail(email);
+            if (customer != null && customer.getPassword() != null) {
+                String stored = customer.getPassword();
+                boolean plainMatch = !stored.startsWith("$2a$") && !stored.startsWith("$2b$")
+                        && stored.equals(password);
+                if (plainMatch) {
+                    // Đăng nhập thành công; hash lại mật khẩu và lưu để lần sau dùng BCrypt
+                    customer.setPassword(passwordEncoder.encode(password));
+                    service.update(customer.getId(), customer);
+                    CustomUserDetails userDetails = new CustomUserDetails(customer);
+                    Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                    HttpSession sessionLogin = request.getSession();
+                    sessionLogin.setAttribute("customer", customer);
+                    return "redirect:/filmbooking/trangchu";
+                }
+            }
+            ra.addFlashAttribute("ERR_LOGIN", "Sai email hoặc mật khẩu");
+            return "redirect:/filmbooking/login";
         }
     }
 
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session.setAttribute("customer", null);
+        session.invalidate();
+        SecurityContextHolder.clearContext();
         return "redirect:/filmbooking/login";
     }
 

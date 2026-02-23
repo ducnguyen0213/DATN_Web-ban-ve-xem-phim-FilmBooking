@@ -416,6 +416,8 @@
                             <p id="tenghe"></p>
                             <input type="hidden" name="seatseat" value="">
                             <input type="hidden" name="seatCountCount" value="">
+                            <input type="hidden" name="seatCodesDon" value="">
+                            <input type="hidden" name="seatCodesDoi" value="">
 
                         </div>
                         <div class="card_info_movie">
@@ -497,6 +499,8 @@
                             <p id="tenghe1"></p>
                             <input type="hidden" id="nameSeat" name="seat">
                             <input type="hidden" name="seatCount" value="">
+                            <input type="hidden" name="seatCodesDon" value="">
+                            <input type="hidden" name="seatCodesDoi" value="">
                         </div>
                         <div class="card_info_movie">
                             <b>Tổng tiền vé: </b>
@@ -766,6 +770,8 @@
             count.textContent = "";
             countSeatTow.textContent = "";
             total.textContent = "";
+            document.querySelectorAll('input[name="seatCodesDon"]').forEach(function(inp) { inp.value = ""; });
+            document.querySelectorAll('input[name="seatCodesDoi"]').forEach(function(inp) { inp.value = ""; });
         } else {
             if (selectedSeatsCount === 0) {
                 count.style.display = "";
@@ -787,6 +793,10 @@
             document.getElementById("sove1").innerHTML = "(" + selectedSeatsCount + "ghế đơn" + "," + selectedSeatsCountTow + "ghế đôi" + ")";
             document.getElementsByName("seatCount")[0].value = "(" + selectedSeatsCount + "ghế đơn" + "," + selectedSeatsCountTow + "ghế đôi" + ")";
             document.getElementsByName("seatCountCount")[0].value = "(" + selectedSeatsCount + "ghế đơn" + "," + selectedSeatsCountTow + "ghế đôi" + ")";
+            var codesDon = selectedSeats.map(function(s) { return s.textContent.trim(); }).filter(Boolean).sort().join(", ");
+            var codesDoi = selectedSeatsTow.map(function(s) { return s.textContent.trim(); }).filter(Boolean).sort().join(", ");
+            document.querySelectorAll('input[name="seatCodesDon"]').forEach(function(inp) { inp.value = codesDon; });
+            document.querySelectorAll('input[name="seatCodesDoi"]').forEach(function(inp) { inp.value = codesDoi; });
 
             var seatDon = selectedSeatsCount * priceTicket1;
             var seatDoi = selectedSeatsCountTow * priceTicket2;

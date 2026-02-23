@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Vé xem phim của bạn - FilmBooking</title>
+</head>
+<body style="margin:0;padding:0;font-family:'Segoe UI',Arial,sans-serif;font-size:15px;line-height:1.5;color:#333;background-color:#f5f5f5;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f5f5f5;">
+    <tr>
+        <td align="center" style="padding:24px 16px;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:560px;margin:0 auto;">
+                <tr>
+                    <td style="background:linear-gradient(135deg,#3e2723 0%,#5d4037 50%,#6d4c41 100%);color:#ffffff;padding:32px 28px;border-radius:12px 12px 0 0;text-align:center;">
+                        <p style="margin:0 0 6px 0;font-size:12px;letter-spacing:2px;opacity:0.9;">FILMBOOKING</p>
+                        <h1 style="margin:0;font-size:24px;font-weight:700;line-height:1.3;">🎬 Vé xem phim của bạn đã sẵn sàng!</h1>
+                        <p style="margin:14px 0 0 0;font-size:15px;opacity:0.95;">Chúc bạn có một buổi xem phim thật tuyệt vời 🍿</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#ffffff;padding:24px 28px 20px 28px;border-left:1px solid #ffe0b2;border-right:1px solid #ffe0b2;">
+                        <p style="margin:0 0 12px 0;font-size:18px;font-weight:700;color:#1a1a1a;letter-spacing:0.5px;text-transform:uppercase;" th:text="${movieName}">TÊN PHIM</p>
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td style="vertical-align:middle;">
+                                    <span style="display:inline-block;background:#fff3e0;color:#E65100;padding:6px 12px;border-radius:6px;font-size:13px;font-weight:700;">✔ ĐÃ THANH TOÁN</span>
+                                </td>
+                            </tr>
+                        </table>
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:16px;">
+                            <tr>
+                                <td style="background:#fafafa;border:1px solid #ffe0b2;border-radius:8px;padding:14px 18px;">
+                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                        <tr>
+                                            <td style="font-size:13px;color:#666;">Ngày chiếu</td>
+                                            <td style="font-size:14px;font-weight:700;color:#1a1a1a;text-align:right;" th:text="${showDate}">—</td>
+                                        </tr>
+                                        <tr><td colspan="2" style="height:8px;"></td></tr>
+                                        <tr>
+                                            <td style="font-size:13px;color:#666;">Giờ chiếu</td>
+                                            <td style="font-size:14px;font-weight:700;color:#E65100;text-align:right;" th:text="${showTime}">—</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#ffffff;padding:0 28px 20px 28px;border-left:1px solid #ffe0b2;border-right:1px solid #ffe0b2;">
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#fafafa;border:1px solid #f0f0f0;border-radius:10px;overflow:hidden;">
+                            <tr><td style="padding:14px 18px;font-size:12px;color:#888;font-weight:600;border-bottom:1px solid #eee;">🎟 THÔNG TIN VÉ</td></tr>
+                            <tr><td style="padding:12px 18px;border-bottom:1px solid #f0f0f0;"><span style="color:#666;">Rạp / Phòng</span><br/><span style="font-weight:600;color:#1a1a1a;" th:text="${cinema}">—</span></td></tr>
+                            <tr><td style="padding:12px 18px;border-bottom:1px solid #f0f0f0;"><span style="color:#666;">Ghế</span><br/><span style="font-weight:500;color:#333;" th:utext="${seatTypeDisplay}">—</span></td></tr>
+                            <tr><td style="padding:12px 18px;"><span style="color:#666;">Đồ ăn / Combo</span><br/><span style="font-weight:500;color:#333;" th:text="${foodsDisplay}">—</span></td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#ffffff;padding:0 28px 24px 28px;border-left:1px solid #ffe0b2;border-right:1px solid #ffe0b2;">
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:14px;">
+                            <tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#555;">Tổng tiền vé</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:right;" th:text="${ticketTotal}">—</td></tr>
+                            <tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#555;">Tổng tiền đồ ăn</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:right;" th:text="${foodTotal}">—</td></tr>
+                            <tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;color:#555;">Giảm giá</td><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;text-align:right;" th:text="${discount}">—</td></tr>
+                            <tr><td style="padding:14px 0 8px 0;font-weight:700;color:#333;">Thành tiền</td><td style="padding:14px 0 8px 0;text-align:right;font-weight:700;font-size:18px;color:#E65100;" th:text="${finalAmount}">—</td></tr>
+                        </table>
+                    </td>
+                </tr>   
+                <tr>
+                    <td style="background:#ffffff;padding:0 28px 24px 28px;border-left:1px solid #ffe0b2;border-right:1px solid #ffe0b2;">
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#fff8e1;border:1px solid #ffe0b2;border-radius:10px;">
+                            <tr>
+                                <td style="padding:16px 18px;font-size:13px;color:#5d4037;line-height:1.6;">
+                                    ⏰ Vui lòng có mặt trước giờ chiếu <strong>15 phút</strong><br/>
+                                    🎟 Mang theo email này khi vào rạp
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background:#ffffff;padding:20px 28px 28px 28px;border:1px solid #ffe0b2;border-top:none;border-radius:0 0 12px 12px;">
+                        <p style="margin:0 0 8px 0;font-size:14px;color:#555;">Cảm ơn bạn đã đặt vé. Hẹn gặp tại rạp!</p>
+                        <p style="margin:0;font-size:12px;color:#999;">— Đội ngũ FilmBooking</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

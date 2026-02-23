@@ -23,23 +23,23 @@
         <li><a href="/filmbooking/lichchieu">LỊCH CHIẾU</a></li>
         <li><a href="/filmbooking/rank-and-membership">THÀNH VIÊN & GIÁ VÉ</a></li>
 
-        <li th:if="${customer == null}">
+        <li th:if="${session.customer == null}">
             <a class="dropdown-item" href="/filmbooking/login">ĐĂNG NHẬP</a>
         </li>
-        <li th:if="${customer == null}">
+        <li th:if="${session.customer == null}">
             <a class="dropdown-item" href="/filmbooking/dangky">ĐĂNG KÝ</a>
         </li>
-        <li class="dropdown" style="cursor: pointer;color:#FFFFFF;margin-top: 20px; " th:if="${customer != null}">
+        <li class="dropdown" style="cursor: pointer;color:#FFFFFF;margin-top: 20px; " th:if="${session.customer != null}">
             <div class="position">
-                <div class="badge red">[[${soldTicketsCountBill}]]</div>
+                <div class="badge red" th:text="${soldTicketsCountBill != null ? soldTicketsCountBill : '0'}">0</div>
                 <i class="fas fa-stream"></i>
-                Xin chào, [[${customer.name}]]
+                Xin chào, [[${session.customer.name}]]
             </div>
 
             <div class="dropdown-content">
-                <a  href="/filmbooking/thongtincanhan">👨‍ Thông tin</a>
-<!--                <a href="#hanhchinhdienanh">💹 Lịch sử</a>-->
-                <a  href="/filmbooking/logout"> <i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                <a href="/filmbooking/thongtincanhan">👨‍ Thông tin</a>
+                <a href="/filmbooking/change-password">🔒 Đổi mật khẩu</a>
+                <a href="/filmbooking/logout"> <i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
             </div>
         </li>
     </ul>

@@ -154,6 +154,55 @@ public class MovieAdminController {
         }
     }
 
+    @PostMapping("/update/{id}")
+    @Operation(summary = "[Cập nhật phim]")
+    public String update(@PathVariable(name = "id") String id,
+                         @RequestParam(name = "name") String name,
+                         @RequestParam(name = "movieType") List<MovieType> movieTypes,
+                         @RequestParam(name = "language") List<Language> languages,
+                         @RequestParam(name = "trailer") String trailer,
+                         @RequestParam(name = "performer") List<Performer> performers,
+                         @RequestParam(name = "description") String description,
+                         @RequestParam(name = "endDate") Date endDate,
+                         @RequestParam(name = "premiereDate") Date premiereDate,
+                         @RequestParam(name = "directors") List<Director> directors,
+                         @RequestParam(name = "image") MultipartFile multipartFile,
+                         @RequestParam(name = "existingImage", required = false) String existingImage,
+                         @RequestParam(name = "movieDuration") Integer movieDuration,
+                         @RequestParam(name = "ratedId") Rated rated,
+                         RedirectAttributes ra) {
+        try {
+            String imageName;
+            if (multipartFile != null && !multipartFile.isEmpty()) {
+                uploadImage.handerUpLoadFile(multipartFile);
+                imageName = multipartFile.getOriginalFilename();
+            } else {
+                imageName = existingImage;
+            }
+            Movie movie = Movie.builder()
+                    .movieDuration(movieDuration)
+                    .name(name)
+                    .description(description)
+                    .trailer(trailer)
+                    .endDate(endDate)
+                    .premiereDate(premiereDate)
+                    .image(imageName)
+                    .rated(rated)
+                    .directors(directors)
+                    .movieTypes(movieTypes)
+                    .languages(languages)
+                    .performers(performers)
+                    .build();
+            service.update(id, movie);
+            ra.addFlashAttribute("successMessage", "Cập nhật phim thành công!");
+            return "redirect:/movie/find-all/page/1?status=&keyword=";
+        } catch (Exception e) {
+            e.printStackTrace();
+            ra.addFlashAttribute("errorMessage", "Cập nhật phim thất bại!");
+            return "redirect:/movie/update/1/" + id;
+        }
+    }
+
     @GetMapping("/delete/{id}")
     public String deleteMovie(@PathVariable(name = "id") String id, RedirectAttributes ra) {
         try {
@@ -168,8 +217,7 @@ public class MovieAdminController {
     @GetMapping("/update/{pageNumber}/{id}")
     public String detailMovie(@PathVariable(name = "id") String id, Model model, @PathVariable("pageNumber") Integer currentPage) {
         List<Director> movieDirecttor = directorService.findDireactorByMovieId(id);
-        System.out.println(movieDirecttor);
-        List<MovieType> movieTypes = movieTypeService.findMovieTyprbyMovieId(id);
+        List<MovieType> movieTypesByMovie = movieTypeService.findMovieTyprbyMovieId(id);
         List<Language> languageSelector = languageService.findNameByMovieId(id);
         List<Performer> perfprmerSelect = performerService.findPerformerByMovieId(id);
         List<Rated> ratedId = ratedService.fillAll();
@@ -177,8 +225,13 @@ public class MovieAdminController {
         List<Language> languageId = languageService.fillAll();
         List<MovieType> movieTypeId = movieTypeService.fillAll();
         List<Performer> performerId = performerService.fillAll();
-        
-        model.addAttribute("ratedId", ratedId);
+
+        Movie movie = service.findById(id);
+        movie.setDirectors(movieDirecttor);
+        movie.setMovieTypes(movieTypesByMovie);
+        movie.setLanguages(languageSelector);
+        movie.setPerformers(perfprmerSelect);
+
         model.addAttribute("ratedId", ratedId);
         model.addAttribute("languages", languageId);
         model.addAttribute("movieTypes", movieTypeId);
@@ -187,8 +240,7 @@ public class MovieAdminController {
         model.addAttribute("performerSelect", perfprmerSelect);
         model.addAttribute("performers", performerId);
         model.addAttribute("languageSelect", languageSelector);
-//        model.addAttribute("movie", new Movie());
-        model.addAttribute("movie", service.findById(id));
+        model.addAttribute("movie", movie);
         return "admin/form-add-movie";
     }
 

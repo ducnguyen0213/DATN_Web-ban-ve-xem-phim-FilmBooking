@@ -85,7 +85,8 @@ function validateFormMovie(event) {
     } else {
         trailerError.textContent = '';
     }
-    if (image.trim() === '') {
+    var isEditMode = document.getElementById('isEditMode');
+    if (!isEditMode && image.trim() === '') {
         imageErr.textContent = "Hình ảnh không được để trống !";
         isValid = false;
     } else {

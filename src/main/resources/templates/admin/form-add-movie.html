@@ -44,9 +44,11 @@
 <div id="loading-overlay">
     <div class="spinner"></div>
 </div>
-<form th:action="@{/movie/save}" th:object="${movie}" method="post" class="form_add_movie"
+<form th:action="${movie.id != null ? '/movie/update/' + movie.id : '/movie/save'}"
+      th:object="${movie}" method="post" class="form_add_movie"
       enctype="multipart/form-data" onsubmit="validateFormMovie(event)">
-    <input type="hidden">
+    <input type="hidden" th:if="${movie.id != null}" th:name="existingImage" th:value="${movie.image}"/>
+    <input type="hidden" th:if="${movie.id != null}" id="isEditMode" value="true"/>
     <div class="seat_input">
         <div class="row g-3">
             <div class="col">
@@ -97,9 +99,9 @@
 
                                 </label>
 
-                                <select id="demo-multiple-select1" name="director" multiple th:field="*{directors}">
-                                    <option th:each="director : ${directors}"  th:value="${director.id}" th:text="${director.name}"
-                                            th:selected="${#lists.contains(movie.directors, director)}">
+                                <select id="demo-multiple-select1" name="directors" multiple>
+                                    <option th:each="director : ${directors}" th:value="${director.id}" th:text="${director.name}"
+                                            th:selected="${movie.directors != null && #lists.contains(movie.directors.![id], director.id)}">
                                     </option>
                                 </select>
                             </div>
@@ -165,7 +167,8 @@
                                     />
                                 </label>
                                 <select id="demo-multiple-select2" name="movieType" multiple>
-                                    <option th:each="movieType : ${movieTypes}" th:value="${movieType.id}" th:text="${movieType.name}">
+                                    <option th:each="movieType : ${movieTypes}" th:value="${movieType.id}" th:text="${movieType.name}"
+                                            th:selected="${movie.movieTypes != null && #lists.contains(movie.movieTypes.![id], movieType.id)}">
                                     </option>
                                 </select>
                             </div>
@@ -208,7 +211,8 @@
                                     <!--                                    </th:block>-->
                                 </label>
                                 <select id="demo-multiple-select3" name="language" multiple>
-                                    <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}">
+                                    <option th:each="language : ${languages}" th:value="${language.id}" th:text="${language.name}"
+                                            th:selected="${movie.languages != null && #lists.contains(movie.languages.![id], language.id)}">
                                     </option>
                                 </select>
                             </div>
@@ -225,13 +229,12 @@
                             class="form-select"
                             aria-label="Default select example"
                             name="ratedId"
-                            th:filed="*{rated}"
                     >
-                        <!--                                    <option selected>Mời chọn phim</option>-->
+                        <option value="">-- Chọn giới hạn tuổi --</option>
                         <th:block th:each="r : ${ratedId}">
-
                             <option
                                     th:value="${r.id}"
+                                    th:selected="${movie.rated != null && movie.rated.id == r.id}"
                             >[[${r.code}]] ([[${r.description}]])
                             </option>
                         </th:block>
@@ -264,7 +267,8 @@
 <!--                                        </th:block>-->
                                     </label>
                                     <select id="demo-multiple-select4" name="performer" multiple>
-                                        <option th:each="performer : ${performers}" th:value="${performer.id}" th:text="${performer.name}">
+                                        <option th:each="performer : ${performers}" th:value="${performer.id}" th:text="${performer.name}"
+                                                th:selected="${movie.performers != null && #lists.contains(movie.performers.![id], performer.id)}">
                                         </option>
                                     </select>
                                 </div>
@@ -287,6 +291,10 @@
             <div class="col">
                 <div class="image_movie">
                     <label>Hình ảnh</label>
+                    <div th:if="${movie.id != null && movie.image != null && !movie.image.isEmpty()}" class="mb-2">
+                        <img th:src="@{'/admin/assets/img/' + ${movie.image}}" alt="Ảnh hiện tại" style="max-height: 180px; border: 1px solid #ddd; border-radius: 6px;"/>
+                        <p class="text-muted small mt-1">Ảnh hiện tại. Để giữ nguyên, không chọn file mới.</p>
+                    </div>
                     <input type="file" id="image" name="image"/>
                 </div>
                 <span id="imageErr" style="color: red; margin: 10px 0px 0px 0px"></span>
@@ -436,21 +444,49 @@
         themeVariant: "light",
     });
 
-    mobiscroll.select("#demo-multiple-select1", {
+    function getSelectedValues(selectId) {
+        var sel = document.getElementById(selectId);
+        if (!sel) return [];
+        var vals = [];
+        for (var i = 0; i < sel.options.length; i++) {
+            if (sel.options[i].selected) vals.push(sel.options[i].value);
+        }
+        return vals;
+    }
+
+    var inst1 = mobiscroll.select("#demo-multiple-select1", {
         inputElement: document.getElementById("demo-multiple-select-input1"),
     });
-    mobiscroll.select("#demo-multiple-select2", {
+    var inst2 = mobiscroll.select("#demo-multiple-select2", {
         inputElement: document.getElementById("demo-multiple-select-input2"),
     });
-    mobiscroll.select("#demo-multiple-select3", {
+    var inst3 = mobiscroll.select("#demo-multiple-select3", {
         inputElement: document.getElementById("demo-multiple-select-input3"),
     });
-    mobiscroll.select("#demo-multiple-select4", {
+    var inst4 = mobiscroll.select("#demo-multiple-select4", {
         inputElement: document.getElementById("demo-multiple-select-input4"),
     });
-    inputImg.onchange = (e) => {
-        if (inputImg.files[0]) img.src = URL.createObjectURL(inputImg.files[0]);
-    };
+
+    // Sau khi Mobiscroll init, đẩy giá trị đã selected (từ server) vào widget
+    document.addEventListener("DOMContentLoaded", function() {
+        var v1 = getSelectedValues("demo-multiple-select1");
+        if (v1.length && inst1) inst1.setVal(v1, true);
+
+        var v2 = getSelectedValues("demo-multiple-select2");
+        if (v2.length && inst2) inst2.setVal(v2, true);
+
+        var v3 = getSelectedValues("demo-multiple-select3");
+        if (v3.length && inst3) inst3.setVal(v3, true);
+
+        var v4 = getSelectedValues("demo-multiple-select4");
+        if (v4.length && inst4) inst4.setVal(v4, true);
+    });
+
+    if (typeof inputImg !== 'undefined' && inputImg) {
+        inputImg.onchange = (e) => {
+            if (inputImg.files[0] && typeof img !== 'undefined' && img) img.src = URL.createObjectURL(inputImg.files[0]);
+        };
+    }
 </script>
 <script
         nomodule

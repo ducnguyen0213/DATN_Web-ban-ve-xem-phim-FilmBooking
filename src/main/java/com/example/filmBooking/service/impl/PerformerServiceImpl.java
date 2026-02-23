@@ -6,6 +6,7 @@ import com.example.filmBooking.repository.PerformerRepository;
 import com.example.filmBooking.service.PerformerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.filmBooking.model.Movie;
 import com.example.filmBooking.repository.MovieRepository;
 
@@ -58,10 +59,10 @@ public class PerformerServiceImpl implements PerformerService {
     }
     
     @Override
+    @Transactional(readOnly = true)
     public List<Performer> findPerformerByMovieId(String id) {
         Movie movie = movieRepository.findById(id).get();
-        List<Performer> listPerformer = movie.getPerformers();
-        return listPerformer;
+        return movie.getPerformers();
     }
 
     @Override

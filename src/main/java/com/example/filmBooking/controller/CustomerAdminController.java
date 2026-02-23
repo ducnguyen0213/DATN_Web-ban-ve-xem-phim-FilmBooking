@@ -2,6 +2,7 @@ package com.example.filmBooking.controller;
 
 import com.example.filmBooking.model.Cinema;
 import com.example.filmBooking.model.Customer;
+import com.example.filmBooking.model.Role;
 import com.example.filmBooking.repository.BillRepository;
 import com.example.filmBooking.service.CustomerService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,35 @@ public class CustomerAdminController {
 
     @Autowired
     private BillRepository repository;
+
+    @GetMapping("/add-admin")
+    public String formAddAdmin(Model model) {
+        model.addAttribute("customer", new Customer());
+        return "admin/add-admin";
+    }
+
+    @PostMapping("/save-admin")
+    public String saveAdmin(
+            @RequestParam(name = "name") String name,
+            @RequestParam(name = "phoneNumber") String phoneNumber,
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "password") String password,
+            RedirectAttributes ra) {
+        if (customerService.findByEmail(email) != null) {
+            ra.addFlashAttribute("errorMessage", "Email đã tồn tại.");
+            return "redirect:/customer/add-admin";
+        }
+        Customer admin = Customer.builder()
+                .name(name)
+                .email(email)
+                .phoneNumber(phoneNumber)
+                .password(password)
+                .role(Role.ADMIN)
+                .build();
+        customerService.save(admin);
+        ra.addFlashAttribute("successMessage", "Thêm tài khoản admin thành công!");
+        return "redirect:/customer/add-admin";
+    }
 
     @GetMapping("/find-all")
     public String viewCustomer(Model model){

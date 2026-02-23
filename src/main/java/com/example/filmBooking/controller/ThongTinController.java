@@ -150,7 +150,7 @@ public class ThongTinController {
             System.out.println("không tìm thấy account");
         }
 
-        return "redirect:/thongtincanhan";
+        return "redirect:/filmbooking/thongtincanhan";
     }
 
 

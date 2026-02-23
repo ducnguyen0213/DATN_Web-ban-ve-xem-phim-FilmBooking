@@ -121,14 +121,21 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-crypto</artifactId>
 		</dependency>
+		<!-- Spring Security 6 (form login tắt, dùng custom login Thymeleaf + phân quyền URL) -->
 		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.6.2</version>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<!-- Spring Boot 3 dùng Jakarta Mail (jakarta.mail). Không thêm com.sun.mail:javax.mail để tránh lỗi "Provider not a subtype". -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+		<!-- Implementation cho Jakarta Mail 1.x (tương thích spring-context-support / Spring Boot 3.1) -->
+		<dependency>
+			<groupId>org.eclipse.angus</groupId>
+			<artifactId>angus-mail</artifactId>
+			<version>1.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.zaxxer</groupId>

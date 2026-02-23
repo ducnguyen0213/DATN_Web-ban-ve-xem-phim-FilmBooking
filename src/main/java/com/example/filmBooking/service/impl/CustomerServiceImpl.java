@@ -2,11 +2,13 @@ package com.example.filmBooking.service.impl;
 
 import com.example.filmBooking.model.Customer;
 import com.example.filmBooking.model.RankCustomer;
+import com.example.filmBooking.model.Role;
 import com.example.filmBooking.repository.CustomerRepository;
 import com.example.filmBooking.repository.RankCustomerRepository;
 import com.example.filmBooking.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +26,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private RankCustomerRepository rankRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public List<Customer> fillAll() {
         return repository.findAll();
@@ -35,6 +40,15 @@ public class CustomerServiceImpl implements CustomerService {
         int value = generator.nextInt((100000 - 1) + 1) + 1;
         customer.setCode("code_" + value);
         customer.setPoint(0);
+        // Hash mật khẩu trước khi lưu (chỉ hash nếu chưa phải BCrypt)
+        String rawPassword = customer.getPassword();
+        if (rawPassword != null && !rawPassword.startsWith("$2a$") && !rawPassword.startsWith("$2b$")) {
+            customer.setPassword(passwordEncoder.encode(rawPassword));
+        }
+        // Đăng ký mới mặc định role USER
+        if (customer.getRole() == null) {
+            customer.setRole(Role.USER);
+        }
         List<RankCustomer> listRank = rankRepository.findAll();
         listRank.sort((o1, o2) -> {
             return o1.getPoint().compareTo(o2.getPoint());
@@ -104,7 +118,14 @@ public class CustomerServiceImpl implements CustomerService {
         customerNew.setName(customer.getName());
         customerNew.setPhoneNumber(customer.getPhoneNumber());
         customerNew.setEmail(customer.getEmail());
-        customerNew.setPassword(customer.getPassword());
+        String newPassword = customer.getPassword();
+        if (newPassword != null && !newPassword.isBlank()) {
+            if (!newPassword.startsWith("$2a$") && !newPassword.startsWith("$2b$")) {
+                customerNew.setPassword(passwordEncoder.encode(newPassword));
+            } else {
+                customerNew.setPassword(newPassword); // đã hash sẵn (vd từ LoginController)
+            }
+        }
         return repository.save(customerNew);
     }
 
